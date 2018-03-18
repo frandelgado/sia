@@ -2,8 +2,8 @@
 1;
 
 global n = 0.02;
-arquitecture = [2, 3, 1]; # Each column specifies the amount of neurons in a layer.
+architecture = [2, 3, 1]; # Each column specifies the amount of neurons in a layer.
 
 # Starting
-weightMatrixes = init(arquitecture);
+weightMatrices = init(architecture)
 

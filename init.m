@@ -1,8 +1,6 @@
-function weight_matrices = init(architecture)
-
-    for i = 1:(size(architecture)-1)
-        weight_matrices[i] = rand(architecture[i],architecture[i+1]); # rows = from ; cols = to
-        weight_matrices[i](end+1,:) = -1*ones(architecture[i+1]);
-    endfor 
-    
+function weight_matrices = init (architecture)
+    arch_size = length(architecture);
+    for i = 1:(arch_size-1)
+        weight_matrices{i} = rand(architecture(i) + 1, architecture(i+1)); # rows = from ; cols = to
+    endfor
 endfunction
