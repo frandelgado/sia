@@ -6,7 +6,7 @@ function output_values = forward(weight_matrices, lat, lg)
     output_values(1, 2) = lg;
 
     for j = 1:layers - 1
-        output_values = propagate(cell2mat(weight_matrices(j)), output_values, j);
+        output_values = propagate(weight_matrices{j}, output_values, j);
     endfor
 
 endfunction
