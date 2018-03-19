@@ -14,12 +14,6 @@ function [modified_weights, deltas] = backpropagation(weights_to_modify, index_t
   layer_output = horzcat(layer_for_g_prime, -1);
   modified_weights = weights_to_modify + (layer_output' * deltas);
   weights_for_new_deltas = weights_to_modify(1:end-1,:);
-  output_values
-  weights_to_modify
-  layer_for_g_prime
-  g_prime(layer_for_g_prime)
-  deltas
-  weights_for_new_deltas
   deltas = deltas * weights_for_new_deltas' .* g_prime(layer_for_g_prime);
 endfunction
 
