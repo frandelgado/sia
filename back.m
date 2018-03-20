@@ -10,9 +10,10 @@ function modified_weight_matrices = back(weight_matrices, output_values, expecte
 endfunction
 
 function [modified_weights, deltas] = backpropagation(weights_to_modify, index_to_use, deltas, output_values, layers)
+  global n;
   layer_for_g_prime = output_values(index_to_use, 1:rows(weights_to_modify) - 1);
   layer_output = horzcat(layer_for_g_prime, -1);
-  modified_weights = weights_to_modify + (layer_output' * deltas);
+  modified_weights = weights_to_modify + n*(layer_output' * deltas);
   weights_for_new_deltas = weights_to_modify(1:end-1,:);
   deltas = deltas * weights_for_new_deltas' .* g_prime(layer_for_g_prime);
 endfunction

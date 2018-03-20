@@ -23,4 +23,5 @@ function aprox_error = aproximation_eror(epoch, weight_matrices, data)
     output_values = forward(weight_matrices,data(i,1),data(1,2));
      aprox_error = aprox_error + quad_error(data(i,3), output_values(end, 1));
   endfor
+  aprox_error = aprox_error/epoch;
 endfunction
