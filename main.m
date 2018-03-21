@@ -3,7 +3,7 @@
 global n = 0.02;
 global activation_function = 1; # 0 for hyperbolic tangent or 1 for exponencial.
 global data = dlmread("terrain04.data"); # Reads data and stores it in a matrix.
-number_of_cases = 50;
+global number_of_cases = 300;
 architecture = [2, 3, 1]; # Each column specifies the amount of neurons in a layer.
 global max_layer_neurons = max(architecture);
 
