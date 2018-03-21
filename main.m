@@ -1,10 +1,10 @@
 # Prevent Octave from thinking that this is a function file:
 1;
 global n = 0.02;
-global activation_function = 1; # 0 for hyperbolic tangent or 1 for exponencial.
+global activation_function = 0; # 0 for hyperbolic tangent or 1 for exponencial.
 global data = dlmread("terrain04.data"); # Reads data and stores it in a matrix.
 global number_of_cases = 300;
-architecture = [2, 3, 1]; # Each column specifies the amount of neurons in a layer.
+architecture = [2, 5, 1]; # Each column specifies the amount of neurons in a layer.
 global max_layer_neurons = max(architecture);
 
 # Activation function
