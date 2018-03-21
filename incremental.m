@@ -11,13 +11,13 @@ function ret = incremental(weight_matrices, number_of_cases)
       weight_matrices = back(weight_matrices, output_values, [data(pattern, 3)]);
       current_epoch_pattern = current_epoch_pattern + 1;
     endwhile  
-    epoch_error = aproximation_eror(epoch, weight_matrices, data);
+    epoch_error = aproximation_error(epoch, weight_matrices, data);
     current_epoch_pattern = 0;
     epoch_error
   endwhile
 endfunction
 
-function aprox_error = aproximation_eror(epoch, weight_matrices, data)
+function aprox_error = aproximation_error(epoch, weight_matrices, data)
   aprox_error = 0;
   for i = 2:epoch+1
     output_values = forward(weight_matrices,data(i,1),data(1,2));

@@ -1,7 +1,7 @@
 function modified_weight_matrices = back(weight_matrices, output_values, expected)
   layers = length(weight_matrices) + 1;
   external_layer = [output_values(end, 1)];
-  init_deltas = g_prime(external_layer) * quad_error(expected, external_layer);
+  init_deltas = g_prime(external_layer) * (expected - external_layer);
   deltas = [init_deltas];
   for j = layers - 1:-1:1
     [weight_matrices{j}, deltas] = backpropagation(weight_matrices{j}, j, deltas, output_values, layers);
@@ -23,6 +23,6 @@ function ret = g_prime(layer)
   if activation_function == 0
     ret = 1 - layer.^2;
   elseif activation_function == 1
-    ret = layer - layer.^2;
+    ret = layer.*(1 - layer);
   endif
 endfunction
