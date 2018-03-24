@@ -13,6 +13,7 @@ global data = dlmread("terrain04.data"); # Reads data and stores it in a matrix.
 global number_of_cases = floor(0.7*(rows(data)-1));
 architecture = [2, 50, 1]; # Each column specifies the amount of neurons in a layer.
 global max_layer_neurons = max(architecture);
+global is_incremental = 1;
 
 # Activation function.
 function ret = sig_exp(z)
@@ -21,4 +22,4 @@ endfunction
 
 # Starting.
 weight_matrices = init(architecture);
-incremental(weight_matrices,number_of_cases);
+train(weight_matrices, number_of_cases, is_incremental);
