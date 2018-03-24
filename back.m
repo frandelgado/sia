@@ -1,12 +1,8 @@
-function modified_weight_matrices = back(weight_matrices, output_values, expected)
+function [modified_weight_matrices, weight_matrices_diff] = back(weight_matrices, weight_matrices_diff, output_values, expected)
   layers = length(weight_matrices) + 1;
   external_layer = [output_values(end, 1)];
   init_deltas = g_prime(external_layer) * (expected - external_layer);
   deltas = [init_deltas];
-  weight_matrices_diff = {};
-  for i = 1:length(weight_matrices)
-    weight_matrices_diff{i} = 0 * weight_matrices{i};
-  endfor
   for j = layers - 1:-1:1
     [weight_matrices{j}, deltas, weight_matrices_diff{j}] = backpropagation(weight_matrices{j}, weight_matrices_diff{j}, j, deltas, output_values, layers);
   endfor
@@ -21,7 +17,7 @@ function [modified_weights, deltas, new_weight_matrix_diff] = backpropagation(we
   layer_output = horzcat(layer_for_g_prime, -1);
   momentum = 0;
   if use_momentum
-    momentum = momentum_alpha * weight_matrix_diff * (n - 1);
+    momentum = momentum_alpha * weight_matrix_diff;
   endif
   new_weight_matrix_diff = n*(layer_output' * deltas) + momentum;
   modified_weights = weights_to_modify + new_weight_matrix_diff;

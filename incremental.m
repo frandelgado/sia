@@ -13,6 +13,7 @@ function ret = incremental(weight_matrices, number_of_cases)
   prev_epoch_error = 1;
   epoch_error_decreasing_steps = 0;
   previous_weights = {};
+  weight_matrices_diff = {};
   t = 1;
   error_time_matrix = ones(1, 3);
   while(epoch_error > min_error)
@@ -20,11 +21,14 @@ function ret = incremental(weight_matrices, number_of_cases)
       previous_weights = weight_matrices;
       prev_epoch_error = epoch_error;
     endif
+    for i = 1:length(weight_matrices)
+      weight_matrices_diff{i} = zeros(rows(weight_matrices{i}), columns(weight_matrices{i}));
+    endfor
     random_cases_indexes = randperm(number_of_cases+1);
     random_cases_indexes = random_cases_indexes(2:end);
     for caseIndex = random_cases_indexes
       output_values = forward(weight_matrices, data(caseIndex, 1), data(caseIndex, 2));
-      weight_matrices = back(weight_matrices, output_values, [data(caseIndex, 3)]);
+      [weight_matrices, weight_matrices_diff] = back(weight_matrices, weight_matrices_diff, output_values, [data(caseIndex, 3)]);
     endfor
 
     [epoch_error, error_time_matrix] = aproximation_error(number_of_cases, weight_matrices, data, error_time_matrix, t);
