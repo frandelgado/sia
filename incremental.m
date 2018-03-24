@@ -6,6 +6,8 @@ function ret = incremental(weight_matrices, number_of_cases)
   global steps_for_adaptative_eta;
   global use_adaptative_eta;
   global percentage_error_for_adaptative_eta;
+  global incremental;
+  incremental = 0;
 
   epoch = rows(data)-1;
   min_error = 0.00001;
@@ -14,6 +16,7 @@ function ret = incremental(weight_matrices, number_of_cases)
   epoch_error_decreasing_steps = 0;
   previous_weights = {};
   weight_matrices_diff = {};
+
   t = 1;
   error_time_matrix = ones(1, 3);
   while(epoch_error > min_error)
@@ -26,10 +29,28 @@ function ret = incremental(weight_matrices, number_of_cases)
     endfor
     random_cases_indexes = randperm(number_of_cases+1);
     random_cases_indexes = random_cases_indexes(2:end);
-    for caseIndex = random_cases_indexes
-      output_values = forward(weight_matrices, data(caseIndex, 1), data(caseIndex, 2));
-      [weight_matrices, weight_matrices_diff] = back(weight_matrices, weight_matrices_diff, output_values, [data(caseIndex, 3)]);
-    endfor
+    if incremental == 1
+      for caseIndex = random_cases_indexes
+        output_values = forward(weight_matrices, data(caseIndex, 1), data(caseIndex, 2));
+        [weight_matrices, weight_matrices_diff] = back(weight_matrices, weight_matrices_diff, output_values, [data(caseIndex, 3)]);
+      endfor
+    else
+      weight_matrices_diff_vector = {};
+      for caseIndex = random_cases_indexes
+        output_values = forward(weight_matrices, data(caseIndex, 1), data(caseIndex, 2));
+        [weight_matrices_value, weight_matrices_diff_value] = back(weight_matrices, weight_matrices_diff, output_values, [data(caseIndex, 3)]);
+        weight_matrices_diff_vector{caseIndex} = weight_matrices_diff_value;
+      endfor
+      for caseIndex = random_cases_indexes
+        for i = 1:length(weight_matrices_diff)
+          weight_matrices_diff{i} = weight_matrices_diff{i} + weight_matrices_diff_vector{caseIndex}{i};
+        endfor
+      endfor
+
+      for i = 1:length(weight_matrices)
+        weight_matrices{i} = weight_matrices{i} + weight_matrices_diff{i};
+      endfor
+    endif
 
     [epoch_error, error_time_matrix] = aproximation_error(number_of_cases, weight_matrices, data, error_time_matrix, t);
     error_time_matrix = generalization_error(number_of_cases, weight_matrices, data, error_time_matrix, t, epoch);
