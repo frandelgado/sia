@@ -21,7 +21,7 @@ function [modified_weights, deltas, new_weight_matrix_diff] = backpropagation(we
   layer_output = horzcat(layer_for_g_prime, -1);
   momentum = 0;
   if use_momentum
-    momentum = momentum_alpha * weight_matrix_diff;
+    momentum = momentum_alpha * weight_matrix_diff * (n - 1);
   endif
   new_weight_matrix_diff = n*(layer_output' * deltas) + momentum;
   modified_weights = weights_to_modify + new_weight_matrix_diff;

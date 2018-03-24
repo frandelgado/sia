@@ -5,6 +5,7 @@ function ret = incremental(weight_matrices, number_of_cases)
   global b_for_adaptative_eta;
   global steps_for_adaptative_eta;
   global use_adaptative_eta;
+  global percentage_error_for_adaptative_eta;
 
   epoch = rows(data)-1;
   min_error = 0.00001;
@@ -25,7 +26,7 @@ function ret = incremental(weight_matrices, number_of_cases)
       output_values = forward(weight_matrices, data(caseIndex, 1), data(caseIndex, 2));
       weight_matrices = back(weight_matrices, output_values, [data(caseIndex, 3)]);
     endfor
-    
+
     [epoch_error, error_time_matrix] = aproximation_error(number_of_cases, weight_matrices, data, error_time_matrix, t);
     error_time_matrix = generalization_error(number_of_cases, weight_matrices, data, error_time_matrix, t, epoch);
 
@@ -33,13 +34,15 @@ function ret = incremental(weight_matrices, number_of_cases)
       if epoch_error < prev_epoch_error
         epoch_error_decreasing_steps = epoch_error_decreasing_steps + 1;
         if steps_for_adaptative_eta <= epoch_error_decreasing_steps
-          n = a_for_adaptative_eta + n;
+          n = a_for_adaptative_eta + n
+          momentum_alpha = 0.9;
         endif
-      elseif epoch_error > prev_epoch_error
+      elseif epoch_error >= (1 + percentage_error_for_adaptative_eta * 0.01) * prev_epoch_error
         weight_matrices = previous_weights;
         n = n - b_for_adaptative_eta * n
         epoch_error = prev_epoch_error;
         epoch_error_decreasing_steps = 0;
+        momentum_alpha = 0;
       endif
     endif
 
