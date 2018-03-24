@@ -17,6 +17,7 @@ function ret = incremental(weight_matrices, number_of_cases)
   while(epoch_error > min_error)
     if use_adaptative_eta
       previous_weights = weight_matrices;
+      prev_epoch_error = epoch_error;
     endif
     random_cases_indexes = randperm(number_of_cases+1);
     random_cases_indexes = random_cases_indexes(2:end);
@@ -24,22 +25,23 @@ function ret = incremental(weight_matrices, number_of_cases)
       output_values = forward(weight_matrices, data(caseIndex, 1), data(caseIndex, 2));
       weight_matrices = back(weight_matrices, output_values, [data(caseIndex, 3)]);
     endfor
-    prev_epoch_error = epoch_error;
+    
+    [epoch_error, error_time_matrix] = aproximation_error(number_of_cases, weight_matrices, data, error_time_matrix, t);
+    error_time_matrix = generalization_error(number_of_cases, weight_matrices, data, error_time_matrix, t, epoch);
+
     if use_adaptative_eta
       if epoch_error < prev_epoch_error
         epoch_error_decreasing_steps = epoch_error_decreasing_steps + 1;
         if steps_for_adaptative_eta <= epoch_error_decreasing_steps
           n = a_for_adaptative_eta + n;
         endif
-      else
+      elseif epoch_error > prev_epoch_error
         weight_matrices = previous_weights;
         n = n - b_for_adaptative_eta * n
         epoch_error = prev_epoch_error;
+        epoch_error_decreasing_steps = 0;
       endif
     endif
-
-    [epoch_error, error_time_matrix] = aproximation_error(number_of_cases, weight_matrices, data, error_time_matrix, t);
-    error_time_matrix = generalization_error(number_of_cases, weight_matrices, data, error_time_matrix, t, epoch);
 
     plot(error_time_matrix(:,2:3));
     axis([0, 1, 0, 0.5]);
