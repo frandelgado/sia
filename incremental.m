@@ -34,12 +34,12 @@ function ret = incremental(weight_matrices, number_of_cases)
       if epoch_error < prev_epoch_error
         epoch_error_decreasing_steps = epoch_error_decreasing_steps + 1;
         if steps_for_adaptative_eta <= epoch_error_decreasing_steps
-          n = a_for_adaptative_eta + n
+          n = a_for_adaptative_eta * n
           momentum_alpha = 0.9;
         endif
       elseif epoch_error >= (1 + percentage_error_for_adaptative_eta * 0.01) * prev_epoch_error
         weight_matrices = previous_weights;
-        n = n - b_for_adaptative_eta * n
+        n = b_for_adaptative_eta * n
         epoch_error = prev_epoch_error;
         epoch_error_decreasing_steps = 0;
         momentum_alpha = 0;
