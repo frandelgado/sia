@@ -18,47 +18,42 @@ global enable_linear_output = 1;
 global max_learning_epochs = 1500;
 global is_test_case = 0;
 
-# Activation function.
-function ret = sig_exp(z)
-  ret = 1 ./ (1 + e.^-z);
-endfunction
-
 # Starting.
 if is_test_case != 1
   weight_matrices = init(architecture);
   [weight_matrices, error_time_matrix] = train(weight_matrices, number_of_cases, is_incremental);
-  print_to_files(weight_matrices, error_time_matrix, 1);
 else
   test_cases = {
-    {[2, 50, 1], 0, 0.02, false, false, 0.9},
+    {[2, 50, 1], 0, 0.02, false, false, 0.9}, #1
     {[2, 30, 20, 1], 0, 0.02, false, false, 0.9},
     {[2, 10, 1], 0, 0.02, false, false, 0.9},
     {[2, 50, 1], 0, 0.04, false, false, 0.9},
-    {[2, 30, 20, 1], 0, 0.04, false, false, 0.9},
+    {[2, 30, 20, 1], 0, 0.04, false, false, 0.9}, #5
     {[2, 10, 1], 0, 0.04, false, false, 0.9},
     {[2, 50, 1], 0, 0.02, true, false, 0.9},
     {[2, 30, 20, 1], 0, 0.02, true, false, 0.9},
     {[2, 10, 1], 0, 0.02, true, false, 0.9},
-    {[2, 50, 1], 0, 0.04, true, false, 0.9},
+    {[2, 50, 1], 0, 0.04, true, false, 0.9}, #10
     {[2, 30, 20, 1], 0, 0.04, true, false, 0.9},
     {[2, 10, 1], 0, 0.04, true, false, 0.9},
     {[2, 50, 1], 0, 0.02, false, true, 0.9},
     {[2, 50, 1], 0, 0.02, true, true, 0.9},
-    {[2, 30, 20, 1], 0, 0.02, false, true, 0.9},
+    {[2, 30, 20, 1], 0, 0.02, false, true, 0.9}, #15
     {[2, 30, 20, 1], 0, 0.02, true, true, 0.9},
     {[2, 50, 1], 0, 0.02, false, true, 0.5},
     {[2, 50, 1], 0, 0.02, true, true, 0.5},
     {[2, 30, 20, 1], 0, 0.02, false, true, 0.5},
-    {[2, 30, 20, 1], 0, 0.02, true, true, 0.5},
-  }
+    {[2, 30, 20, 1], 0, 0.02, true, true, 0.5}, #20
+  };
   for test_case_index = 1:length(test_cases)
     # Set all test config
     architecture = test_cases{test_case_index}{1};
     max_layer_neurons = max(architecture);
-    n = test_cases{test_case_index}{2};
-    use_adaptative_eta = test_cases{test_case_index}{3};
-    use_momentum = test_cases{test_case_index}{4};
-    momentum_alpha = test_cases{test_case_index}{5};
+    activation_function = test_cases{test_case_index}{2};
+    n = test_cases{test_case_index}{3};
+    use_adaptative_eta = test_cases{test_case_index}{4};
+    use_momentum = test_cases{test_case_index}{5};
+    momentum_alpha = test_cases{test_case_index}{6};
     # Begin learning case test
     weight_matrices = init(architecture);
     [weight_matrices, error_time_matrix] = train(weight_matrices, number_of_cases, is_incremental);

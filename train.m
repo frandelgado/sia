@@ -8,6 +8,7 @@ function [weight_matrices, error_time_matrix] = train(weight_matrices, number_of
   global percentage_error_for_adaptative_eta;
   global max_learning_epochs;
   global min_error_for_use_adaptive_eta;
+  global is_test_case;
 
   epoch = rows(data)-1;
   min_error = 0.00001;
@@ -42,26 +43,31 @@ function [weight_matrices, error_time_matrix] = train(weight_matrices, number_of
       if epoch_error < prev_epoch_error
         epoch_error_decreasing_steps = epoch_error_decreasing_steps + 1;
         if steps_for_adaptative_eta <= epoch_error_decreasing_steps
-          n = a_for_adaptative_eta * n
+          n = a_for_adaptative_eta * n;
           momentum_alpha = 0.9;
         endif
       elseif epoch_error >= (1 + percentage_error_for_adaptative_eta * 0.01) * prev_epoch_error
         weight_matrices = previous_weights;
-        n = b_for_adaptative_eta * n
+        n = b_for_adaptative_eta * n;
         epoch_error = prev_epoch_error;
         epoch_error_decreasing_steps = 0;
         momentum_alpha = 0;
       endif
+      if is_test_case != 1
+        printf("n: %d", n);
+      endif
     endif
 
-    plot(error_time_matrix(:,2:3));
-    axis([0, 1, 0, 0.3]);
-    axis("autox");
-    xlabel("epoca");
-    ylabel("error");
-    title("Error de generalizacion y de aprendizaje en funcion de la epoca");
-    legend ("Aprendizaje", "Generalizacion");
-    drawnow();
+    if is_test_case != 1
+      plot(error_time_matrix(:,2:3));
+      axis([0, 1, 0, 0.3]);
+      axis("autox");
+      xlabel("epoca");
+      ylabel("error");
+      title("Error de generalizacion y de aprendizaje en funcion de la epoca");
+      legend ("Aprendizaje", "Generalizacion");
+      drawnow();
+    endif
     t = t + 1;
   endwhile
 endfunction
@@ -100,7 +106,7 @@ function [aprox_error, error_time_matrix] = aproximation_error(number_of_cases, 
   aprox_error = aprox_error/number_of_cases;
   error_time_matrix(t, 1) = t;
   error_time_matrix(t, 2) = aprox_error;
-  aprox_error
+  aprox_error;
 endfunction
 
 function error_time_matrix = generalization_error(number_of_cases, weight_matrices, data, error_time_matrix, t, epoch)
@@ -113,6 +119,13 @@ function error_time_matrix = generalization_error(number_of_cases, weight_matric
   gen_error = gen_error/(epoch - number_of_cases);
   error_time_matrix(t, 1) = t;
   error_time_matrix(t, 3) = gen_error;
-  gen_error
-  printf("-------------------\n");
+  gen_error;
+  if is_test_case != 1
+    printf("-------------------\n");
+  endif
+endfunction
+
+# Activation function.
+function ret = sig_exp(z)
+  ret = 1 ./ (1 + e.^-z);
 endfunction

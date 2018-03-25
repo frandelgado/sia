@@ -26,8 +26,7 @@ function ret = print_to_files(result_weight_matrices, error_time_matrix, run_num
   text(1350, 0.04, sprintf("E(1500): %d", error_time_matrix(1500, 4)));
   saveas(1, sprintf("./test_results/eta_%d.png", run_number));
 
-  result_weight_matrices
   for i = 1:length(result_weight_matrices)
-    dlmwrite(sprintf("./test_results/weights_%d.txt", run_number), result_weight_matrices{i}, '-append', 'delimiter', '\t', 'precision', 6, 'roffset', 1)
+    dlmwrite(sprintf("./test_results/weights_%d.txt", run_number), result_weight_matrices{i}, '-append', 'delimiter', '\t', 'precision', 6, 'roffset', 1);
   endfor
 endfunction
