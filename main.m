@@ -16,7 +16,7 @@ global max_layer_neurons = max(architecture);
 global is_incremental = 1;
 global enable_linear_output = 1;
 global max_learning_epochs = 1500;
-global is_test_case = 1;
+global is_test_case = 0;
 
 # Activation function.
 function ret = sig_exp(z)
