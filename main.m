@@ -27,6 +27,7 @@ endfunction
 if is_test_case != 1
   weight_matrices = init(architecture);
   [weight_matrices, error_time_matrix] = train(weight_matrices, number_of_cases, is_incremental);
+  print_to_files(weight_matrices, error_time_matrix, 1);
 else
   test_cases = {
     {[2, 50, 1], 0, 0.02, false, false, 0.9},

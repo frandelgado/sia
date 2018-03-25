@@ -7,6 +7,7 @@ function [weight_matrices, error_time_matrix] = train(weight_matrices, number_of
   global use_adaptative_eta;
   global percentage_error_for_adaptative_eta;
   global max_learning_epochs;
+  global min_error_for_use_adaptive_eta;
 
   epoch = rows(data)-1;
   min_error = 0.00001;
@@ -54,7 +55,7 @@ function [weight_matrices, error_time_matrix] = train(weight_matrices, number_of
     endif
 
     plot(error_time_matrix(:,2:3));
-    axis([0, 1, 0, 0.4]);
+    axis([0, 1, 0, 0.3]);
     axis("autox");
     xlabel("epoca");
     ylabel("error");
