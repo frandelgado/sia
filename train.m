@@ -14,7 +14,6 @@ function ret = train(weight_matrices, number_of_cases, is_incremental)
   epoch_error_decreasing_steps = 0;
   previous_weights = {};
   weight_matrices_diff = {};
-
   t = 1;
   error_time_matrix = ones(1, 3);
   while(epoch_error > min_error)
@@ -27,8 +26,8 @@ function ret = train(weight_matrices, number_of_cases, is_incremental)
     endfor
     random_cases_indexes = randperm(number_of_cases+1);
     random_cases_indexes = random_cases_indexes(2:end);
-    if is_incremental != 0
-      weight_matrices = do_incremental_steps(random_cases_indexes, weight_matrices, weight_matrices_diff, data);
+    if is_incremental == 1
+      [weight_matrices, weight_matrices_diff] = do_incremental_steps(random_cases_indexes, weight_matrices, weight_matrices_diff, data);
     else
       weight_matrices = do_batch_steps(random_cases_indexes, weight_matrices, weight_matrices_diff, data);
     endif
@@ -60,7 +59,7 @@ function ret = train(weight_matrices, number_of_cases, is_incremental)
   endwhile
 endfunction
 
-function weight_matrices = do_incremental_steps(random_cases_indexes, weight_matrices, weight_matrices_diff, data)
+function [weight_matrices, weight_matrices_diff] = do_incremental_steps(random_cases_indexes, weight_matrices, weight_matrices_diff, data)
   for caseIndex = random_cases_indexes
     output_values = forward(weight_matrices, data(caseIndex, 1), data(caseIndex, 2));
     [weight_matrices, weight_matrices_diff] = back(weight_matrices, weight_matrices_diff, output_values, [data(caseIndex, 3)]);
