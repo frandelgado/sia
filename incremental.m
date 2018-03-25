@@ -6,6 +6,7 @@ function ret = incremental(weight_matrices, number_of_cases)
   global steps_for_adaptative_eta;
   global use_adaptative_eta;
   global percentage_error_for_adaptative_eta;
+  global max_learning_epochs;
 
   epoch = rows(data)-1;
   min_error = 0.00001;
@@ -16,7 +17,7 @@ function ret = incremental(weight_matrices, number_of_cases)
   weight_matrices_diff = {};
   t = 1;
   error_time_matrix = ones(1, 3);
-  while(epoch_error > min_error)
+  while(epoch_error > min_error  && t <= max_learning_epochs)
     if use_adaptative_eta
       previous_weights = weight_matrices;
       prev_epoch_error = epoch_error;
@@ -53,6 +54,9 @@ function ret = incremental(weight_matrices, number_of_cases)
     plot(error_time_matrix(:,2:3));
     axis([0, 1, 0, 0.5]);
     axis("autox");
+    xlabel ("epoch");
+    ylabel ("error");
+    title ("Generalization and learning errors");
     drawnow();
     t = t + 1;
   endwhile

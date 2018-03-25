@@ -1,4 +1,4 @@
-function ret = train(weight_matrices, number_of_cases, is_incremental)
+function [weight_matrices, error_time_matrix] = train(weight_matrices, number_of_cases, is_incremental)
   global data;
   global n;
   global a_for_adaptative_eta;
@@ -6,6 +6,7 @@ function ret = train(weight_matrices, number_of_cases, is_incremental)
   global steps_for_adaptative_eta;
   global use_adaptative_eta;
   global percentage_error_for_adaptative_eta;
+  global max_learning_epochs;
 
   epoch = rows(data)-1;
   min_error = 0.00001;
@@ -16,7 +17,7 @@ function ret = train(weight_matrices, number_of_cases, is_incremental)
   weight_matrices_diff = {};
   t = 1;
   error_time_matrix = ones(1, 3);
-  while(epoch_error > min_error)
+  while(epoch_error > min_error && t <= max_learning_epochs)
     if use_adaptative_eta
       previous_weights = weight_matrices;
       prev_epoch_error = epoch_error;
@@ -34,7 +35,8 @@ function ret = train(weight_matrices, number_of_cases, is_incremental)
 
     [epoch_error, error_time_matrix] = aproximation_error(number_of_cases, weight_matrices, data, error_time_matrix, t);
     error_time_matrix = generalization_error(number_of_cases, weight_matrices, data, error_time_matrix, t, epoch);
-
+    error_time_matrix(t, 1) = t;
+    error_time_matrix(t, 4) = n;
     if use_adaptative_eta
       if epoch_error < prev_epoch_error
         epoch_error_decreasing_steps = epoch_error_decreasing_steps + 1;
@@ -52,8 +54,12 @@ function ret = train(weight_matrices, number_of_cases, is_incremental)
     endif
 
     plot(error_time_matrix(:,2:3));
-    axis([0, 1, 0, 0.5]);
+    axis([0, 1, 0, 0.4]);
     axis("autox");
+    xlabel("epoca");
+    ylabel("error");
+    title("Error de generalizacion y de aprendizaje en funcion de la epoca");
+    legend ("Aprendizaje", "Generalizacion");
     drawnow();
     t = t + 1;
   endwhile
