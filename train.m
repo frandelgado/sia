@@ -104,7 +104,7 @@ function error_time_matrix = generalization_error(number_of_cases, weight_matric
     gen_error = gen_error + quad_error(data(i,3), output_values(end, 1));
   endfor
 
-  gen_error = gen_error/number_of_cases;
+  gen_error = gen_error/(epoch - number_of_cases);
   error_time_matrix(t, 1) = t;
   error_time_matrix(t, 3) = gen_error;
   gen_error
