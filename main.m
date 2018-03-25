@@ -3,10 +3,10 @@
 global n = 0.02;
 global use_momentum = true;
 global use_adaptative_eta = true;
-global percentage_error_for_adaptative_eta = 3.5;
-global a_for_adaptative_eta = 1.1;
-global b_for_adaptative_eta = 0.75;
-global steps_for_adaptative_eta = 5;
+global percentage_error_for_adaptative_eta = 4;
+global a_for_adaptative_eta = 1.5;
+global b_for_adaptative_eta = 0.95;
+global steps_for_adaptative_eta = 3;
 global momentum_alpha = 0.9;
 global activation_function = 1; # 0 for hyperbolic tangent or 1 for exponencial.
 global data = dlmread("terrain04.data"); # Reads data and stores it in a matrix.
