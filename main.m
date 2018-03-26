@@ -1,8 +1,8 @@
 # Prevent Octave from thinking that this is a function file:
 1;
 global n = 0.02;
-global use_momentum = true;
 global use_adaptative_eta = true;
+global use_momentum = true;
 global percentage_error_for_adaptative_eta = 3;
 global a_for_adaptative_eta = 1.4;
 global b_for_adaptative_eta = 0.95;
@@ -24,6 +24,7 @@ if is_test_case != 1
   [weight_matrices, error_time_matrix] = train(weight_matrices, number_of_cases, is_incremental);
 else
   test_cases = {
+    # Arq, act_func, n, use_adaptive, use_momentum, momentum_alpha
     {[2, 50, 1], 0, 0.02, false, false, 0.9}, #1
     {[2, 30, 20, 1], 0, 0.02, false, false, 0.9},
     {[2, 10, 1], 0, 0.02, false, false, 0.9},

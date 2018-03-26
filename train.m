@@ -93,9 +93,6 @@ function weight_matrices = do_batch_steps(random_cases_indexes, weight_matrices,
     for caseIndex = random_cases_indexes
       weight_matrices_diff{i} = weight_matrices_diff{i} + weight_matrices_diff_vector{caseIndex}{i};
     endfor
-  endfor
-
-  for i = 1:length(weight_matrices)
     weight_matrices{i} = weight_matrices{i} + weight_matrices_diff{i};
   endfor
 endfunction
