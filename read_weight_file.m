@@ -1,5 +1,5 @@
-function ret = read_weight_file()
-  fid = fopen("./test_results/weights_1.txt");
+function weight_matrices = read_weight_file(file_num)
+  fid = fopen(sprintf("./test_results/weights_%d.txt", file_num));
   weight_matrices = {};
   weight_matrices{1} = [];
   weight_matrix_index = 1;
