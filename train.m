@@ -110,6 +110,7 @@ function [aprox_error, error_time_matrix] = aproximation_error(number_of_cases, 
 endfunction
 
 function error_time_matrix = generalization_error(number_of_cases, weight_matrices, data, error_time_matrix, t, epoch)
+  global is_test_case;
   gen_error = 0;
   for i = number_of_cases+2:epoch+1
     output_values = forward(weight_matrices,data(i,1), data(i,2));
