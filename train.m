@@ -54,7 +54,7 @@ function [weight_matrices, error_time_matrix] = train(weight_matrices, number_of
         momentum_alpha = 0;
       endif
       if is_test_case != 1
-        printf("n: %d", n);
+        printf("n: %d\n", n);
       endif
     endif
 
