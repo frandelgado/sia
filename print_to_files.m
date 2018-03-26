@@ -1,4 +1,5 @@
 function ret = print_to_files(result_weight_matrices, error_time_matrix, run_number)
+  unlink(sprintf("./test_results/weights_%d.txt", run_number));
   for i = 1:length(result_weight_matrices)
     dlmwrite(sprintf("./test_results/weights_%d.txt", run_number), result_weight_matrices{i}, '-append', 'delimiter', '\t', 'precision', 6, 'roffset', 1);
   endfor

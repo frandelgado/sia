@@ -14,6 +14,8 @@ function [weight_matrices, error_time_matrix] = train(weight_matrices, number_of
   min_error = 0.00001;
   epoch_error = 1;
   prev_epoch_error = 1;
+  gen_epoch_error = 1;
+  prev_gen_epoch_error = 1;
   epoch_error_decreasing_steps = 0;
   previous_weights = {};
   weight_matrices_diff = {};
@@ -23,6 +25,7 @@ function [weight_matrices, error_time_matrix] = train(weight_matrices, number_of
     if use_adaptative_eta
       previous_weights = weight_matrices;
       prev_epoch_error = epoch_error;
+      prev_gen_epoch_error = gen_epoch_error;
     endif
     for i = 1:length(weight_matrices)
       weight_matrices_diff{i} = zeros(rows(weight_matrices{i}), columns(weight_matrices{i}));
@@ -36,7 +39,7 @@ function [weight_matrices, error_time_matrix] = train(weight_matrices, number_of
     endif
 
     [epoch_error, error_time_matrix] = aproximation_error(number_of_cases, weight_matrices, data, error_time_matrix, t);
-    error_time_matrix = generalization_error(number_of_cases, weight_matrices, data, error_time_matrix, t, epoch);
+    [gen_epoch_error, error_time_matrix] = generalization_error(number_of_cases, weight_matrices, data, error_time_matrix, t, epoch);
     error_time_matrix(t, 1) = t;
     error_time_matrix(t, 4) = n;
     if is_test_case != 1
@@ -53,6 +56,7 @@ function [weight_matrices, error_time_matrix] = train(weight_matrices, number_of
         weight_matrices = previous_weights;
         n = b_for_adaptative_eta * n;
         epoch_error = prev_epoch_error;
+        gen_epoch_error = prev_gen_epoch_error;
         epoch_error_decreasing_steps = 0;
         momentum_alpha = 0;
       endif
@@ -60,6 +64,10 @@ function [weight_matrices, error_time_matrix] = train(weight_matrices, number_of
         printf("n: %d\n", n);
       endif
     endif
+    error_time_matrix(t, 1) = t;
+    error_time_matrix(t, 2) = epoch_error;
+    error_time_matrix(t, 1) = t;
+    error_time_matrix(t, 3) = gen_epoch_error;
 
     if is_test_case != 1
       plot(error_time_matrix(:,2:3));
@@ -108,12 +116,10 @@ function [aprox_error, error_time_matrix] = aproximation_error(number_of_cases, 
   if is_test_case != 1
     printf("L error: %d\n", aprox_error);
   endif
-  error_time_matrix(t, 1) = t;
-  error_time_matrix(t, 2) = aprox_error;
   aprox_error;
 endfunction
 
-function error_time_matrix = generalization_error(number_of_cases, weight_matrices, data, error_time_matrix, t, epoch)
+function [gen_error, error_time_matrix] = generalization_error(number_of_cases, weight_matrices, data, error_time_matrix, t, epoch)
   global is_test_case;
   gen_error = 0;
   for i = number_of_cases+2:epoch+1
@@ -125,8 +131,6 @@ function error_time_matrix = generalization_error(number_of_cases, weight_matric
   if is_test_case != 1
     printf("G error: %d\n", gen_error);
   endif
-  error_time_matrix(t, 1) = t;
-  error_time_matrix(t, 3) = gen_error;
   gen_error;
   if is_test_case != 1
     printf("-------------------\n");
