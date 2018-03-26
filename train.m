@@ -20,6 +20,9 @@ function [weight_matrices, error_time_matrix] = train(weight_matrices, number_of
   t = 1;
   error_time_matrix = ones(1, 3);
   while(epoch_error > min_error && t <= max_learning_epochs)
+    if is_test_case != 1
+      printf("Epoch: %d\n", t);
+    endif
     if use_adaptative_eta
       previous_weights = weight_matrices;
       prev_epoch_error = epoch_error;
@@ -98,12 +101,16 @@ function weight_matrices = do_batch_steps(random_cases_indexes, weight_matrices,
 endfunction
 
 function [aprox_error, error_time_matrix] = aproximation_error(number_of_cases, weight_matrices, data, error_time_matrix, t)
+  global is_test_case;
   aprox_error = 0;
   for i = 2:number_of_cases+1
     output_values = forward(weight_matrices,data(i,1), data(i,2));
     aprox_error = aprox_error + quad_error(data(i,3), output_values(end, 1));
   endfor
   aprox_error = aprox_error/number_of_cases;
+  if is_test_case != 1
+    printf("A error: %d\n", aprox_error);
+  endif
   error_time_matrix(t, 1) = t;
   error_time_matrix(t, 2) = aprox_error;
   aprox_error;
@@ -118,6 +125,9 @@ function error_time_matrix = generalization_error(number_of_cases, weight_matric
   endfor
 
   gen_error = gen_error/(epoch - number_of_cases);
+  if is_test_case != 1
+    printf("G error: %d\n", gen_error);
+  endif
   error_time_matrix(t, 1) = t;
   error_time_matrix(t, 3) = gen_error;
   gen_error;
