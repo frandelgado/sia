@@ -32,3 +32,8 @@ function ret = propagate(weight_matrix, output_values, current_input_index, last
     output_values(current_input_index + 1, :) = horzcat(with_applied_function, zeros(1, diff_size));
     ret = output_values;
 endfunction
+
+# Activation function.
+function ret = sig_exp(z)
+  ret = 1 ./ (1 + e.^-z);
+endfunction

@@ -21,5 +21,4 @@ function weight_matrices = read_weight_file(file_num)
     endif
   endwhile
   fclose (fid);
-  weight_matrices
 endfunction

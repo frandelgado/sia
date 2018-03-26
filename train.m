@@ -132,8 +132,3 @@ function error_time_matrix = generalization_error(number_of_cases, weight_matric
     printf("-------------------\n");
   endif
 endfunction
-
-# Activation function.
-function ret = sig_exp(z)
-  ret = 1 ./ (1 + e.^-z);
-endfunction
