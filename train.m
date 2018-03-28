@@ -30,12 +30,12 @@ function [weight_matrices, error_time_matrix] = train(weight_matrices, number_of
     for i = 1:length(weight_matrices)
       weight_matrices_diff{i} = zeros(rows(weight_matrices{i}), columns(weight_matrices{i}));
     endfor
-    random_cases_indexes = randperm(number_of_cases+1);
-    random_cases_indexes = random_cases_indexes(2:end);
+
+    random_cases_indexes = 2:number_of_cases+1;
     if is_incremental == 1
       [weight_matrices, weight_matrices_diff] = do_incremental_steps(random_cases_indexes, weight_matrices, weight_matrices_diff, data);
     else
-      weight_matrices = do_batch_steps(random_cases_indexes, weight_matrices, weight_matrices_diff, data);
+      [weight_matrices, weight_matrices_diff] = do_batch_steps(random_cases_indexes, weight_matrices, weight_matrices_diff, data);
     endif
 
     [epoch_error, error_time_matrix] = aproximation_error(number_of_cases, weight_matrices, data, error_time_matrix, t);
@@ -71,16 +71,51 @@ function [weight_matrices, error_time_matrix] = train(weight_matrices, number_of
 
     if is_test_case != 1
       plot(error_time_matrix(:,2:3));
-      axis([0, 1, 0, 0.3]);
+      axis([0, 1, 0, 0.05]);
       axis("autox");
       xlabel("epoca");
       ylabel("error");
       title("Error de generalizacion y de aprendizaje en funcion de la epoca");
       legend ("Aprendizaje", "Generalizacion");
       drawnow();
+      if mod(t, 100) == 0
+        draw_meshgrid(weight_matrices, data);
+      endif
     endif
     t = t + 1;
   endwhile
+endfunction
+
+function draw_meshgrid(weight_matrices, data)
+  step = 0.01;
+  max_x = 0;
+  min_x = 0;
+  max_y = 0;
+  min_y = 0;
+  for idx = 2:rows(data)
+    min_x = min(min_x, data(idx, 1));
+    max_x = max(max_x, data(idx, 1));
+  endfor
+  for idx = 2:rows(data)
+    min_y = min(min_y, data(idx, 2));
+    max_y = max(max_y, data(idx, 2));
+  endfor
+
+  x = linspace(min_x, max_x, 100);
+  y = linspace(min_y, max_y, 100);
+  [xx, yy] = meshgrid(x, y);
+  zz = xx * 0;
+  for idx_x = 1:length(x)
+    for idx_y = 1:length(y)
+      x_coord = xx(idx_x, idx_y);
+      y_coord = yy(idx_x, idx_y);
+      output_values = forward(weight_matrices, x_coord, y_coord);
+      zz(idx_x, idx_y) = output_values(end, 1);
+    endfor
+  endfor
+  figure;
+  surf(xx, yy, zz);
+  drawnow;
 endfunction
 
 function [weight_matrices, weight_matrices_diff] = do_incremental_steps(random_cases_indexes, weight_matrices, weight_matrices_diff, data)
@@ -90,7 +125,7 @@ function [weight_matrices, weight_matrices_diff] = do_incremental_steps(random_c
   endfor
 endfunction
 
-function weight_matrices = do_batch_steps(random_cases_indexes, weight_matrices, weight_matrices_diff, data)
+function [weight_matrices, weight_matrices_diff] = do_batch_steps(random_cases_indexes, weight_matrices, weight_matrices_diff, data)
   weight_matrices_diff_vector = {};
   for caseIndex = random_cases_indexes
     output_values = forward(weight_matrices, data(caseIndex, 1), data(caseIndex, 2));
