@@ -18,7 +18,7 @@ global enable_linear_output = 1;
 global max_learning_epochs = 50000; # Max learning epochs to run
 global is_test_case = 0; # 0 to test using above config, 1 to begin custom tests and print results to output files
 # For use case
-global is_use_case = 0; # 0 to train de neural network, 1 to use one specific neural network
+global is_use_case = 1; # 0 to train de neural network, 1 to use one specific neural network
 global use_case_file_num = 5; # Weights file number
 global use_case_x = 0.3119; # X input
 global use_case_y = -0.8417; # Y input
@@ -79,4 +79,11 @@ else
   output_values = forward(weight_matrices, use_case_x, use_case_y);
   result_z = output_values(end, 1)
   error_z = ((output_values(end, 1)/use_case_expected_z) - 1)*100
+
+  figure;
+  draw_map(data);
+  hold on;
+  draw_meshgrid(weight_matrices, data);
+  drawnow;
+  key = input("Press any key to exit");
 endif
