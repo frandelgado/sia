@@ -1,7 +1,7 @@
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 public interface GenericSearchProblem {
-    ArrayList<Action> getNextPossibleStep(State state);
+    LinkedList<Action> getNextPossibleAction(State state);
     State nextState(State state, Action action);
     State initialState();
     double StepCost(State state, Action action, State results);
