@@ -10,4 +10,63 @@
     <module>solver</module>
     <module>rollingcube</module>
   </modules>
+
+    <properties>
+        <log4j.version>2.11.0</log4j.version>
+        <junit.version>4.11</junit.version>
+        <args4j.version>2.33</args4j.version>
+        <sia.version>1.0</sia.version>
+        <jetbrains.version>13.0</jetbrains.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/args4j/args4j -->
+        <dependency>
+            <groupId>args4j</groupId>
+            <artifactId>args4j</artifactId>
+            <version>${args4j.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.jetbrains/annotations -->
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>${jetbrains.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ar.com.itba.sia</groupId>
+            <artifactId>search-interfaces</artifactId>
+            <version>${sia.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>repo</id>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <url>file://${maven.multiModuleProjectDirectory}/repo</url>
+        </repository>
+    </repositories>
 </project>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>ar.com.itba.sia</groupId>
+  <artifactId>search-interfaces</artifactId>
+  <versioning>
+    <release>1.0</release>
+    <versions>
+      <version>LATEST</version>
+      <version>1.0</version>
+    </versions>
+    <lastUpdated>20180418221352</lastUpdated>
+  </versioning>
+</metadata>
