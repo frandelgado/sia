@@ -22,4 +22,8 @@ public class RollingCubeGame implements Problem<RollingCubeState> {
     public boolean isResolved(RollingCubeState rollingCubeState) {
         return false;
     }
+
+    public RollingCubeGame(){
+
+    }
 }

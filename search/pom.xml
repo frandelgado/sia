@@ -19,6 +19,7 @@
         <jetbrains.version>13.0</jetbrains.version>
     </properties>
 
+    <dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -55,6 +56,7 @@
         </dependency>
 
     </dependencies>
+    </dependencyManagement>
 
     <repositories>
         <repository>
