@@ -2,6 +2,7 @@ package ar.edu.itba.sia.g4.search.rollingcube.game;
 
 import ar.com.itba.sia.Problem;
 import ar.com.itba.sia.Rule;
+import ar.edu.itba.sia.g4.search.rollingcube.action.FaceColor;
 import ar.edu.itba.sia.g4.search.rollingcube.action.RollDirection;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,6 +52,7 @@ public class RollingCubeGame implements Problem<Board> {
         RollDirection rollDir;
         Cube cubeToMove;
         Board newBoard;
+        FaceColor newFaceColor;
         int size = rollDirections.length;
         int i;
         int j;
@@ -60,7 +62,13 @@ public class RollingCubeGame implements Problem<Board> {
             j = emptySpot[1] + rollDir.j;
             newBoard = board.cloneBoard();
             cubeToMove = newBoard.getMatrix()[i][j];
-            cubeToMove.roll(rollDir);
+            if(cubeToMove.getFaceColor() == FaceColor.ALL_WHITE){
+                newBoard.substractWhite();
+            }
+            newFaceColor = cubeToMove.roll(rollDir);
+            if(newFaceColor == FaceColor.ALL_WHITE){
+                newBoard.addWhite();
+            }
             newBoard.getMatrix()[emptySpot[0]][emptySpot[1]] = cubeToMove;
             newBoard.setEmptySpot(i, j);
             rules.add(new RollingCubeRule(newBoard));

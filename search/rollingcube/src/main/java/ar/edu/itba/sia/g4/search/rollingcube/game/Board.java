@@ -6,6 +6,7 @@ public class Board {
 
     private Cube[][] matrix;
     private int[] emptySpot;
+    private int whiteCount;
 
     public Board(){
         int i;
@@ -18,29 +19,20 @@ public class Board {
         }
         this.matrix[1][1] = null;
         this.emptySpot = new int[]{1, 1};
+        this.whiteCount = 0;
     }
 
-    public Board(Cube[][] matrix, int[] emptySpot){
+    public Board(Cube[][] matrix, int[] emptySpot, int whiteCount){
         this.matrix = matrix;
         this.emptySpot = emptySpot;
+        this.whiteCount = whiteCount;
     }
 
     public boolean isResolved() {
         if(this.matrix[1][1] != null) {
             return false;
         }
-        int i;
-        int j;
-        Cube cube;
-        for(i = 0;i < 3; i++){
-            for(j = 0; j < 3;j++){
-                cube = this.matrix[i][j];
-                if(cube != null && cube.getFaceColor() != FaceColor.ALL_WHITE){
-                    return false;
-                }
-            }
-        }
-        return true;
+        return this.whiteCount == 8;
     }
 
     public int[] getEmptySpot() {
@@ -64,8 +56,17 @@ public class Board {
         this.matrix[i][j] = null;
     }
 
+    public void addWhite(){
+        this.whiteCount++;
+    }
+
+    public void substractWhite(){
+        this.whiteCount--;
+    }
+
     public Board cloneBoard() {
         Cube[][] newMatrix = new Cube[3][3];
+        int newWhiteCount;
         int[] newEmptySpot;
         int i;
         int j;
@@ -78,6 +79,7 @@ public class Board {
         }
         newMatrix[this.emptySpot[0]][this.emptySpot[1]] = null;
         newEmptySpot = new int[]{this.emptySpot[0], this.emptySpot[1]};
-        return new Board(matrix, newEmptySpot);
+        newWhiteCount = this.whiteCount;
+        return new Board(matrix, newEmptySpot, newWhiteCount);
     }
 }

@@ -18,8 +18,9 @@ public class Cube {
         return faceColor;
     }
 
-    public void roll(RollDirection rollDirection){
+    public FaceColor roll(RollDirection rollDirection){
         this.faceColor = this.faceColor.roll(rollDirection);
+        return this.faceColor;
     }
 
     public Cube cloneCube() {
