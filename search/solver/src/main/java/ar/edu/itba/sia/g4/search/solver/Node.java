@@ -1,18 +1,20 @@
 package ar.edu.itba.sia.g4.search.solver;
 
 public class Node<E> implements Comparable {
-    private Node<E> parent;
-    private E state;
-    private double cost;
-    private double heuristicCost;
-    private int expandedNodes;
-    private int visitedNodes;
+    private final Node<E> parent;
+    private final E state;
+    private final double cost;
+    private final double heuristicCost;
+    private final int expandedNodes;
+    private final int visitedNodes;
 
     public Node(E state, int expandedNodes,int visitedNodes, double cost, double heuristicCost, Node parent){
         this.state = state;
         this.parent = parent;
         this.expandedNodes = expandedNodes;
         this.visitedNodes = visitedNodes;
+        this.cost = cost;
+        this.heuristicCost = heuristicCost;
     }
 
     @Override

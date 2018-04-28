@@ -3,11 +3,11 @@ package ar.edu.itba.sia.g4.search.solver;
 import ar.com.itba.sia.Heuristic;
 import ar.com.itba.sia.Problem;
 import ar.edu.itba.sia.g4.search.solver.cli.CliOptions;
+import org.jetbrains.annotations.NotNull;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 
-import java.util.LinkedList;
-import java.util.PriorityQueue;
+import java.lang.reflect.InvocationTargetException;
 
 public class SolverCLI {
 
@@ -24,24 +24,54 @@ public class SolverCLI {
         return values;
     }
 
-    private static Heuristic getHeuristic(CliOptions options) {
+    private static Heuristic getHeuristic(@NotNull final CliOptions options) {
+        try {
+            ClassLoader loader = ClassLoader.getSystemClassLoader();
+            String heuristic = "ar.edu.itba.sia.g4.search.rollingcube.heuristic.NilHeuristic";
+            Class<Heuristic> Heuristic = (Class<Heuristic>) loader.loadClass(heuristic);
+            return Heuristic.getDeclaredConstructor().newInstance();
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
-    private static Problem getProblem(CliOptions options) {
+    private static Problem getProblem(@NotNull final CliOptions options) {
+        try {
+            ClassLoader loader = ClassLoader.getSystemClassLoader();
+            String game = "ar.edu.itba.sia.g4.search.rollingcube.game.RollingCubeGame";
+            Class<Problem> Problem = (Class<Problem>) loader.loadClass(game);
+            return Problem.getDeclaredConstructor().newInstance();
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
-    private static Solver getSolver(CliOptions options) {
-        final Problem problem = getProblem(options);
-        final Heuristic heuristic = getHeuristic(options);
-        Solver result = new Solver(problem, heuristic);
-        return null;
+    private static Solver getSolver(@NotNull final CliOptions options) {
+        return new Solver(getProblem(options), getHeuristic(options));
     }
 
-    private static int getSolverBackend(CliOptions options) {
+    private static int getSolverBackend(@NotNull final CliOptions options) {
         int type = 0;
-
         type = options.isDfs() ? 0 : type;
         type = options.isBfs() ? 1 : type;
         type = options.isAstar() ? 2 : type;
@@ -71,8 +101,6 @@ public class SolverCLI {
 
         System.out.println("The costs were:");
         System.out.printf("- Total raw cost: %e", cost);
-
-
     }
 
 

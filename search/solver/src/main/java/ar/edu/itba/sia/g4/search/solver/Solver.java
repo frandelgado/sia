@@ -3,6 +3,7 @@ package ar.edu.itba.sia.g4.search.solver;
 import ar.com.itba.sia.Heuristic;
 import ar.com.itba.sia.Problem;
 import ar.com.itba.sia.Rule;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +14,7 @@ public class Solver<E> {
     Heuristic<E> heuristic;
     ListFactory listFactory;
 
-    public Solver(Problem<E> problem, Heuristic<E> heuristic){
+    public Solver(@NotNull Problem<E> problem, @NotNull Heuristic<E> heuristic){
         this.problem = problem;
         this.heuristic = heuristic;
         this.listFactory = new ListFactory();
@@ -47,7 +48,7 @@ public class Solver<E> {
         return lastExpandedNode;
     }
 
-    private LinkedList<Node<E>> generateFrontierStates(Node<E> node, int expandedNodesCount, int visitedNodesCount){
+    private LinkedList<Node<E>> generateFrontierStates(@NotNull Node<E> node, int expandedNodesCount, int visitedNodesCount){
         List<Rule<E>> rules = problem.getRules(node.getState());
         LinkedList<Node<E>> frontierNodes = new LinkedList<>();
         for(Rule<E> r : rules){
