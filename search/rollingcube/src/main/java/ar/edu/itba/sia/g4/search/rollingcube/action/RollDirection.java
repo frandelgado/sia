@@ -13,4 +13,19 @@ public enum RollDirection {
         this.i = i;
         this.j = j;
     }
+
+    public RollDirection getOppositeDirection(){
+        switch (this){
+            case EAST:
+                return WEST;
+            case WEST:
+                return EAST;
+            case NORTH:
+                return SOUTH;
+            case SOUTH:
+                return NORTH;
+            default:
+                throw new IllegalArgumentException("Can't roll that way");
+        }
+    }
 }

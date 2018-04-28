@@ -65,7 +65,7 @@ public class RollingCubeGame implements Problem<Board> {
             if(cubeToMove.getFaceColor() == FaceColor.ALL_WHITE){
                 newBoard.substractWhite();
             }
-            newFaceColor = cubeToMove.roll(rollDir);
+            newFaceColor = cubeToMove.roll(rollDir.getOppositeDirection());
             if(newFaceColor == FaceColor.ALL_WHITE){
                 newBoard.addWhite();
             }
