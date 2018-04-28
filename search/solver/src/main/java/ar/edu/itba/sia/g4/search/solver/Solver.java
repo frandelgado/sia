@@ -3,11 +3,9 @@ package ar.edu.itba.sia.g4.search.solver;
 import ar.com.itba.sia.Heuristic;
 import ar.com.itba.sia.Problem;
 import ar.com.itba.sia.Rule;
-import ar.edu.itba.sia.g4.search.rollingcube.game.RollingCubeGame;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
 
 public class Solver<E> {
 
@@ -23,7 +21,7 @@ public class Solver<E> {
 
     public Node<E> solve(int searchType){
         GenericList<Node> queue = listFactory.getList(searchType);
-        LinkedList<Node<E>> fronteerNodes;
+        LinkedList<Node<E>> frontierNodes;
         int expandedNodesCount = 1;
         int vistedNodesCount = 1;
         E state = problem.getInitialState();
@@ -38,8 +36,8 @@ public class Solver<E> {
 
         while(!problem.isResolved(lastExpandedNode.getState())){
             vistedNodesCount++;
-            fronteerNodes = generateFronteerStates(lastExpandedNode, expandedNodesCount, vistedNodesCount);
-            for(Node<E> n : fronteerNodes){
+            frontierNodes = generateFrontierStates(lastExpandedNode, expandedNodesCount, vistedNodesCount);
+            for(Node<E> n : frontierNodes){
                 queue.add(n);
                 expandedNodesCount++;
             }
@@ -49,14 +47,14 @@ public class Solver<E> {
         return lastExpandedNode;
     }
 
-    private LinkedList<Node<E>> generateFronteerStates(Node<E> node, int expandedNodesCount, int visitedNodesCount){
+    private LinkedList<Node<E>> generateFrontierStates(Node<E> node, int expandedNodesCount, int visitedNodesCount){
         List<Rule<E>> rules = problem.getRules(node.getState());
-        LinkedList<Node<E>> fronteerNodes = new LinkedList<>();
+        LinkedList<Node<E>> frontierNodes = new LinkedList<>();
         for(Rule<E> r : rules){
             E state = r.applyToState(node.getState());
             Node<E> newNode = new Node<>(state, expandedNodesCount, visitedNodesCount,node.getCost() + r.getCost(), heuristic.getValue(state), node);
-            fronteerNodes.add(newNode);
+            frontierNodes.add(newNode);
         }
-        return fronteerNodes;
+        return frontierNodes;
     }
 }
