@@ -2,7 +2,6 @@ package ar.edu.itba.sia.g4.search.solver;
 
 public class ListFactory {
 
-
     public static GenericList<Node> getList(int type){
         if(type == 0){
             return new Stack<>();
