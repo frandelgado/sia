@@ -37,13 +37,13 @@ public class Solver<E> {
         Node<E> lastExpandedNode = new Node<>(state,expandedNodesCount,vistedNodesCount, 0, heuristic.getValue(state),null);
 
         while(!problem.isResolved(lastExpandedNode.getState())){
+            vistedNodesCount++;
             fronteerNodes = generateFronteerStates(lastExpandedNode, expandedNodesCount, vistedNodesCount);
             for(Node<E> n : fronteerNodes){
                 queue.add(n);
                 expandedNodesCount++;
             }
             lastExpandedNode = queue.poll();
-            vistedNodesCount++;
         }
 
         return lastExpandedNode;
