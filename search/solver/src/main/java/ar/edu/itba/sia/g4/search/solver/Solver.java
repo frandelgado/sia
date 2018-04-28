@@ -26,6 +26,13 @@ public class Solver<E> {
         LinkedList<Node<E>> fronteerNodes;
         int expandedNodesCount = 0;
         E state = problem.getInitialState();
+        double heuristicCost;
+
+        if(heuristic != null)
+            heuristicCost = heuristic.getValue(state);
+        else
+            heuristicCost = 0;
+        
         Node<E> lastExpandedNode = new Node<>(state,0, 0, heuristic.getValue(state),null);
 
         while(!problem.isResolved(lastExpandedNode.getState())){
