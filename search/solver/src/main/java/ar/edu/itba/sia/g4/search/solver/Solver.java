@@ -29,7 +29,7 @@ public class Solver<E> {
         Node<E> lastExpandedNode = new Node<>(state,0, 0, heuristic.getValue(state),null);
 
         while(!problem.isResolved(lastExpandedNode.getState())){
-            fronteerNodes = generateFronteerStates(lastExpandedNode, expandedNodesCountx);
+            fronteerNodes = generateFronteerStates(lastExpandedNode, expandedNodesCount);
             for(Node<E> n : fronteerNodes){
                 queue.add(n);
                 expandedNodesCount++;
