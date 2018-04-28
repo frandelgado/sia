@@ -1,6 +1,15 @@
-Search Solver
-=============
+# Search Solver
 
+<!-- TOC -->
+
+* [Search Solver](#search-solver)
+* [Installation](#installation)
+  * [Get the right dependencies](#get-the-right-dependencies)
+  * [How do I add jars to my local repo?](#how-do-i-add-jars-to-my-local-repo)
+  * [How do I compile the jars?](#how-do-i-compile-the-jars)
+  * [Where can I find the files?](#where-can-i-find-the-files)
+
+<!-- /TOC -->
 
 # Installation
 
@@ -16,7 +25,7 @@ You need:
 
 Like this:
 
-`mvn install:install-file -DlocalRepositoryPath=repo -DcreateChecksum=true -Dpackaging=jar -Dfile=GPS.jar  -DgroupId=ar.com.itba.sia -DartifactId=search-interfaces -Dversion=1.0`
+`mvn install:install-file -DlocalRepositoryPath=repo -DcreateChecksum=true -Dpackaging=jar -Dfile=GPS.jar -DgroupId=ar.com.itba.sia -DartifactId=search-interfaces -Dversion=1.0`
 
 ## How do I compile the jars?
 
