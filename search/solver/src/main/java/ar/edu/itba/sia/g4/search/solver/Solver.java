@@ -13,26 +13,28 @@ public class Solver<E> {
 
     Problem<E> problem;
     Heuristic<E> heuristic;
+    ListFactory listFactory;
 
     public Solver(Problem<E> problem, Heuristic<E> heuristic){
         this.problem = problem;
         this.heuristic = heuristic;
+        this.listFactory = new ListFactory();
     }
 
-    public Node<E> solve(){
-        PriorityQueue<Node> pqueue = new PriorityQueue<>();
+    public Node<E> solve(int searchType){
+        GenericList<Node> queue = listFactory.getList(searchType);
         LinkedList<Node<E>> fronteerNodes;
         int expandedNodesCount = 0;
         E state = problem.getInitialState();
         Node<E> lastExpandedNode = new Node<>(state,0, 0, heuristic.getValue(state),null);
 
         while(!problem.isResolved(lastExpandedNode.getState())){
-            fronteerNodes = generateFronteerStates(lastExpandedNode, expandedNodesCount);
+            fronteerNodes = generateFronteerStates(lastExpandedNode, expandedNodesCountx);
             for(Node<E> n : fronteerNodes){
-                pqueue.add(n);
+                queue.add(n);
                 expandedNodesCount++;
             }
-            lastExpandedNode = pqueue.poll();
+            lastExpandedNode = queue.poll();
         }
 
         return lastExpandedNode;
