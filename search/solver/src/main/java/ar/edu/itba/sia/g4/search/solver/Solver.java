@@ -24,7 +24,8 @@ public class Solver<E> {
     public Node<E> solve(int searchType){
         GenericList<Node> queue = listFactory.getList(searchType);
         LinkedList<Node<E>> fronteerNodes;
-        int expandedNodesCount = 0;
+        int expandedNodesCount = 1;
+        int vistedNodesCount = 1;
         E state = problem.getInitialState();
         double heuristicCost;
 
@@ -32,27 +33,28 @@ public class Solver<E> {
             heuristicCost = heuristic.getValue(state);
         else
             heuristicCost = 0;
-        
-        Node<E> lastExpandedNode = new Node<>(state,0, 0, heuristic.getValue(state),null);
+
+        Node<E> lastExpandedNode = new Node<>(state,expandedNodesCount,vistedNodesCount, 0, heuristic.getValue(state),null);
 
         while(!problem.isResolved(lastExpandedNode.getState())){
-            fronteerNodes = generateFronteerStates(lastExpandedNode, expandedNodesCount);
+            fronteerNodes = generateFronteerStates(lastExpandedNode, expandedNodesCount, vistedNodesCount);
             for(Node<E> n : fronteerNodes){
                 queue.add(n);
                 expandedNodesCount++;
             }
             lastExpandedNode = queue.poll();
+            vistedNodesCount++;
         }
 
         return lastExpandedNode;
     }
 
-    private LinkedList<Node<E>> generateFronteerStates(Node<E> node, int expandedNodesCount){
+    private LinkedList<Node<E>> generateFronteerStates(Node<E> node, int expandedNodesCount, int visitedNodesCount){
         List<Rule<E>> rules = problem.getRules(node.getState());
         LinkedList<Node<E>> fronteerNodes = new LinkedList<>();
         for(Rule<E> r : rules){
             E state = r.applyToState(node.getState());
-            Node<E> newNode = new Node<>(state, expandedNodesCount,node.getCost() + r.getCost(), heuristic.getValue(state), node);
+            Node<E> newNode = new Node<>(state, expandedNodesCount, visitedNodesCount,node.getCost() + r.getCost(), heuristic.getValue(state), node);
             fronteerNodes.add(newNode);
         }
         return fronteerNodes;
