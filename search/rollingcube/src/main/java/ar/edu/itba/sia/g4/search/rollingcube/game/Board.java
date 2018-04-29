@@ -1,12 +1,18 @@
 package ar.edu.itba.sia.g4.search.rollingcube.game;
 
-import ar.edu.itba.sia.g4.search.rollingcube.action.FaceColor;
 
-public class Board {
+import ar.edu.itba.sia.g4.search.rollingcube.tools.Observable;
+import ar.edu.itba.sia.g4.search.rollingcube.tools.Observer;
+import ar.edu.itba.sia.g4.search.rollingcube.graphics.BoardGraphicsHandler;
+
+
+public class Board implements Observable<BoardGraphicsHandler>{
 
     private Cube[][] matrix;
     private int[] emptySpot;
     private int whiteCount;
+
+    private Observer<Board> observer;
 
     public Board(){
         int i;
@@ -64,6 +70,10 @@ public class Board {
         this.whiteCount--;
     }
 
+    public Cube[][] getCubeMatrix(){
+        return this.matrix;
+    }
+
     public Board cloneBoard() {
         Cube[][] newMatrix = new Cube[3][3];
         int newWhiteCount;
@@ -81,5 +91,26 @@ public class Board {
         newEmptySpot = new int[]{this.emptySpot[0], this.emptySpot[1]};
         newWhiteCount = this.whiteCount;
         return new Board(matrix, newEmptySpot, newWhiteCount);
+    }
+
+    @Override
+    public void addObserver(BoardGraphicsHandler observer) {
+        if(this.observer == null){
+            this.observer = observer;
+        }
+    }
+
+    @Override
+    public void removeObserver(BoardGraphicsHandler observer) {
+        if(this.observer != null){
+            this.observer = null;
+        }
+    }
+
+    @Override
+    public void notifyObservers() {
+        if(observer != null){
+            this.observer.Update(this);
+        }
     }
 }
