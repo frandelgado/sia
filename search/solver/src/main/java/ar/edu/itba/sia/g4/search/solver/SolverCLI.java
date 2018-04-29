@@ -93,7 +93,7 @@ public class SolverCLI {
         }
 
         double cost = node.getCost();
-        int expanded = node.getExpandedNodes();
+        int expanded = node.getVisitedNodes();
         double deltaT = stopTimestamp - startTimestamp;
 
         System.out.printf("Solved problem in %ems", deltaT);

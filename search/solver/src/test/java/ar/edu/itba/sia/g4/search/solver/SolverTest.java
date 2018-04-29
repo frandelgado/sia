@@ -3,7 +3,6 @@ package ar.edu.itba.sia.g4.search.solver;
 import ar.com.itba.sia.Heuristic;
 import ar.com.itba.sia.Problem;
 import ar.com.itba.sia.Rule;
-import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,21 +59,21 @@ public class SolverTest {
         Rule<MockedState>[] result = new Rule[] {
          mock(Rule.class), // f: I -> A
          mock(Rule.class), // f: I -> B
-         mock(Rule.class), // f: A -> F
          mock(Rule.class), // f: B -> X1
          mock(Rule.class), // f: B -> X2
          mock(Rule.class), // f: A -> X3
          mock(Rule.class), // f: A -> X4
+         mock(Rule.class), // f: A -> F
         };
 
         IntStream.range(0, result.length).forEach(i -> when(result[i].getCost()).thenReturn(1.));
         when(result[0].applyToState(initialState)).thenReturn(stateA);
         when(result[1].applyToState(initialState)).thenReturn(stateB);
-        when(result[2].applyToState(stateA)).thenReturn(finalState);
-        when(result[3].applyToState(stateB)).thenReturn(stateX1);
-        when(result[4].applyToState(stateB)).thenReturn(stateX2);
-        when(result[5].applyToState(stateA)).thenReturn(stateX3);
-        when(result[6].applyToState(stateA)).thenReturn(stateX4);
+        when(result[2].applyToState(stateB)).thenReturn(stateX1);
+        when(result[3].applyToState(stateB)).thenReturn(stateX2);
+        when(result[4].applyToState(stateA)).thenReturn(stateX3);
+        when(result[5].applyToState(stateA)).thenReturn(stateX4);
+        when(result[6].applyToState(stateA)).thenReturn(finalState);
         return result;
     }
 
@@ -83,8 +82,8 @@ public class SolverTest {
         Problem<MockedState> problem = mock(Problem.class);
         when(problem.getInitialState()).thenReturn(initialState);
         when(problem.getRules(initialState)).thenReturn(Arrays.asList(rules[0], rules[1]));
-        when(problem.getRules(stateA)).thenReturn(Arrays.asList(rules[2], rules[5], rules[6]));
-        when(problem.getRules(stateB)).thenReturn(Arrays.asList(rules[3], rules[4]));
+        when(problem.getRules(stateA)).thenReturn(Arrays.asList(rules[4], rules[5], rules[6]));
+        when(problem.getRules(stateB)).thenReturn(Arrays.asList(rules[2], rules[3]));
         when(problem.getRules(stateX1)).thenReturn(Collections.emptyList());
         when(problem.getRules(stateX2)).thenReturn(Collections.emptyList());
         when(problem.getRules(stateX3)).thenReturn(Collections.emptyList());
@@ -114,16 +113,17 @@ public class SolverTest {
     public void shouldSolveWithBFS() {
         Node<MockedState> finalNode = solver.solve(1);
         testForInvariants(finalNode);
-        assertThat("Visited nodes", finalNode.getVisitedNodes(), equalTo(4));
-        assertThat("Expanded nodes", finalNode.getExpandedNodes(), equalTo(8));
+        // Queue I, then A, then B, Then X1, 2, and F
+        assertThat("Queued nodes", finalNode.getQueuedNodes(), equalTo(8));
+        assertThat("Visited nodes", finalNode.getVisitedNodes(), equalTo(6));
     }
 
     @Test
     public void shouldSolveWithDFS() {
         Node<MockedState> finalNode = solver.solve(0);
         testForInvariants(finalNode);
-        assertThat("Visited nodes", finalNode.getVisitedNodes(), equalTo(2));
-        assertThat("Expanded nodes", finalNode.getExpandedNodes(), equalTo(2));
+        assertThat("Queued nodes", finalNode.getQueuedNodes(), equalTo(6));
+        assertThat("Visited nodes", finalNode.getVisitedNodes(), equalTo(5));
     }
 
     @Test

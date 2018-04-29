@@ -2,21 +2,21 @@ package ar.edu.itba.sia.g4.search.solver;
 
 import java.util.LinkedList;
 
-public class Queue<Node> implements GenericList<Node> {
+public class Queue<T extends Node<?>> implements GenericList<T> {
 
-    private LinkedList<Node> queue;
+    private java.util.Queue<T> queue;
 
     public Queue(){
         queue = new LinkedList<>();
     }
 
     @Override
-    public void add(Node node) {
+    public void add(T node) {
         queue.add(node);
     }
 
     @Override
-    public Node poll() {
+    public T poll() {
         return queue.poll();
     }
 }

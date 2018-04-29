@@ -20,40 +20,38 @@ public class Solver<E> {
         this.listFactory = new ListFactory();
     }
 
+    private Node<E> nodeFromInitialState(E state) {
+        double heuristicCost = heuristic == null ? 0 : heuristic.getValue(state);
+        return new Node<>(state, 1, 1, 0, heuristicCost,null);
+    }
+
     public Node<E> solve(int searchType){
-        GenericList<Node> queue = listFactory.getList(searchType);
-        LinkedList<Node<E>> frontierNodes;
-        int expandedNodesCount = 1;
-        int vistedNodesCount = 1;
-        E state = problem.getInitialState();
-        double heuristicCost;
+        GenericList<Node<E>> queue = listFactory.getList(searchType);
 
-        if(heuristic != null)
-            heuristicCost = heuristic.getValue(state);
-        else
-            heuristicCost = 0;
-
-        Node<E> lastExpandedNode = new Node<>(state,expandedNodesCount,vistedNodesCount, 0, heuristic.getValue(state),null);
+        int enqueuedNodesCount = 1; // added to the queue
+        int vistedNodesCount = 1; // visited and tested as solution
+        Node<E> lastExpandedNode = nodeFromInitialState(problem.getInitialState());
 
         while(!problem.isResolved(lastExpandedNode.getState())){
+            List<Node<E>> frontierNodes = generateFrontierStates(lastExpandedNode);
+            queue.addAll(frontierNodes);
+            enqueuedNodesCount += frontierNodes.size();
             vistedNodesCount++;
-            frontierNodes = generateFrontierStates(lastExpandedNode, expandedNodesCount, vistedNodesCount);
-            for(Node<E> n : frontierNodes){
-                queue.add(n);
-                expandedNodesCount++;
-            }
+            lastExpandedNode.setQueuedNodes(enqueuedNodesCount).setVisitedNodes(vistedNodesCount);
             lastExpandedNode = queue.poll();
         }
 
-        return lastExpandedNode;
+        return lastExpandedNode.setQueuedNodes(enqueuedNodesCount).setVisitedNodes(vistedNodesCount);
     }
 
-    private LinkedList<Node<E>> generateFrontierStates(@NotNull Node<E> node, int expandedNodesCount, int visitedNodesCount){
+    private LinkedList<Node<E>> generateFrontierStates(@NotNull Node<E> node){
         List<Rule<E>> rules = problem.getRules(node.getState());
         LinkedList<Node<E>> frontierNodes = new LinkedList<>();
         for(Rule<E> r : rules){
             E state = r.applyToState(node.getState());
-            Node<E> newNode = new Node<>(state, expandedNodesCount, visitedNodesCount,node.getCost() + r.getCost(), heuristic.getValue(state), node);
+            double newCost = node.getCost() + r.getCost();
+            double heuristicCost = heuristic == null ? 0 : heuristic.getValue(state);
+            Node<E> newNode = new Node<>(state, -1, -1, newCost, heuristicCost, node);
             frontierNodes.add(newNode);
         }
         return frontierNodes;
