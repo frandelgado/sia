@@ -53,7 +53,7 @@ public class Board implements Observable<BoardGraphicsHandler>{
                 if(this.matrix[i][j] != null){
                     System.out.print(this.matrix[i][j].getFaceColor().toString() + " ");
                 }else{
-                    System.out.print("n ");
+                    System.out.print("   ");
                 }
                 if(j == 2){
                     System.out.print("\n");

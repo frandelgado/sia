@@ -88,7 +88,7 @@ public class SolverCLI {
         double stopTimestamp = System.currentTimeMillis();
 
         if (node == null) {
-            System.err.println("The game died.");
+            System.err.println("No solution found.");
             System.exit(-1);
         }
 

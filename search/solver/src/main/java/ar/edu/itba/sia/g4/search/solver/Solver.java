@@ -14,13 +14,13 @@ public class Solver<E> {
     Problem<E> problem;
     Heuristic<E> heuristic;
     ListFactory listFactory;
-    HashSet<E> visitedNodes;
+    HashSet<Integer> visitedStates;
 
     public Solver(@NotNull Problem<E> problem, @NotNull Heuristic<E> heuristic){
         this.problem = problem;
         this.heuristic = heuristic;
         this.listFactory = new ListFactory();
-        this.visitedNodes = new HashSet<>();
+        this.visitedStates = new HashSet<>();
     }
 
     private Node<E> nodeFromInitialState(E state) {
@@ -35,15 +35,22 @@ public class Solver<E> {
         int vistedNodesCount = 1; // visited and tested as solution
         Node<E> lastExpandedNode = nodeFromInitialState(problem.getInitialState());
 
-        while(!problem.isResolved(lastExpandedNode.getState())){
+        while(lastExpandedNode != null && !problem.isResolved(lastExpandedNode.getState())){
             List<Node<E>> frontierNodes = generateFrontierStates(lastExpandedNode);
             queue.addAll(frontierNodes);
             enqueuedNodesCount += frontierNodes.size();
             vistedNodesCount++;
+            this.visitedStates.add(lastExpandedNode.getState().hashCode());
             lastExpandedNode.setQueuedNodes(enqueuedNodesCount).setVisitedNodes(vistedNodesCount);
             lastExpandedNode = queue.poll();
+            while(lastExpandedNode != null && this.visitedStates.contains(lastExpandedNode.getState().hashCode())){
+                lastExpandedNode = queue.poll();
+            }
+            //System.out.println(this.visitedStates.size());
         }
-
+        if(lastExpandedNode == null){
+            return null;
+        }
         return lastExpandedNode.setQueuedNodes(enqueuedNodesCount).setVisitedNodes(vistedNodesCount);
     }
 

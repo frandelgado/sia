@@ -133,4 +133,24 @@ public enum FaceColor {
             throw new IllegalArgumentException("Can't roll that way");
         }
     }
+
+    @Override
+    public String toString() {
+        switch (this) {
+            case ALL_BLACK:
+                return "AB";
+            case ALL_WHITE:
+                return "AW";
+            case W_WHITE_E_BLACK:
+                return "WWEB";
+            case W_BLACK_E_WHITE:
+                return "WBEW";
+            case N_BLACK_S_WHITE:
+                return "NBSW";
+            case N_WHITE_S_BLACK:
+                return "NWSB";
+            default:
+                throw new IllegalArgumentException("Can't roll that way");
+        }
+    }
 }
