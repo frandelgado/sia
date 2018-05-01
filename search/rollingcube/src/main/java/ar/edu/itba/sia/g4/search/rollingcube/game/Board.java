@@ -55,6 +55,7 @@ public class Board implements Observable<BoardGraphicsHandler>{
 
     public void setMatrix(Cube[][] matrix) {
         this.matrix = matrix;
+        this.notifyObservers();
     }
 
     public void setEmptySpot(int i, int j){
@@ -90,7 +91,7 @@ public class Board implements Observable<BoardGraphicsHandler>{
         newMatrix[this.emptySpot[0]][this.emptySpot[1]] = null;
         newEmptySpot = new int[]{this.emptySpot[0], this.emptySpot[1]};
         newWhiteCount = this.whiteCount;
-        return new Board(matrix, newEmptySpot, newWhiteCount);
+        return new Board(newMatrix, newEmptySpot, newWhiteCount);
     }
 
     @Override

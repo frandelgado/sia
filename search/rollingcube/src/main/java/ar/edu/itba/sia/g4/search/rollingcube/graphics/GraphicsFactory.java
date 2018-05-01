@@ -10,7 +10,7 @@ public class GraphicsFactory {
     private static HashMap<FaceColor, String> faceColorPaths;
     private static Image emptySpotImage;
 
-    public static void createLetterImages(){
+    public static void createFaceColorImages(){
         if(faceColorImages != null){
             return;
         }

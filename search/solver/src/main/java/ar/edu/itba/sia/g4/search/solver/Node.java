@@ -29,7 +29,7 @@ public class Node<E> implements Comparable {
     }
 
     public E getState() {
-        return state;
+        return this.state;
     }
 
     public Node<E> getParent() {
