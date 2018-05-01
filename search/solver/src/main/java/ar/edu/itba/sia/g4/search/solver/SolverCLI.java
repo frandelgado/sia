@@ -8,6 +8,7 @@ import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.function.Consumer;
 
 public class SolverCLI {
 
@@ -67,15 +68,23 @@ public class SolverCLI {
     }
 
     private static Solver getSolver(@NotNull final CliOptions options) {
-        return new Solver(getProblem(options), getHeuristic(options));
+        return new Solver(getProblem(options), getSolverBackend(options));
     }
 
-    private static int getSolverBackend(@NotNull final CliOptions options) {
-        int type = 0;
-        type = options.isDfs() ? 0 : type;
-        type = options.isBfs() ? 1 : type;
-        type = options.isAstar() ? 2 : type;
-        return type;
+    private static SearchStrategy getSolverBackend(@NotNull final CliOptions options) {
+        if (options.isDfs()) {
+            return new DFSStragegy();
+        }
+
+        if (options.isBfs()) {
+            return new BFSStragegy();
+        }
+
+        if (options.isAstar()) {
+            return new AStarStrategy(getHeuristic(options));
+        }
+
+        throw new IllegalArgumentException("No such solver");
     }
 
 
@@ -83,8 +92,9 @@ public class SolverCLI {
         CliOptions options = parseOptions(args);
 
         Solver solver = getSolver(options);
+
         double startTimestamp = System.currentTimeMillis();
-        Node node = solver.solve(getSolverBackend(options));
+        Node node = solver.solve();
         double stopTimestamp = System.currentTimeMillis();
 
         if (node == null) {

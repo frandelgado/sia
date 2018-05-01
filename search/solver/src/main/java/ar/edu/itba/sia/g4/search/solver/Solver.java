@@ -1,69 +1,65 @@
 package ar.edu.itba.sia.g4.search.solver;
 
-import ar.com.itba.sia.Heuristic;
 import ar.com.itba.sia.Problem;
-import ar.com.itba.sia.Rule;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class Solver<E> {
 
-    Problem<E> problem;
-    Heuristic<E> heuristic;
-    ListFactory listFactory;
-    HashSet<Integer> visitedStates;
+    private final Problem<E> problem;
+    private final SearchStrategy<E> strategy;
+    private final List<Consumer<Node<E>>> spies = new LinkedList<>();
 
-    public Solver(@NotNull Problem<E> problem, @NotNull Heuristic<E> heuristic){
+    public Solver(@NotNull Problem<E> problem, @NotNull SearchStrategy<E> strategy){
         this.problem = problem;
-        this.heuristic = heuristic;
-        this.listFactory = new ListFactory();
-        this.visitedStates = new HashSet<>();
+        this.strategy = strategy;
     }
 
-    private Node<E> nodeFromInitialState(E state) {
-        double heuristicCost = heuristic == null ? 0 : heuristic.getValue(state);
-        return new Node<>(state, 1, 1, 0, heuristicCost,null);
+    private void dispatchNodeToSpies(Node<E> node) {
+        for (Consumer<Node<E>> spy : spies) {
+            spy.accept(node);
+        }
     }
 
-    public Node<E> solve(int searchType){
-        GenericList<Node<E>> queue = listFactory.getList(searchType);
+    public void subscribe(@NotNull Consumer<Node<E>> spy) {
+        spies.add(spy);
+    }
 
+    public Node<E> solve(){
         int enqueuedNodesCount = 1; // added to the queue
-        int vistedNodesCount = 1; // visited and tested as solution
-        Node<E> lastExpandedNode = nodeFromInitialState(problem.getInitialState());
+        int visitedNodesCount = 1; // visited and tested as solution
+        HashSet<E> visitedStates = new HashSet<>();
 
-        while(lastExpandedNode != null && !problem.isResolved(lastExpandedNode.getState())){
-            List<Node<E>> frontierNodes = generateFrontierStates(lastExpandedNode);
-            queue.addAll(frontierNodes);
-            enqueuedNodesCount += frontierNodes.size();
-            vistedNodesCount++;
-            this.visitedStates.add(lastExpandedNode.getState().hashCode());
-            lastExpandedNode.setQueuedNodes(enqueuedNodesCount).setVisitedNodes(vistedNodesCount);
-            lastExpandedNode = queue.poll();
-            while(lastExpandedNode != null && this.visitedStates.contains(lastExpandedNode.getState().hashCode())){
-                lastExpandedNode = queue.poll();
-            }
-            //System.out.println(this.visitedStates.size());
+        SearchStrategy<E> gejo = this.strategy;
+        Node<E> node = gejo.nodeFromInitialState(problem.getInitialState());
+        gejo.offer(node);
+
+        while ((node = gejo.getNextNode()) != null && !problem.isResolved(node.getState())) {
+
+            visitedStates.add(node.getState());
+            dispatchNodeToSpies(node);
+
+            List<Node<E>> children = gejo.explodeChildren(node, problem.getRules(node.getState()))
+                .filter(child -> !visitedStates.contains(child.getState()))
+                .collect(Collectors.toList());
+            gejo.offerAll(children);
+            enqueuedNodesCount += children.size();
+            node.setVisitedNodes(++visitedNodesCount).setQueuedNodes(enqueuedNodesCount);
         }
-        if(lastExpandedNode == null){
-            return null;
-        }
-        return lastExpandedNode.setQueuedNodes(enqueuedNodesCount).setVisitedNodes(vistedNodesCount);
+
+        return node == null ? null : node.setQueuedNodes(enqueuedNodesCount).setVisitedNodes(visitedNodesCount);
+
     }
 
-    private LinkedList<Node<E>> generateFrontierStates(@NotNull Node<E> node){
-        List<Rule<E>> rules = problem.getRules(node.getState());
-        LinkedList<Node<E>> frontierNodes = new LinkedList<>();
-        for(Rule<E> r : rules){
-            E state = r.applyToState(node.getState());
-            double newCost = node.getCost() + r.getCost();
-            double heuristicCost = heuristic == null ? 0 : heuristic.getValue(state);
-            Node<E> newNode = new Node<>(state, -1, -1, newCost, heuristicCost, node);
-            frontierNodes.add(newNode);
-        }
-        return frontierNodes;
+    public Problem<E> getProblem() {
+        return problem;
+    }
+
+    public SearchStrategy<E> getStrategy() {
+        return strategy;
     }
 }

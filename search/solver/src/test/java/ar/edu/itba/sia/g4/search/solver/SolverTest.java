@@ -18,10 +18,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 public class SolverTest {
-
-    private Solver<MockedState> solver;
-    private Problem<MockedState> problem;
-    private Heuristic<MockedState> heuristic;
     private MockedState initialState = new MockedState();
     private MockedState finalState = new MockedState();
     private MockedState stateA = new MockedState();
@@ -33,9 +29,6 @@ public class SolverTest {
 
     @Before
     public void setUp() throws Exception {
-        problem = setUpProblem();
-        heuristic = setUpHeuristic();
-        solver = new Solver<>(problem, heuristic);
     }
 
     @After
@@ -111,7 +104,11 @@ public class SolverTest {
 
     @Test
     public void shouldSolveWithBFS() {
-        Node<MockedState> finalNode = solver.solve(1);
+        Problem<MockedState> problem = setUpProblem();
+        SearchStrategy<MockedState> backend = new BFSStragegy<>();
+        Solver<MockedState> solver = new Solver<>(problem, backend);
+
+        Node<MockedState> finalNode = solver.solve();
         testForInvariants(finalNode);
         // Queue I, then A, then B, Then X1, 2, and F
         assertThat("Queued nodes", finalNode.getQueuedNodes(), equalTo(8));
@@ -120,7 +117,11 @@ public class SolverTest {
 
     @Test
     public void shouldSolveWithDFS() {
-        Node<MockedState> finalNode = solver.solve(0);
+        Problem<MockedState> problem = setUpProblem();
+        SearchStrategy<MockedState> backend = new DFSStragegy<>();
+        Solver<MockedState> solver = new Solver<>(problem, backend);
+
+        Node<MockedState> finalNode = solver.solve();
         testForInvariants(finalNode);
         assertThat("Queued nodes", finalNode.getQueuedNodes(), equalTo(6));
         assertThat("Visited nodes", finalNode.getVisitedNodes(), equalTo(5));
@@ -128,13 +129,14 @@ public class SolverTest {
 
     @Test
     public void shouldSolveWithAStar() {
-        Node<MockedState> finalNode = solver.solve(2);
+        Problem<MockedState> problem = setUpProblem();
+        Heuristic<MockedState> heuristic = setUpHeuristic();
+        SearchStrategy<MockedState> backend = new AStarStrategy<>(heuristic);
+        Solver<MockedState> solver = new Solver<>(problem, backend);
+        solver.subscribe(node -> System.out.println(node.getState()));
+
+        Node<MockedState> finalNode = solver.solve();
         testForInvariants(finalNode);
 
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldScreamWithBadInput() {
-       solver.solve(80);
     }
 }

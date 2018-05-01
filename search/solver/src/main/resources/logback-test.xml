@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="defaultPattern" value="%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"/>
+
+    <appender name="root-appender" class="ch.qos.logback.core.ConsoleAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <maxHistory>5</maxHistory>
+            <filenamePattern>logs/sia.warnings.%d{yyyy-MM-dd}</filenamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${defaultPattern:-}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="sia-appender" class="ch.qos.logback.core.ConsoleAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <maxHistory>5</maxHistory>
+            <filenamePattern>logs/sia.%d{yyyy-MM-dd}</filenamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${defaultPattern:-}</pattern>
+        </encoder>
+    </appender>
+
+    <root level="WARN">
+        <appender-ref ref="root-appender"/>
+    </root>
+
+    <!-- additivity prevents logs from bubbling up to parent loggers -->
+    <logger name="ar.edu.itba.sia" level="DEBUG" additivity="false">
+        <appender-ref ref="sia-appender"/>
+    </logger>
+</configuration>
