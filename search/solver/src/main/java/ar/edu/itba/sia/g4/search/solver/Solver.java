@@ -34,19 +34,18 @@ public class Solver<E> {
         int visitedNodesCount = 1; // visited and tested as solution
         HashSet<E> visitedStates = new HashSet<>();
 
-        SearchStrategy<E> gejo = this.strategy;
-        Node<E> node = gejo.nodeFromInitialState(problem.getInitialState());
-        gejo.offer(node);
+        Node<E> node = strategy.nodeFromInitialState(problem.getInitialState());
+        strategy.offer(node);
 
-        while ((node = gejo.getNextNode()) != null && !problem.isResolved(node.getState())) {
+        while ((node = strategy.getNextNode()) != null && !problem.isResolved(node.getState())) {
 
             visitedStates.add(node.getState());
             dispatchNodeToSpies(node);
 
-            List<Node<E>> children = gejo.explodeChildren(node, problem.getRules(node.getState()))
+            List<Node<E>> children = strategy.explodeChildren(node, problem.getRules(node.getState()))
                 .filter(child -> !visitedStates.contains(child.getState()))
                 .collect(Collectors.toList());
-            gejo.offerAll(children);
+            strategy.offerAll(children);
             enqueuedNodesCount += children.size();
             node.setVisitedNodes(++visitedNodesCount).setQueuedNodes(enqueuedNodesCount);
         }
