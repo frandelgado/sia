@@ -27,7 +27,7 @@ public class SolverCLI {
     private static Heuristic getHeuristic(@NotNull final CliOptions options) {
         try {
             ClassLoader loader = ClassLoader.getSystemClassLoader();
-            String heuristic = "ar.edu.itba.sia.g4.search.rollingcube.heuristic.NilHeuristic";
+            String heuristic = "ar.edu.itba.sia.g4.search.rollingcube.heuristic.MaxWhiteHeuristic";
             Class<Heuristic> Heuristic = (Class<Heuristic>) loader.loadClass(heuristic);
             return Heuristic.getDeclaredConstructor().newInstance();
 
@@ -96,8 +96,8 @@ public class SolverCLI {
         int expanded = node.getVisitedNodes();
         double deltaT = stopTimestamp - startTimestamp;
 
-        System.out.printf("Solved problem in %ems", deltaT);
-        System.out.printf("Expanded %d nodes", expanded);
+        System.out.printf("Solved problem in %f s\n", deltaT/1000);
+        System.out.printf("Expanded %d nodes\n", expanded);
 
         System.out.println("The costs were:");
         System.out.printf("- Total raw cost: %e", cost);

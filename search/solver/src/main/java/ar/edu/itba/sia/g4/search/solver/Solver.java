@@ -5,6 +5,7 @@ import ar.com.itba.sia.Problem;
 import ar.com.itba.sia.Rule;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,11 +14,13 @@ public class Solver<E> {
     Problem<E> problem;
     Heuristic<E> heuristic;
     ListFactory listFactory;
+    HashSet<E> visitedNodes;
 
     public Solver(@NotNull Problem<E> problem, @NotNull Heuristic<E> heuristic){
         this.problem = problem;
         this.heuristic = heuristic;
         this.listFactory = new ListFactory();
+        this.visitedNodes = new HashSet<>();
     }
 
     private Node<E> nodeFromInitialState(E state) {

@@ -1,9 +1,10 @@
 package ar.edu.itba.sia.g4.search.rollingcube.game;
 
-
 import ar.edu.itba.sia.g4.search.rollingcube.tools.Observable;
 import ar.edu.itba.sia.g4.search.rollingcube.tools.Observer;
 import ar.edu.itba.sia.g4.search.rollingcube.graphics.BoardGraphicsHandler;
+
+import java.util.Arrays;
 
 
 public class Board implements Observable<BoardGraphicsHandler>{
@@ -38,7 +39,28 @@ public class Board implements Observable<BoardGraphicsHandler>{
         if(this.matrix[1][1] != null) {
             return false;
         }
+        if(this.whiteCount == 8){
+            this.print();
+        }
         return this.whiteCount == 8;
+    }
+
+    public void print(){
+        int i;
+        int j;
+        for(i = 0;i < 3; i++){
+            for(j = 0; j < 3;j++){
+                if(this.matrix[i][j] != null){
+                    System.out.print(this.matrix[i][j].getFaceColor().toString() + " ");
+                }else{
+                    System.out.print("n ");
+                }
+                if(j == 2){
+                    System.out.print("\n");
+                }
+            }
+        }
+        System.out.print("\n");
     }
 
     public int[] getEmptySpot() {
@@ -92,6 +114,21 @@ public class Board implements Observable<BoardGraphicsHandler>{
         newEmptySpot = new int[]{this.emptySpot[0], this.emptySpot[1]};
         newWhiteCount = this.whiteCount;
         return new Board(newMatrix, newEmptySpot, newWhiteCount);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Board board = (Board) o;
+
+        return Arrays.deepEquals(matrix, board.matrix);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(matrix);
     }
 
     @Override

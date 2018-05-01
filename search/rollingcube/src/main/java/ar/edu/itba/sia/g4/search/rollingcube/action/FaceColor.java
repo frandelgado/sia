@@ -44,7 +44,6 @@ public enum FaceColor {
         }
     }
 
-
     private FaceColor allBlackRoll(final RollDirection dir){
         switch (dir){
         case NORTH:

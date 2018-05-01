@@ -4,6 +4,8 @@ import ar.com.itba.sia.Rule;
 import ar.edu.itba.sia.g4.search.rollingcube.action.FaceColor;
 import ar.edu.itba.sia.g4.search.rollingcube.action.RollDirection;
 
+import java.util.HashSet;
+
 public class RollingCubeRule implements Rule<Board> {
 
     private RollDirection rollDir;
