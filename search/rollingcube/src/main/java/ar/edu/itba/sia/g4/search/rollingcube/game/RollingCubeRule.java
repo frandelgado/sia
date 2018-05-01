@@ -7,19 +7,21 @@ import ar.edu.itba.sia.g4.search.rollingcube.action.RollDirection;
 public class RollingCubeRule implements Rule<Board> {
 
     private RollDirection rollDir;
+    private double cost;
 
     public RollingCubeRule(RollDirection rollDir){
         this.rollDir = rollDir;
+        this.cost = 1;
     }
 
     @Override
     public double getCost() {
-        return 1;
+        return this.cost;
     }
 
     @Override
-    public void setCost(double v) {
-
+    public void setCost(double cost) {
+        this.cost = cost;
     }
 
     @Override
