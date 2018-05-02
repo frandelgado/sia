@@ -3,26 +3,22 @@
     <property name="defaultPattern" value="%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"/>
 
     <appender name="root-appender" class="ch.qos.logback.core.ConsoleAppender">
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <maxHistory>5</maxHistory>
-            <filenamePattern>logs/sia.warnings.%d{yyyy-MM-dd}</filenamePattern>
-        </rollingPolicy>
-        <encoder>
-            <pattern>${defaultPattern:-}</pattern>
-        </encoder>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
+            </Pattern>
+        </layout>
     </appender>
 
     <appender name="sia-appender" class="ch.qos.logback.core.ConsoleAppender">
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <maxHistory>5</maxHistory>
-            <filenamePattern>logs/sia.%d{yyyy-MM-dd}</filenamePattern>
-        </rollingPolicy>
-        <encoder>
-            <pattern>${defaultPattern:-}</pattern>
-        </encoder>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
+            </Pattern>
+        </layout>
     </appender>
 
-    <root level="ERROR">
+    <root level="ERROR" debug="false">
         <appender-ref ref="root-appender"/>
     </root>
 

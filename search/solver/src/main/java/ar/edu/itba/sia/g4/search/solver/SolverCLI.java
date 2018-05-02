@@ -3,6 +3,7 @@ package ar.edu.itba.sia.g4.search.solver;
 import ar.com.itba.sia.Heuristic;
 import ar.com.itba.sia.Problem;
 import ar.edu.itba.sia.g4.search.solver.cli.CliOptions;
+import ar.edu.itba.sia.g4.search.solver.spy.ConsoleSpy;
 import org.jetbrains.annotations.NotNull;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;

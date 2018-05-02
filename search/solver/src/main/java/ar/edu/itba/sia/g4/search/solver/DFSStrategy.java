@@ -22,8 +22,7 @@ public class DFSStrategy<E> implements SearchStrategy<E> {
     }
 
     @Override
-    public int offerAll(List<Node<E>> nodes) {
-        Lists.reverse(nodes).forEach(this::offer);
-        return nodes.size();
+    public void reset() {
+        stack.clear();
     }
 }

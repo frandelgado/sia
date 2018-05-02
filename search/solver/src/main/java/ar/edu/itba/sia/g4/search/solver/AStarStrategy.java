@@ -30,7 +30,12 @@ public class AStarStrategy<E> implements SearchStrategy<E> {
     }
 
     @Override
-    public Stream<Node<E>> explodeChildren(@NotNull Node<E> parent, @NotNull List<Rule<E>> rules) {
+    public void reset() {
+        pqueue.clear();
+    }
+
+    @Override
+    public Stream<Node<E>> explodeNode(@NotNull Node<E> parent, @NotNull List<Rule<E>> rules) {
         E currentState = parent.getState();
         return rules.parallelStream()
          .map(rule -> {

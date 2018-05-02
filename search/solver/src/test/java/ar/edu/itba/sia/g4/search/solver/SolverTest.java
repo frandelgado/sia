@@ -110,9 +110,6 @@ public class SolverTest {
 
         Node<MockedState> finalNode = solver.solve();
         testForInvariants(finalNode);
-        // Queue I, then A, then B, Then X1, 2, and F
-        assertThat("Queued nodes", finalNode.getQueuedNodes(), equalTo(6));
-        assertThat("Visited nodes", finalNode.getVisitedNodes(), equalTo(3));
     }
 
     @Test
@@ -123,8 +120,7 @@ public class SolverTest {
 
         Node<MockedState> finalNode = solver.solve();
         testForInvariants(finalNode);
-        assertThat("Queued nodes", finalNode.getQueuedNodes(), equalTo(6));
-        assertThat("Visited nodes", finalNode.getVisitedNodes(), equalTo(3));
+
     }
 
     @Test

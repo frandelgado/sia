@@ -21,7 +21,7 @@ public interface SearchStrategy<E> {
         return nodes.size();
     }
 
-    default Stream<Node<E>> explodeChildren(Node<E> parent, List<Rule<E>> rules) {
+    default Stream<Node<E>> explodeNode(Node<E> parent, List<Rule<E>> rules) {
         E currentState = parent.getState();
         return rules.parallelStream()
          .map(rule -> {
@@ -31,8 +31,10 @@ public interface SearchStrategy<E> {
          });
     }
 
-    default boolean isIterativeDeepening() {
+    default boolean isIterative() {
         return false;
     }
+
+    void reset();
 
 }

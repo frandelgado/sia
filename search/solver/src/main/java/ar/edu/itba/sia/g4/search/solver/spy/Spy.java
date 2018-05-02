@@ -13,4 +13,6 @@ public interface Spy<E> {
     default void onSolution(Node<E> node) {}
 
     default void onSolutionMissing(int maxDepthReached, int visitedNodesCount, int enqueuedNodesCount) {}
+
+    default void onDepth(int depth) {}
 }

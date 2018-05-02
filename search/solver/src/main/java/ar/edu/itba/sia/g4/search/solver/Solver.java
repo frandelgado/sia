@@ -41,7 +41,12 @@ public class Solver<E> {
 
             @Override
             public void onSolutionMissing(int maxDepthReached, int visitedNodesCount, int enqueuedNodesCount) {
-                listeners.forEach(spy -> onSolutionMissing(maxDepthReached, visitedNodesCount, enqueuedNodesCount));
+                listeners.forEach(spy -> spy.onSolutionMissing(maxDepthReached, visitedNodesCount, enqueuedNodesCount));
+            }
+
+            @Override
+            public void onDepth(int depth) {
+                listeners.forEach(spy -> spy.onDepth(depth));
             }
         };
     }
@@ -51,48 +56,61 @@ public class Solver<E> {
     }
 
 
-    public Node<E> solve(){
+    private Node<E> solveForDepth(int currentDepthLimit) {
         int enqueuedNodesCount = 1; // added to the queue
         int visitedNodesCount = 1; // visited and tested as solution
-        int maxDepthReached = 0;
         Set<E> queuedStates = new HashSet<>();
 
+        strategy.reset();
         Node<E> node = strategy.nodeFromInitialState(problem.getInitialState());
+        broadcast.onDepth(currentDepthLimit);
+        strategy.offer(node);
         queuedStates.add(node.getState());
 
-        if(strategy instanceof IDDFSStrategy){
-            node = ((IDDFSStrategy) strategy).doIddfs(this, problem, queuedStates, node);
-        }else{
-            strategy.offer(node);
-            while ((node = strategy.getNextNode()) != null && !problem.isResolved(node.getState())) {
-                broadcast.onVisitedNode(node);
+        while ((node = strategy.getNextNode()) != null && !problem.isResolved(node.getState())) {
+            broadcast.onVisitedNode(node);
+            ++visitedNodesCount;
 
-                maxDepthReached = Math.max(maxDepthReached, node.getDepth());
+            if (node.getDepth() >= currentDepthLimit) {
+                node = null;
+                continue;
+            }
 
-                List<Node<E>> children = strategy.explodeChildren(node, problem.getRules(node.getState()))
+            List<Node<E>> children = strategy.explodeNode(node, problem.getRules(node.getState()))
                  .filter(child -> !queuedStates.contains(child.getState()))
                  .collect(Collectors.toList());
-                strategy.offerAll(children);
-                broadcast.onQueuedChildren(children);
-                children.forEach(n -> queuedStates.add(n.getState()));
-                enqueuedNodesCount += children.size();
-                node.setVisitedNodes(++visitedNodesCount).setQueuedNodes(enqueuedNodesCount);
-                for (Node<E> n : children) {
-                    if (problem.isResolved(n.getState())) {
-                        n.setQueuedNodes(enqueuedNodesCount).setVisitedNodes(visitedNodesCount);
-                        broadcast.onSolution(n);
-                        return n;
-                    }
+            strategy.offerAll(children);
+            broadcast.onQueuedChildren(children);
+            children.forEach(n -> queuedStates.add(n.getState()));
+            enqueuedNodesCount += children.size();
+
+            for (Node<E> n : children) {
+                if (problem.isResolved(n.getState())) {
+                    n.setVisitedNodes(visitedNodesCount).setQueuedNodes(enqueuedNodesCount);
+                    return n;
                 }
             }
         }
-
-        if (node == null) {
-            broadcast.onSolutionMissing(maxDepthReached, visitedNodesCount, enqueuedNodesCount);
-            return null;
+        if (node != null) {
+            node.setVisitedNodes(visitedNodesCount).setQueuedNodes(enqueuedNodesCount);
         }
+        return node;
+    }
 
-        node.setQueuedNodes(enqueuedNodesCount).setVisitedNodes(visitedNodesCount);
+
+    public Node<E> solve() {
+        int currentDepthLimit = strategy.isIterative() ? 1 : Integer.MAX_VALUE;
+
+        Node<E> node;
+
+        do {
+            node = solveForDepth(currentDepthLimit);
+            if (node != null && problem.isResolved(node.getState())) {
+                break;
+            }
+            currentDepthLimit++;
+        } while (strategy.isIterative() && node == null);
+
         broadcast.onSolution(node);
         return node;
 

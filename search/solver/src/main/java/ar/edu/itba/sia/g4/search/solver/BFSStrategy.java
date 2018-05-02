@@ -7,7 +7,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 public class BFSStrategy<E> implements SearchStrategy<E> {
-    private final Deque<Node<E>> queue = new LinkedList<>();
+    private final Deque<Node<E>> queue = new ArrayDeque<>();
 
     @Override
     public Node<E> getNextNode() {
@@ -18,5 +18,10 @@ public class BFSStrategy<E> implements SearchStrategy<E> {
     public Node<E> offer(@NotNull Node<E> node) {
         queue.add(node);
         return node;
+    }
+
+    @Override
+    public void reset() {
+        queue.clear();
     }
 }

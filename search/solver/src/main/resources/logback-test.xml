@@ -27,7 +27,7 @@
     </root>
 
     <!-- additivity prevents logs from bubbling up to parent loggers -->
-    <logger name="ar.edu.itba.sia" level="DEBUG" additivity="false">
+    <logger name="ar.edu.itba.sia" level="INFO" additivity="false">
         <appender-ref ref="sia-appender"/>
     </logger>
 </configuration>
