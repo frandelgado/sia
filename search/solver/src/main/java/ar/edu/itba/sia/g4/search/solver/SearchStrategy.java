@@ -9,7 +9,7 @@ import static java.util.stream.Collectors.toList;
 
 public interface SearchStrategy<E> {
     default Node<E> nodeFromInitialState(E state) {
-        return new Node<>(state, 1, 1, 0, 0,null);
+        return new Node<>(state, 1, 1, 1, 0, 0,null);
     }
 
     Node<E> getNextNode();
@@ -27,7 +27,7 @@ public interface SearchStrategy<E> {
          .map(rule -> {
              E state = rule.applyToState(currentState);
              double newCost = parent.getCost() + rule.getCost();
-             return new Node<>(state, -1, -1, newCost, -1, parent);
+             return new Node<>(state, -1, -1, parent.getDepth() + 1, newCost, -1, parent);
          });
     }
 

@@ -7,14 +7,16 @@ public class Node<E> implements Comparable {
     private final double heuristicCost;
     private int visitedNodes;
     private int queuedNodes;
+    private int depth;
 
-    public Node(E state, int queuedNodes, int visitedNodes, double cost, double heuristicCost, Node parent){
+    public Node(E state, int queuedNodes, int visitedNodes, int depth, double cost, double heuristicCost, Node parent){
         this.state = state;
         this.parent = parent;
         this.visitedNodes = visitedNodes;
         this.queuedNodes = queuedNodes;
         this.cost = cost;
         this.heuristicCost = heuristicCost;
+        this.depth = depth;
     }
 
     @Override
@@ -46,6 +48,10 @@ public class Node<E> implements Comparable {
 
     public int getVisitedNodes() {
         return visitedNodes;
+    }
+
+    public int getDepth() {
+        return depth;
     }
 
     public int getQueuedNodes() {

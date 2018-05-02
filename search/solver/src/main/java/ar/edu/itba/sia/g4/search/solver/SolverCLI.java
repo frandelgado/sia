@@ -87,6 +87,10 @@ public class SolverCLI {
             return new GreedyStrategy(getHeuristic(options));
         }
 
+        if (options.isIddfs()) {
+            return new IDDFSStrategy();
+        }
+
         throw new IllegalArgumentException("No such solver");
     }
 

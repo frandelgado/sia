@@ -34,7 +34,7 @@ public class GreedyStrategy<E> implements SearchStrategy<E> {
                 .map(rule -> {
                     E state = rule.applyToState(currentState);
                     double heuristicCost = heuristic.getValue(state);
-                    return new Node<>(state, -1, -1, 0, heuristicCost, parent);
+                    return new Node<>(state, -1, -1, parent.getDepth() + 1, 0, heuristicCost, parent);
                 });
     }
 }

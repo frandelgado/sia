@@ -37,7 +37,7 @@ public class AStarStrategy<E> implements SearchStrategy<E> {
              E state = rule.applyToState(currentState);
              double newCost = parent.getCost() + rule.getCost();
              double heuristicCost = heuristic.getValue(state);
-             return new Node<>(state, -1, -1, newCost, heuristicCost, parent);
+             return new Node<>(state, -1, -1, parent.getDepth() + 1, newCost, heuristicCost, parent);
          });
     }
 }
