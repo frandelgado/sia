@@ -20,7 +20,7 @@ public class Solver<E> {
         this.strategy = strategy;
     }
 
-    private void dispatchNodeToSpies(Node<E> node) {
+    public void dispatchNodeToSpies(Node<E> node) {
         for (Consumer<Node<E>> spy : spies) {
             spy.accept(node);
         }
@@ -47,24 +47,28 @@ public class Solver<E> {
         Set<E> queuedStates = new HashSet<>();
 
         Node<E> node = strategy.nodeFromInitialState(problem.getInitialState());
-        strategy.offer(node);
         queuedStates.add(node.getState());
 
-        while ((node = strategy.getNextNode()) != null && !problem.isResolved(node.getState())) {
+        if(strategy instanceof IDDFSStrategy){
+            node = ((IDDFSStrategy) strategy).doIddfs(this, problem, queuedStates, node);
+        }else{
+            strategy.offer(node);
+            while ((node = strategy.getNextNode()) != null && !problem.isResolved(node.getState())) {
 
-            dispatchNodeToSpies(node);
+                dispatchNodeToSpies(node);
 
-            List<Node<E>> children = strategy.explodeChildren(node, problem.getRules(node.getState()))
-                .filter(child -> !queuedStates.contains(child.getState()))
-                //.filter(child -> !nodeHasALoop(child))
-                .collect(Collectors.toList());
-            strategy.offerAll(children);
-            children.forEach(n -> queuedStates.add(n.getState()));
-            enqueuedNodesCount += children.size();
-            node.setVisitedNodes(++visitedNodesCount).setQueuedNodes(enqueuedNodesCount);
-            for (Node<E> n : children) {
-                if (problem.isResolved(n.getState())) {
-                    return n.setQueuedNodes(enqueuedNodesCount).setVisitedNodes(visitedNodesCount);
+                List<Node<E>> children = strategy.explodeChildren(node, problem.getRules(node.getState()))
+                        .filter(child -> !queuedStates.contains(child.getState()))
+                        //.filter(child -> !nodeHasALoop(child))
+                        .collect(Collectors.toList());
+                strategy.offerAll(children);
+                children.forEach(n -> queuedStates.add(n.getState()));
+                enqueuedNodesCount += children.size();
+                node.setVisitedNodes(++visitedNodesCount).setQueuedNodes(enqueuedNodesCount);
+                for (Node<E> n : children) {
+                    if (problem.isResolved(n.getState())) {
+                        return n.setQueuedNodes(enqueuedNodesCount).setVisitedNodes(visitedNodesCount);
+                    }
                 }
             }
         }
