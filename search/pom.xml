@@ -8,10 +8,13 @@
   <name>search</name>
   <modules>
     <module>solver</module>
-    <module>rollingcube</module>
+      <module>rollingcube</module>
+      <module>distribution</module>
   </modules>
 
     <properties>
+        <skip.assembly>true</skip.assembly>
+
         <log4j.version>2.11.0</log4j.version>
         <junit.version>4.11</junit.version>
         <args4j.version>2.33</args4j.version>
@@ -111,4 +114,34 @@
             <url>file://${maven.multiModuleProjectDirectory}/repo</url>
         </repository>
     </repositories>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>3.1.0</version>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <mainClass>ar.edu.itba.sia.g4.search.solver.SolverCLI</mainClass>
+                            </manifest>
+                        </archive>
+                        <descriptors>
+                            <descriptor>distribution/src/assembly/bin.xml</descriptor>
+                        </descriptors>
+                        </configuration>
+                    <executions>
+                        <execution>
+                            <id>make-assembly</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>single</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

@@ -72,10 +72,10 @@
       <artifactId>annotations</artifactId>
     </dependency>
 
-      <dependency>
-          <groupId>ar.com.itba.sia</groupId>
-          <artifactId>search-interfaces</artifactId>
-      </dependency>
+    <dependency>
+        <groupId>ar.com.itba.sia</groupId>
+        <artifactId>search-interfaces</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>ar.edu.itba.sia.g4.search</groupId>
@@ -95,6 +95,7 @@
         <!-- see http://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
         <plugin>
           <artifactId>maven-resources-plugin</artifactId>
+
           <version>3.0.2</version>
         </plugin>
         <plugin>
@@ -115,6 +116,9 @@
                 <mainClass>ar.edu.itba.sia.g4.search.solver.SolverCLI</mainClass>
               </manifest>
             </archive>
+            <excludes>
+              <exclude>**/logback-test.xml</exclude>
+            </excludes>
           </configuration>
         </plugin>
         <plugin>
