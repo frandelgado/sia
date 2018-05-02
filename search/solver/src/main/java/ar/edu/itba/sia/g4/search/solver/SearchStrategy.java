@@ -31,4 +31,8 @@ public interface SearchStrategy<E> {
          });
     }
 
+    default boolean isIterativeDeepening() {
+        return false;
+    }
+
 }

@@ -101,6 +101,7 @@ public class SolverCLI {
         CliOptions options = parseOptions(args);
 
         Solver solver = getSolver(options);
+        solver.subscribe(new ConsoleSpy());
 
         double startTimestamp = System.currentTimeMillis();
         Node node = solver.solve();

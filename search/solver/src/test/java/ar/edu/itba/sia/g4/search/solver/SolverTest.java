@@ -111,8 +111,8 @@ public class SolverTest {
         Node<MockedState> finalNode = solver.solve();
         testForInvariants(finalNode);
         // Queue I, then A, then B, Then X1, 2, and F
-        assertThat("Queued nodes", finalNode.getQueuedNodes(), equalTo(8));
-        assertThat("Visited nodes", finalNode.getVisitedNodes(), equalTo(6));
+        assertThat("Queued nodes", finalNode.getQueuedNodes(), equalTo(6));
+        assertThat("Visited nodes", finalNode.getVisitedNodes(), equalTo(3));
     }
 
     @Test
@@ -124,7 +124,7 @@ public class SolverTest {
         Node<MockedState> finalNode = solver.solve();
         testForInvariants(finalNode);
         assertThat("Queued nodes", finalNode.getQueuedNodes(), equalTo(6));
-        assertThat("Visited nodes", finalNode.getVisitedNodes(), equalTo(5));
+        assertThat("Visited nodes", finalNode.getVisitedNodes(), equalTo(3));
     }
 
     @Test
@@ -133,7 +133,6 @@ public class SolverTest {
         Heuristic<MockedState> heuristic = setUpHeuristic();
         SearchStrategy<MockedState> backend = new AStarStrategy<>(heuristic);
         Solver<MockedState> solver = new Solver<>(problem, backend);
-        solver.subscribe(node -> System.out.println(node.getState()));
 
         Node<MockedState> finalNode = solver.solve();
         testForInvariants(finalNode);

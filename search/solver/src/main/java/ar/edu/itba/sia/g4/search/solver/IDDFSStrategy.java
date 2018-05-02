@@ -36,7 +36,6 @@ public class IDDFSStrategy<E> implements SearchStrategy<E> {
     }
 
     private Node<E> doDfs(Solver<E> solver, Problem<E> problem, Set<E> queuedStates, Node<E> node, int depth, int enqueuedNodesCount, int visitedNodesCount){
-        solver.dispatchNodeToSpies(node);
         if(depth == 0 && problem.isResolved(node.getState())){
             return node;
         }
