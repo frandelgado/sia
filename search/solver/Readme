@@ -1,0 +1,18 @@
+Instrucciones
+
+Para generar el proyecto debe ubicarse sobre la carpeta search (raíz de maven) y ejecutar:
+mvn clean package
+
+En la consola ir a la carpeta donde se encuentra el “distribution-1.0-SNAPSHOT-jar-with-dependencies.jar”. Puede encontrarlo en el submódulo distribution en la carpeta target.
+
+Ejecutar el .jar con las siguientes opciones:
+Para seleccionar el problema a resolver:
+Agregar “-p ubicación_de_la_clase_que_implementa_el_problema”.
+Para correr las distintas estrategias de búsqueda:
+BFS: utilizar “-b”.
+DFS: utilizar “-d”.
+Greedy: utilizar “-g -h ubicación_de_la_heurística”.
+A*: utilizar “-a -h ubicación_de_la_heurística”.
+IDDFS: utilizar “-i”.
+
+
