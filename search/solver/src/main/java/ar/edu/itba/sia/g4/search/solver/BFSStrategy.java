@@ -6,7 +6,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.LinkedList;
 
-public class BFSStragegy<E> implements SearchStrategy<E> {
+public class BFSStrategy<E> implements SearchStrategy<E> {
     private final Deque<Node<E>> queue = new LinkedList<>();
 
     @Override

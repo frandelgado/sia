@@ -36,9 +36,9 @@ public class Board implements Observable<BoardGraphicsHandler>{
     }
 
     public boolean isResolved() {
-        if(this.matrix[1][1] != null) {
-            return false;
-        }
+//        if(this.matrix[1][1] != null) {
+//            return false;
+//        }
         if(this.whiteCount == 8){
             this.print();
         }

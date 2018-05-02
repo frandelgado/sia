@@ -8,7 +8,6 @@ import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.function.Consumer;
 
 public class SolverCLI {
 
@@ -28,7 +27,7 @@ public class SolverCLI {
     private static Heuristic getHeuristic(@NotNull final CliOptions options) {
         try {
             ClassLoader loader = ClassLoader.getSystemClassLoader();
-            String heuristic = "ar.edu.itba.sia.g4.search.rollingcube.heuristic.MaxWhiteHeuristic";
+            String heuristic = options.getHeuristic();
             Class<Heuristic> Heuristic = (Class<Heuristic>) loader.loadClass(heuristic);
             return Heuristic.getDeclaredConstructor().newInstance();
 
@@ -49,7 +48,7 @@ public class SolverCLI {
     private static Problem getProblem(@NotNull final CliOptions options) {
         try {
             ClassLoader loader = ClassLoader.getSystemClassLoader();
-            String game = "ar.edu.itba.sia.g4.search.rollingcube.game.RollingCubeGame";
+            String game = options.getProblem();
             Class<Problem> Problem = (Class<Problem>) loader.loadClass(game);
             return Problem.getDeclaredConstructor().newInstance();
 
@@ -73,15 +72,19 @@ public class SolverCLI {
 
     private static SearchStrategy getSolverBackend(@NotNull final CliOptions options) {
         if (options.isDfs()) {
-            return new DFSStragegy();
+            return new DFSStrategy();
         }
 
         if (options.isBfs()) {
-            return new BFSStragegy();
+            return new BFSStrategy();
         }
 
         if (options.isAstar()) {
             return new AStarStrategy(getHeuristic(options));
+        }
+
+        if (options.isGreedy()) {
+            return new GreedyStrategy(getHeuristic(options));
         }
 
         throw new IllegalArgumentException("No such solver");

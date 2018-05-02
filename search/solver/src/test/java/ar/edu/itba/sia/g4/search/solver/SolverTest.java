@@ -105,7 +105,7 @@ public class SolverTest {
     @Test
     public void shouldSolveWithBFS() {
         Problem<MockedState> problem = setUpProblem();
-        SearchStrategy<MockedState> backend = new BFSStragegy<>();
+        SearchStrategy<MockedState> backend = new BFSStrategy<>();
         Solver<MockedState> solver = new Solver<>(problem, backend);
 
         Node<MockedState> finalNode = solver.solve();
@@ -118,7 +118,7 @@ public class SolverTest {
     @Test
     public void shouldSolveWithDFS() {
         Problem<MockedState> problem = setUpProblem();
-        SearchStrategy<MockedState> backend = new DFSStragegy<>();
+        SearchStrategy<MockedState> backend = new DFSStrategy<>();
         Solver<MockedState> solver = new Solver<>(problem, backend);
 
         Node<MockedState> finalNode = solver.solve();

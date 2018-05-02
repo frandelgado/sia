@@ -7,7 +7,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
 
-public class DFSStragegy<E> implements SearchStrategy<E> {
+public class DFSStrategy<E> implements SearchStrategy<E> {
     private final Deque<Node<E>> stack = new ArrayDeque<>();
 
     @Override

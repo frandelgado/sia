@@ -9,16 +9,20 @@ public class CliOptions {
     private boolean errorFree;
 
     @Option(name = "-b", aliases = { "--bfs"}, required = false,
-     usage = "Perform a BFS strategy", forbids={"-d", "-a"})
+     usage = "Perform a BFS strategy", forbids={"-d", "-a", "-g"})
     private boolean bfs;
 
     @Option(name = "-d", aliases = { "--dfs" }, required = false,
-     usage = "Perform a DFS strategy", forbids={"-b, -a"})
+     usage = "Perform a DFS strategy", forbids={"-b", "-a", "-g"})
     private boolean dfs;
 
     @Option(name = "-a", aliases = { "--astar" }, required = false,
-     usage = "Perform an A* strategy", forbids={"-b, -d"}, depends = {"-h"})
+     usage = "Perform an A* strategy", forbids={"-b", "-d", "-g"}, depends = {"-h"})
     private boolean astar;
+
+    @Option(name = "-g", aliases = { "--greedy" }, required = false,
+            usage = "Perform an greedy strategy", forbids={"-b, -d, -a"}, depends = {"-h"})
+    private boolean greedy;
 
     @Option(name = "-p", aliases = { "--problem" }, required = true,
      usage = "The problem to solve")
@@ -37,7 +41,7 @@ public class CliOptions {
         try {
             parser.parseArgument(args);
             // default to dfs
-            if (!(isBfs() || isDfs() || isAstar())) {
+            if (!(isBfs() || isDfs() || isAstar() || isGreedy())) {
                 setDfs(true);
             }
             errorFree = true;
@@ -49,6 +53,10 @@ public class CliOptions {
 
     public boolean isBfs() {
         return bfs;
+    }
+
+    public boolean isGreedy() {
+        return greedy;
     }
 
     public CliOptions setBfs(boolean bfs) {
