@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -29,27 +30,43 @@ public class Solver<E> {
         spies.add(spy);
     }
 
+    private boolean nodeHasALoop(@NotNull Node<E> node) {
+        E myState = node.getState();
+        Node<E> parent;
+        while ((parent = node.getParent()) != null) {
+            if (myState.equals(parent.getState())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Node<E> solve(){
         int enqueuedNodesCount = 1; // added to the queue
         int visitedNodesCount = 1; // visited and tested as solution
-        HashSet<E> visitedStates = new HashSet<>();
+        Set<E> queuedStates = new HashSet<>();
 
         Node<E> node = strategy.nodeFromInitialState(problem.getInitialState());
         strategy.offer(node);
 
         while ((node = strategy.getNextNode()) != null && !problem.isResolved(node.getState())) {
 
-            visitedStates.add(node.getState());
             dispatchNodeToSpies(node);
 
             List<Node<E>> children = strategy.explodeChildren(node, problem.getRules(node.getState()))
-                .filter(child -> !visitedStates.contains(child.getState()))
+                .filter(child -> !queuedStates.contains(child.getState()))
+                //.filter(child -> !nodeHasALoop(child))
                 .collect(Collectors.toList());
             strategy.offerAll(children);
+            children.forEach(n -> queuedStates.add(n.getState()));
             enqueuedNodesCount += children.size();
             node.setVisitedNodes(++visitedNodesCount).setQueuedNodes(enqueuedNodesCount);
+            for (Node<E> n : children) {
+                if (problem.isResolved(n.getState())) {
+                    return n.setQueuedNodes(enqueuedNodesCount).setVisitedNodes(visitedNodesCount);
+                }
+            }
         }
-
         return node == null ? null : node.setQueuedNodes(enqueuedNodesCount).setVisitedNodes(visitedNodesCount);
 
     }
