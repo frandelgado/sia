@@ -35,10 +35,14 @@ public class RollingCubeRule implements Rule<Board> {
         Cube cubeToMove = newBoard.getMatrix()[i][j];
         if(cubeToMove.getFaceColor() == FaceColor.ALL_WHITE){
             newBoard.substractWhite();
+            this.cost = 1;
         }
         FaceColor newFaceColor = cubeToMove.roll(rollDir.getOppositeDirection());
         if(newFaceColor == FaceColor.ALL_WHITE){
             newBoard.addWhite();
+            this.cost = 0;
+        }else if(newFaceColor == FaceColor.ALL_BLACK){
+            this.cost = 2;
         }
         newBoard.getMatrix()[emptySpot[0]][emptySpot[1]] = cubeToMove;
         newBoard.setEmptySpot(i, j);

@@ -48,6 +48,7 @@ public class Solver<E> {
 
         Node<E> node = strategy.nodeFromInitialState(problem.getInitialState());
         strategy.offer(node);
+        queuedStates.add(node.getState());
 
         while ((node = strategy.getNextNode()) != null && !problem.isResolved(node.getState())) {
 
