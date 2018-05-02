@@ -32,7 +32,8 @@ public class SolverCLI {
             return Heuristic.getDeclaredConstructor().newInstance();
 
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            System.err.println("Could not load the class for the heuristic.");
+            System.exit(4);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
@@ -53,7 +54,8 @@ public class SolverCLI {
             return Problem.getDeclaredConstructor().newInstance();
 
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            System.err.println("Could not load the class for the problem.");
+            System.exit(2);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
@@ -118,6 +120,7 @@ public class SolverCLI {
 
         System.out.println("The costs were:");
         System.out.printf("- Total raw cost: %e", cost);
+        System.out.println();
     }
 
 
