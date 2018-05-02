@@ -20,8 +20,8 @@ public class DistributedHalfHeuristic implements Heuristic<Board> {
         for(i = 0;i < 3; i++){
             for(j = 0; j < 3;j++){
                 cube = board.getMatrix()[i][j];
-                faceColor = cube.getFaceColor();
                 if(board.getMatrix()[i][j] != null){
+                    faceColor = cube.getFaceColor();
                     switch (faceColor){
                         case ALL_WHITE:
                             result += 2.0;
