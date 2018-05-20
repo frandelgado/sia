@@ -1,6 +1,7 @@
 package ar.edu.itba.sia.g4.genetics.cli;
 
 import ar.edu.itba.sia.g4.genetics.dnd.DNDCharacter;
+import ar.edu.itba.sia.g4.genetics.dnd.Item;
 import ar.edu.itba.sia.g4.genetics.dnd.Warrior1DNDCharacterSoup;
 import ar.edu.itba.sia.g4.genetics.dnd.crossers.NilCrosser;
 import ar.edu.itba.sia.g4.genetics.dnd.mutators.NilMutator;
@@ -15,6 +16,7 @@ import ar.edu.itba.sia.g4.genetics.engine.problem.Selector;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 
+import java.nio.file.Paths;
 import java.util.List;
 
 public class Main {
@@ -37,7 +39,19 @@ public class Main {
 
     public static void main(String... args) {
         CommandLineOptions options = parseArguments(args);
-        PrimordialSoup<DNDCharacter> genesisPool = new Warrior1DNDCharacterSoup(10);
+
+        List<Item> gauntlets = ItemLoader.loadFromFile(Paths.get("items/guantes.tsv"));
+        List<Item> helmets = ItemLoader.loadFromFile(Paths.get("items/cascos.tsv"));
+        List<Item> boots = ItemLoader.loadFromFile(Paths.get("items/botas.tsv"));
+        List<Item> weapons = ItemLoader.loadFromFile(Paths.get("items/armas.tsv"));
+        List<Item> chestplates = ItemLoader.loadFromFile(Paths.get("items/pecheras.tsv"));
+
+        PrimordialSoup<DNDCharacter> genesisPool = new Warrior1DNDCharacterSoup(10)
+            .setBoots(boots)
+            .setChestplates(chestplates)
+            .setGauntlets(gauntlets)
+            .setWeapons(weapons)
+            .setHelmets(helmets);
         List<DNDCharacter> population = genesisPool.miracleOfLife();
 
         Mutator<DNDCharacter> nilMutator = new NilMutator();

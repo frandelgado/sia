@@ -1,13 +1,15 @@
 package ar.edu.itba.sia.g4.genetics.dnd;
 
 public class Item {
+    private final String id;
     private final double str;
     private final double agi;
     private final double exp;
     private final double res;
     private final double hp;
 
-    public Item(double str, double agi, double exp, double res, double hp) {
+    public Item(String id, double str, double agi, double exp, double res, double hp) {
+        this.id = id;
         this.str = str;
         this.agi = agi;
         this.exp = exp;
@@ -35,10 +37,14 @@ public class Item {
         return hp;
     }
 
+    public String getId() {
+        return id;
+    }
+
     @Override
     public String toString() {
-        return String.format("[Str:%.2f Agi:%.2f Exp:%.2f Res:%.2f HP:%.2f]",
-         str, agi, exp, res, hp);
+        return String.format("[ID(%8s) Str:%.2f Agi:%.2f Exp:%.2f Res:%.2f HP:%.2f]",
+         id, str, agi, exp, res, hp);
     }
 
     @Override
@@ -64,15 +70,19 @@ public class Item {
         if (Double.compare(item.res, res) != 0) {
             return false;
         }
-        return Double.compare(item.hp, hp) == 0;
+        if (Double.compare(item.hp, hp) != 0) {
+            return false;
+        }
+        return id != null ? id.equals(item.id) : item.id == null;
     }
 
     @Override
     public int hashCode() {
         int result;
         long temp;
+        result = id != null ? id.hashCode() : 0;
         temp = Double.doubleToLongBits(str);
-        result = (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
         temp = Double.doubleToLongBits(agi);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         temp = Double.doubleToLongBits(exp);
