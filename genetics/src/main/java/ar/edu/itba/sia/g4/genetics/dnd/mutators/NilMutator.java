@@ -6,7 +6,7 @@ import ar.edu.itba.sia.g4.genetics.engine.problem.Mutator;
 public class NilMutator implements Mutator<DNDCharacter> {
 
     @Override
-    public DNDCharacter mutate(DNDCharacter ind) {
+    public DNDCharacter mutate(DNDCharacter ind, long generation) {
         return ind;
     }
 }

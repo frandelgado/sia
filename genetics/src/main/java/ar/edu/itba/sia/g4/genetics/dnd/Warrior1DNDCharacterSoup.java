@@ -50,7 +50,26 @@ public class Warrior1DNDCharacterSoup implements PrimordialSoup<DNDCharacter> {
         return new DNDCharacter(warrior, helmet, weapon, chestplate, gauntlets, boots, height);
     }
 
-    public List<Item> getHelmets() {
+    public double getRandomHeight(){
+        return MIN_HEIGHT + (MAX_HEIGHT - MIN_HEIGHT) * this.rnd.nextDouble();
+    }
+    public Item getRandomHelmet(){
+        return select(getHelmets(), (int) Math.round(this.rnd.nextDouble() * Integer.MAX_VALUE));
+    }
+    public Item getRandomWeapon(){
+        return select(getWeapons(), (int) Math.round(this.rnd.nextDouble() * Integer.MAX_VALUE));
+    }
+    public Item getRandomChestplate(){
+        return select(getChestplates(), (int) Math.round(this.rnd.nextDouble() * Integer.MAX_VALUE));
+    }
+    public Item getRandomGauntlets(){
+        return select(getGauntlets(), (int) Math.round(this.rnd.nextDouble() * Integer.MAX_VALUE));
+    }
+    public Item getRandomBoots(){
+        return select(getBoots(), (int) Math.round(this.rnd.nextDouble() * Integer.MAX_VALUE));
+    }
+
+    public  List<Item> getHelmets() {
         return helmets;
     }
 

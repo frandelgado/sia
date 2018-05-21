@@ -2,7 +2,10 @@ package ar.edu.itba.sia.g4.genetics.dnd;
 
 import ar.edu.itba.sia.g4.genetics.engine.problem.Species;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class DNDCharacter implements Species {
     private final Profession profession;
@@ -153,5 +156,9 @@ public class DNDCharacter implements Species {
          profession.toString(),
          str, agi, exp, res, hp, height,
          items[0], items[1], items[2], items[3], items[4]);
+    }
+
+    public Object[] getCromosome() {
+        return new Object[]{this.items[0], this.items[1], this.items[2], this.items[3], this.items[4], this.height};
     }
 }

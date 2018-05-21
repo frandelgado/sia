@@ -31,14 +31,14 @@ public class Darwin<T extends Species> {
         long generation = 0;
         do {
             previousPopulation = currentPopulation;
-            currentPopulation = getNextGeneration(currentPopulation);
+            currentPopulation = getNextGeneration(currentPopulation, generation);
         } while (target.shouldEvolve(previousPopulation, currentPopulation, ++generation));
         return currentPopulation;
     }
 
-    private List<T> getNextGeneration(List<T> population) {
+    private List<T> getNextGeneration(List<T> population, long generation) {
         List<T> offspring = breedAll(population)
-         .map(mutator::mutate)
+         .map(ind -> mutator.mutate(ind, generation))
          .collect(Collectors.toList());
 
         return selector.selectAndReplace(population, offspring);
