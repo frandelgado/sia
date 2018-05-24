@@ -141,7 +141,8 @@ public class DNDCharacter implements Species {
 
         return String.format(
           "---\n" +
-          "Character %s <str %.2f, agi %.2f, exp %.2f, res %.2f, hp %.2f>\n\n" +
+          "Character %s <str %.2f, agi %.2f, exp %.2f, res %.2f, hp %.2f>\n" +
+           "               Class: \t%s\n" +
            "       !       Height \t%f\n" +
            "      .-.      \n" +
            "    __|=|__    HELMET \t%s \n" +
@@ -153,8 +154,9 @@ public class DNDCharacter implements Species {
            "      |||      \n" +
            "     /_|_\\     BOOTS \t%s \n" +
            "",
-         profession.toString(),
-         str, agi, exp, res, hp, height,
+         this.hashCode(),
+         str, agi, exp, res, hp,
+         profession.toString(), height,
          items[0], items[1], items[2], items[3], items[4]);
     }
 
