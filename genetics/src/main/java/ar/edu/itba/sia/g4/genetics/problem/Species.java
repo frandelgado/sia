@@ -1,4 +1,4 @@
-package ar.edu.itba.sia.g4.genetics.engine.problem;
+package ar.edu.itba.sia.g4.genetics.problem;
 
 public interface Species {
     double getFitness();

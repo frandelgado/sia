@@ -1,6 +1,6 @@
 package ar.edu.itba.sia.g4.genetics.dnd;
 
-import ar.edu.itba.sia.g4.genetics.engine.problem.Species;
+import ar.edu.itba.sia.g4.genetics.problem.Species;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,28 +1,26 @@
 package ar.edu.itba.sia.g4.genetics.engine;
 
-import ar.edu.itba.sia.g4.genetics.engine.problem.Crossover;
-import ar.edu.itba.sia.g4.genetics.engine.problem.EvolutionaryTarget;
-import ar.edu.itba.sia.g4.genetics.engine.problem.Mutator;
-import ar.edu.itba.sia.g4.genetics.engine.problem.Selector;
-import ar.edu.itba.sia.g4.genetics.engine.problem.Species;
+import ar.edu.itba.sia.g4.genetics.problem.Combinator;
+import ar.edu.itba.sia.g4.genetics.problem.Couple;
+import ar.edu.itba.sia.g4.genetics.problem.EvolutionaryTarget;
+import ar.edu.itba.sia.g4.genetics.problem.Mutator;
+import ar.edu.itba.sia.g4.genetics.problem.Species;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class Darwin<T extends Species> {
-    private final Mutator<T> mutator;
-    private final Selector<T> selector;
-    private final Crossover<T> crossover;
+public class Darwin<T extends Species> implements GeneticEngine<T> {
     private final EvolutionaryTarget<T> target;
+    private final Combinator<T> combinator;
+    private final Mutator<T> mutator;
+    private final Replacer<T> replacer;
 
-    public Darwin(Mutator<T> mutator, Crossover<T> crossover, Selector<T> selector, EvolutionaryTarget<T> target) {
-        this.mutator = mutator;
-        this.crossover = crossover;
-        this.selector = selector;
+    public Darwin(EvolutionaryTarget<T> target, Combinator<T> combinator, Mutator<T> mutator, Replacer<T> replacer) {
         this.target = target;
+        this.combinator = combinator;
+        this.mutator = mutator;
+        this.replacer = replacer;
     }
 
     public List<T> evolve(List<T> population) {
@@ -37,24 +35,35 @@ public class Darwin<T extends Species> {
     }
 
     private List<T> getNextGeneration(List<T> population, long generation) {
-        List<T> offspring = breedAll(population)
-         .map(ind -> mutator.mutate(ind, generation))
+        // do some math to find the correct population gap
+        int k = (int) replacer.getGenerationalGapRatio() * population.size();
+
+        // select some k parents
+        List<T> parents = replacer.getParents(population, k);
+        // make some couples (k / 2 + 1)
+        List<T> children = combinator.pickCouples(parents, k / 2 + 1)
+         .stream().parallel()
+        // see if we should breed the couples. Breed them or return them
+         .map(p -> breedPair(p, generation))
+         // Note: if we had K pairs and each *sort preserving* pair only produced a single
+         // offspring, the flatMap wouldn't be necessary and this would be a tad faster.
+         // The only property we need to ensure that is that if X({p1, p2}) -> ({c1, c2})
+         // then X'(p1, p2) -> c1 and X'(p2, p1) -> c2
+         .flatMap(pair -> Stream.of(pair.getHead(), pair.getTail()))
+        // see if we should mutate individuals. Mutate if so
+         .map(i -> mutateThing(i, generation))
+        // limit k
+         .limit(k)
          .collect(Collectors.toList());
-
-        return selector.selectAndReplace(population, offspring);
+        // use replacement method (#N, #k) -> #N
+        return replacer.mix(population, children);
     }
-
-    private Stream<T> breedAll(List<T> population) {
-        return IntStream.range(0, population.size())
-         .mapToObj(i -> breedOne(i, population))
-         .flatMap(stream -> stream);
+    
+    private Couple<T> breedPair(Couple<T> couple, long generation) {
+        return combinator.shouldBreed(couple, generation) ? combinator.breed(couple) : couple;
     }
-
-    private Stream<T> breedOne(int i, List<T> population) {
-        T parent = population.get(i);
-        return population.parallelStream()
-            .skip(i + 1)
-            .flatMap(p -> Arrays.stream(crossover.breed(parent, p)));
+    
+    private T mutateThing(T theThing, long generation) {
+        return mutator.shouldMutate(theThing, generation) ? mutator.mutate(theThing) : theThing;
     }
-
 }

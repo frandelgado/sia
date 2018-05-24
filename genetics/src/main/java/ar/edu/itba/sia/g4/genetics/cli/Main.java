@@ -1,19 +1,22 @@
 package ar.edu.itba.sia.g4.genetics.cli;
 
 import ar.edu.itba.sia.g4.genetics.dnd.DNDCharacter;
+import ar.edu.itba.sia.g4.genetics.dnd.DNDCharacterSoup;
 import ar.edu.itba.sia.g4.genetics.dnd.Item;
 import ar.edu.itba.sia.g4.genetics.dnd.Warrior1DNDCharacterSoup;
 import ar.edu.itba.sia.g4.genetics.dnd.crossers.SinglePointCrosser;
-import ar.edu.itba.sia.g4.genetics.dnd.mutators.OneAlleleChoice;
+import ar.edu.itba.sia.g4.genetics.dnd.mutators.ProbabilityFunction;
 import ar.edu.itba.sia.g4.genetics.dnd.mutators.OneAlleleMutator;
-import ar.edu.itba.sia.g4.genetics.dnd.selectors.NilSelector;
+import ar.edu.itba.sia.g4.genetics.dnd.selectors.RouletteSelector;
 import ar.edu.itba.sia.g4.genetics.dnd.targets.NilTarget;
 import ar.edu.itba.sia.g4.genetics.engine.Darwin;
-import ar.edu.itba.sia.g4.genetics.engine.problem.Crossover;
-import ar.edu.itba.sia.g4.genetics.engine.problem.EvolutionaryTarget;
-import ar.edu.itba.sia.g4.genetics.engine.problem.Mutator;
-import ar.edu.itba.sia.g4.genetics.engine.problem.PrimordialSoup;
-import ar.edu.itba.sia.g4.genetics.engine.problem.Selector;
+import ar.edu.itba.sia.g4.genetics.engine.NewGenerationReplacer;
+import ar.edu.itba.sia.g4.genetics.engine.Replacer;
+import ar.edu.itba.sia.g4.genetics.problem.Combinator;
+import ar.edu.itba.sia.g4.genetics.problem.EvolutionaryTarget;
+import ar.edu.itba.sia.g4.genetics.problem.Mutator;
+import ar.edu.itba.sia.g4.genetics.problem.PrimordialSoup;
+import ar.edu.itba.sia.g4.genetics.problem.Selector;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.slf4j.Logger;
@@ -53,7 +56,7 @@ public class Main {
         List<Item> chestplates = ItemLoader.loadFromFile(Paths.get("items/pecheras.tsv"));
 
         logger.info("Generating warriors");
-        PrimordialSoup<DNDCharacter> genesisPool = new Warrior1DNDCharacterSoup(10)
+        DNDCharacterSoup genesisPool = new Warrior1DNDCharacterSoup(1000)
             .setBoots(boots)
             .setChestplates(chestplates)
             .setGauntlets(gauntlets)
@@ -63,17 +66,13 @@ public class Main {
 
         //        Mutator<DNDCharacter> nilMutator = new NilMutator();
 //        Crossover<DNDCharacter> nilCrosser = new NilCrosser();
-        Selector<DNDCharacter> nilSelector = new NilSelector();
+        Selector<DNDCharacter> nilSelector = new RouletteSelector();
         EvolutionaryTarget<DNDCharacter> nilTarget = new NilTarget();
-        Mutator<DNDCharacter> oneAlleleMutator = new OneAlleleMutator(new OneAlleleChoice() {
-            @Override
-            public double mutatationProb(long generation, int alleleIndex) {
-                return 0;
-            }
-        }, (Warrior1DNDCharacterSoup) genesisPool);
-        Crossover<DNDCharacter> singlePointCrosser = new SinglePointCrosser();
+        Mutator<DNDCharacter> oneAlleleMutator = new OneAlleleMutator((ind, gen) -> 0, genesisPool);
+        Combinator<DNDCharacter> singlePointCrosser = new SinglePointCrosser();
+        Replacer<DNDCharacter> replacer = new NewGenerationReplacer<>();
 
-        Darwin<DNDCharacter> charles = new Darwin(oneAlleleMutator, singlePointCrosser, nilSelector, nilTarget);
+        Darwin<DNDCharacter> charles = new Darwin(nilTarget, singlePointCrosser, oneAlleleMutator, replacer);
         logger.info("Running the engine");
         List<DNDCharacter> evolved = charles.evolve(population);
 
