@@ -36,6 +36,6 @@ public class KeepSomeAncestorsReplacer<T extends Species> implements Replacer<T>
         int kComplement = original.size() - children.size();
         List<T> keep = replacer.select(original, kComplement);
         return Stream.concat(keep.stream(), children.stream())
-         .collect(Collectors.toUnmodifiableList());
+         .collect(Collectors.toList());
     }
 }

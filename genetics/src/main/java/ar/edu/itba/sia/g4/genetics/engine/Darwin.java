@@ -68,7 +68,7 @@ public class Darwin<T extends Species> implements GeneticEngine<T> {
          .map(i -> mutateThing(i, generation))
         // limit k
          .limit(k)
-         .collect(Collectors.toUnmodifiableList());
+         .collect(Collectors.toList());
         // use replacement method (#N, #k) -> #N
         return replacer.mix(population, children);
     }

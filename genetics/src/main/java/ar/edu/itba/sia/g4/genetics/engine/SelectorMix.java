@@ -27,6 +27,6 @@ public class SelectorMix<T extends Species> implements Selector<T> {
         int mixX = (int)(mix * populationLimit);
         List<T> mix1list = mix1.select(population, mixX);
         List<T> mix2list = mix2.select(population, populationLimit - mixX);
-        return Stream.concat(mix1list.stream(), mix2list.stream()).collect(Collectors.toUnmodifiableList());
+        return Stream.concat(mix1list.stream(), mix2list.stream()).collect(Collectors.toList());
     }
 }

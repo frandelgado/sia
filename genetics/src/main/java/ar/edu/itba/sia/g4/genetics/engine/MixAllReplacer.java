@@ -34,7 +34,7 @@ public class MixAllReplacer<T extends Species> implements Replacer<T> {
     @Override
     public List<T> mix(List<T> originalPopulation, List<T> newChildren) {
         List<T> everyone = Stream.concat(newChildren.stream(), originalPopulation.stream())
-         .collect(Collectors.toUnmodifiableList());
+         .collect(Collectors.toList());
         return replacer.select(everyone, originalPopulation.size());
     }
 }
