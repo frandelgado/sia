@@ -8,6 +8,6 @@ import java.util.List;
 public class NilTarget implements EvolutionaryTarget<DNDCharacter> {
     @Override
     public boolean shouldEvolve(List<DNDCharacter> prev, List<DNDCharacter> curr, long generation) {
-        return generation < 1000;
+        return generation < 100000;
     }
 }

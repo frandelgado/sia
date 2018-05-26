@@ -151,13 +151,14 @@ public class DNDCharacter implements Species {
            "   <>/   \\<>   CHEST. \t%s\n" +
            "    \\|_._|/    GAUNT. \t%s\n" +
            "     <_I_>     \n" +
-           "      |||      \n" +
-           "     /_|_\\     BOOTS \t%s \n" +
+           "      |||      BOOTS \t%s \n" +
+           "     /_|_\\     Fitness: %f\n" +
            "",
          this.hashCode(),
          str, agi, exp, res, hp,
          profession.toString(), height,
-         items[0], items[1], items[2], items[3], items[4]);
+         items[0], items[1], items[2], items[3], items[4],
+         getFitness());
     }
 
     public Object[] getCromosome() {

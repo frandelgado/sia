@@ -5,6 +5,8 @@ import ar.edu.itba.sia.g4.genetics.problem.Couple;
 import ar.edu.itba.sia.g4.genetics.problem.EvolutionaryTarget;
 import ar.edu.itba.sia.g4.genetics.problem.Mutator;
 import ar.edu.itba.sia.g4.genetics.problem.Species;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,6 +17,7 @@ public class Darwin<T extends Species> implements GeneticEngine<T> {
     private final Combinator<T> combinator;
     private final Mutator<T> mutator;
     private final Replacer<T> replacer;
+    private final static Logger logger = LoggerFactory.getLogger(Darwin.class);
 
     public Darwin(EvolutionaryTarget<T> target, Combinator<T> combinator, Mutator<T> mutator, Replacer<T> replacer) {
         this.target = target;
@@ -30,13 +33,24 @@ public class Darwin<T extends Species> implements GeneticEngine<T> {
         do {
             previousPopulation = currentPopulation;
             currentPopulation = getNextGeneration(currentPopulation, generation);
-        } while (target.shouldEvolve(previousPopulation, currentPopulation, ++generation));
+            assert previousPopulation.size() == currentPopulation.size();
+            inspectGeneration(previousPopulation, currentPopulation, generation);
+        } while (target.shouldEvolve(previousPopulation, currentPopulation, generation++));
         return currentPopulation;
+    }
+
+    private void inspectGeneration(List<T> prev, List<T> cur, long generation) {
+        double oldAvgFitness = prev.parallelStream().mapToDouble(Species::getFitness).average().orElse(0);
+        double avgFitness = cur.parallelStream().mapToDouble(Species::getFitness).average().orElse(0);
+        logger.info("Generation {}", generation);
+        logger.info("Avg fitness {}", avgFitness);
+        logger.info("Delta fitness {}", -oldAvgFitness + avgFitness);
+        logger.info("Fittest {}", cur.parallelStream().mapToDouble(Species::getFitness).max().orElse(0));
     }
 
     private List<T> getNextGeneration(List<T> population, long generation) {
         // do some math to find the correct population gap
-        int k = (int) replacer.getGenerationalGapRatio() * population.size();
+        int k = (int)(replacer.getGenerationalGapRatio() * population.size());
 
         // select some k parents
         List<T> parents = replacer.getParents(population, k);
@@ -54,7 +68,7 @@ public class Darwin<T extends Species> implements GeneticEngine<T> {
          .map(i -> mutateThing(i, generation))
         // limit k
          .limit(k)
-         .collect(Collectors.toList());
+         .collect(Collectors.toUnmodifiableList());
         // use replacement method (#N, #k) -> #N
         return replacer.mix(population, children);
     }

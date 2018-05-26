@@ -4,6 +4,8 @@ import ar.edu.itba.sia.g4.genetics.problem.Selector;
 import ar.edu.itba.sia.g4.genetics.problem.Species;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class KeepSomeAncestorsReplacer<T extends Species> implements Replacer<T> {
     private final Selector<T> selector;
@@ -33,8 +35,7 @@ public class KeepSomeAncestorsReplacer<T extends Species> implements Replacer<T>
     public List<T> mix(List<T> original, List<T> children) {
         int kComplement = original.size() - children.size();
         List<T> keep = replacer.select(original, kComplement);
-        List<T> result = keep;
-        result.addAll(children);
-        return result;
+        return Stream.concat(keep.stream(), children.stream())
+         .collect(Collectors.toUnmodifiableList());
     }
 }

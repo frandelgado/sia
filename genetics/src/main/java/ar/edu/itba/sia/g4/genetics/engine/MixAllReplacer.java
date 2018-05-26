@@ -4,6 +4,8 @@ import ar.edu.itba.sia.g4.genetics.problem.Selector;
 import ar.edu.itba.sia.g4.genetics.problem.Species;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MixAllReplacer<T extends Species> implements Replacer<T> {
     private final Selector<T> selector;
@@ -31,8 +33,8 @@ public class MixAllReplacer<T extends Species> implements Replacer<T> {
 
     @Override
     public List<T> mix(List<T> originalPopulation, List<T> newChildren) {
-        List<T> everyone = originalPopulation;
-        everyone.addAll(newChildren);
+        List<T> everyone = Stream.concat(newChildren.stream(), originalPopulation.stream())
+         .collect(Collectors.toUnmodifiableList());
         return replacer.select(everyone, originalPopulation.size());
     }
 }
