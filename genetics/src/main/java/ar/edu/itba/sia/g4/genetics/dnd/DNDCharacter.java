@@ -158,7 +158,7 @@ public class DNDCharacter implements Species {
          getFitness());
     }
 
-    public Object[] getCromosome() {
+    public Object[] getChromosome() {
         return new Object[]{this.items[0], this.items[1], this.items[2], this.items[3], this.items[4], this.height};
     }
 }

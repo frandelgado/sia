@@ -27,7 +27,7 @@ public class OneAlleleMutator implements Mutator<DNDCharacter> {
 
     @Override
     public DNDCharacter mutate(DNDCharacter ind) {
-        Object[] cromosome = ind.getCromosome();
+        Object[] cromosome = ind.getChromosome();
         int i = ind.hashCode() % (cromosome.length);
         switch (i){
             case 0: cromosome[i] = this.soup.getRandomHelmet();break;
