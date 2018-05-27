@@ -21,6 +21,7 @@ public class AnnularCrosser implements Combinator<DNDCharacter> {
         
         Object[] offspring1Chromosome = papi.getChromosome();
         Object[] offspring2Chromosome = mami.getChromosome();
+
         Object allele;
         for(int i = pointIndex; length >= 0; i++){
             allele = offspring1Chromosome[i];
