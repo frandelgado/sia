@@ -19,24 +19,24 @@ public class AnnularCrosser implements Combinator<DNDCharacter> {
         int pointIndex = random.nextInt(6);
         int length = random.nextInt(3);
 
-        Object[] offspring1Cromosome = papi.getCromosome();
-        Object[] offspring2Cromosome = mami.getCromosome();
+        Object[] offspring1Chromosome = papi.getChromosome();
+        Object[] offspring2Chromosome = mami.getChromosome();
         Object allele;
         for(int i = pointIndex; length >= 0; i++){
-            allele = offspring1Cromosome[i];
-            offspring1Cromosome[i] = offspring2Cromosome[i];
-            offspring2Cromosome[i] = allele;
+            allele = offspring1Chromosome[i];
+            offspring1Chromosome[i] = offspring2Chromosome[i];
+            offspring2Chromosome[i] = allele;
             if(i==5)
                 i=0;
             length--;
         }
 
-        DNDCharacter offspring1  = new DNDCharacter(papi.getProfession(), (Item) offspring1Cromosome[0],
-                (Item) offspring1Cromosome[1],(Item) offspring1Cromosome[2], (Item) offspring1Cromosome[3],
-                (Item) offspring1Cromosome[4], (double) offspring1Cromosome[5]);
-        DNDCharacter offspring2  = new DNDCharacter(mami.getProfession(), (Item) offspring2Cromosome[0],
-                (Item) offspring2Cromosome[1],(Item) offspring2Cromosome[2], (Item) offspring2Cromosome[3],
-                (Item) offspring2Cromosome[4], (double) offspring2Cromosome[5]);
+        DNDCharacter offspring1  = new DNDCharacter(papi.getProfession(), (Item) offspring1Chromosome[0],
+                (Item) offspring1Chromosome[1],(Item) offspring1Chromosome[2], (Item) offspring1Chromosome[3],
+                (Item) offspring1Chromosome[4], (double) offspring1Chromosome[5]);
+        DNDCharacter offspring2  = new DNDCharacter(mami.getProfession(), (Item) offspring2Chromosome[0],
+                (Item) offspring2Chromosome[1],(Item) offspring2Chromosome[2], (Item) offspring2Chromosome[3],
+                (Item) offspring2Chromosome[4], (double) offspring2Chromosome[5]);
         return new Couple<>(offspring1, offspring2);
     }
 

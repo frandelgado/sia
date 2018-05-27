@@ -19,25 +19,25 @@ public class DoublePointCrosser implements Combinator<DNDCharacter> {
         while( secondPoint == firstPoint){
             secondPoint = new Random().nextInt(6);
         }
-        Object[] offspring1Cromosome = papi.getChromosome();
-        Object[] offspring2Cromosome = mami.getChromosome();
+        Object[] offspring1chromosome = papi.getChromosome();
+        Object[] offspring2chromosome = mami.getChromosome();
         Object allele;
         for(int i = firstPoint; i != secondPoint; i++){
-            allele = offspring1Cromosome[i];
-            offspring1Cromosome[i] = offspring2Cromosome[i];
-            offspring2Cromosome[i] = allele;
+            allele = offspring1chromosome[i];
+            offspring1chromosome[i] = offspring2chromosome[i];
+            offspring2chromosome[i] = allele;
             // The chromosomes are thought of as rings
             // with the first and last gene connected.
             if(i == 5){
                 i = 0;
             }
         }
-        DNDCharacter offspring1  = new DNDCharacter(papi.getProfession(), (Item) offspring1Cromosome[0],
-                (Item) offspring1Cromosome[1],(Item) offspring1Cromosome[2], (Item) offspring1Cromosome[3],
-                (Item) offspring1Cromosome[4], (double) offspring1Cromosome[5]);
-        DNDCharacter offspring2  = new DNDCharacter(mami.getProfession(), (Item) offspring2Cromosome[0],
-                (Item) offspring2Cromosome[1],(Item) offspring2Cromosome[2], (Item) offspring2Cromosome[3],
-                (Item) offspring2Cromosome[4], (double) offspring2Cromosome[5]);
+        DNDCharacter offspring1  = new DNDCharacter(papi.getProfession(), (Item) offspring1chromosome[0],
+                (Item) offspring1chromosome[1],(Item) offspring1chromosome[2], (Item) offspring1chromosome[3],
+                (Item) offspring1chromosome[4], (double) offspring1chromosome[5]);
+        DNDCharacter offspring2  = new DNDCharacter(mami.getProfession(), (Item) offspring2chromosome[0],
+                (Item) offspring2chromosome[1],(Item) offspring2chromosome[2], (Item) offspring2chromosome[3],
+                (Item) offspring2chromosome[4], (double) offspring2chromosome[5]);
         return new Couple<>(offspring1, offspring2);
     }
 

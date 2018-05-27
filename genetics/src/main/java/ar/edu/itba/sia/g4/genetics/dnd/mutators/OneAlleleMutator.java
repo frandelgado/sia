@@ -27,19 +27,19 @@ public class OneAlleleMutator implements Mutator<DNDCharacter> {
 
     @Override
     public DNDCharacter mutate(DNDCharacter ind) {
-        Object[] cromosome = ind.getChromosome();
-        int i = ind.hashCode() % (cromosome.length);
+        Object[] chromosome = ind.getChromosome();
+        int i = ind.hashCode() % (chromosome.length);
         switch (i){
-            case 0: cromosome[i] = this.soup.getRandomHelmet();break;
-            case 1: cromosome[i] = this.soup.getRandomWeapon();break;
-            case 2: cromosome[i] = this.soup.getRandomChestplate();break;
-            case 3: cromosome[i] = this.soup.getRandomGauntlets();break;
-            case 4: cromosome[i] = this.soup.getRandomBoots();break;
-            case 5: cromosome[i] = this.soup.getRandomHeight();break;
+            case 0: chromosome[i] = this.soup.getRandomHelmet();break;
+            case 1: chromosome[i] = this.soup.getRandomWeapon();break;
+            case 2: chromosome[i] = this.soup.getRandomChestplate();break;
+            case 3: chromosome[i] = this.soup.getRandomGauntlets();break;
+            case 4: chromosome[i] = this.soup.getRandomBoots();break;
+            case 5: chromosome[i] = this.soup.getRandomHeight();break;
         }
-        DNDCharacter mutatedInd  = new DNDCharacter(ind.getProfession(), (Item) cromosome[0],
-                (Item) cromosome[1],(Item) cromosome[2], (Item) cromosome[3],
-                (Item) cromosome[4], (double) cromosome[5]);
+        DNDCharacter mutatedInd  = new DNDCharacter(ind.getProfession(), (Item) chromosome[0],
+                (Item) chromosome[1],(Item) chromosome[2], (Item) chromosome[3],
+                (Item) chromosome[4], (double) chromosome[5]);
         return mutatedInd;
     }
 
