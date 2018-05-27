@@ -13,7 +13,10 @@ import ar.edu.itba.sia.g4.genetics.dnd.crossers.DoublePointCrosser;
 import ar.edu.itba.sia.g4.genetics.dnd.crossers.SinglePointCrosser;
 import ar.edu.itba.sia.g4.genetics.dnd.mutators.OneAlleleMutator;
 import ar.edu.itba.sia.g4.genetics.dnd.selectors.RankingSelector;
+import ar.edu.itba.sia.g4.genetics.dnd.selectors.EliteSelector;
+import ar.edu.itba.sia.g4.genetics.dnd.selectors.ProbabilisticTournamentSelector;
 import ar.edu.itba.sia.g4.genetics.dnd.selectors.RouletteSelector;
+import ar.edu.itba.sia.g4.genetics.dnd.selectors.UniversalSelector;
 import ar.edu.itba.sia.g4.genetics.dnd.targets.IterationTarget;
 import ar.edu.itba.sia.g4.genetics.engine.Darwin;
 import ar.edu.itba.sia.g4.genetics.engine.GeneticEngine;
@@ -88,6 +91,12 @@ public class Main {
             return new RouletteSelector<>(selectorConfig.isUseBoltzmann());
         case "ranking":
             return new RankingSelector<>(selectorConfig.isUseBoltzmann());
+        case "probabilisticTournament":
+            return new ProbabilisticTournamentSelector<>(selectorConfig.isUseBoltzmann());
+        case "elite":
+            return new EliteSelector<>(selectorConfig.isUseBoltzmann());
+        case "universal":
+            return new UniversalSelector<>(selectorConfig.isUseBoltzmann());
         default:
             throw new IllegalArgumentException("No such selector");
         }
