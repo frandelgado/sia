@@ -1,11 +1,45 @@
 {
+  "profession": "WARRIOR1",
   "items": {
-    "gauntlets": "items/guantes.tsv",
-    "weapons": "items/armas.tsv",
-    "chestplates": "items/pecheras.tsv",
-    "helmets": "items/cascos.tsv",
-    "boots": "items/botas.tsv"
+    "gauntlets": "items-chicos/guantes.tsv",
+    "weapons": "items-chicos/armas.tsv",
+    "chestplates": "items-chicos/pecheras.tsv",
+    "helmets": "items-chicos/cascos.tsv",
+    "boots": "items-chicos/botas.tsv"
   },
+
   "populationSize": 1000,
-  "generationalGap": 0.75
+  "generationalGap": 0.75,
+
+  "target": {
+    "iterations": 1000
+  },
+
+  "selector": {
+    "mix": 0.5,
+
+    "first": {
+      "useBoltzmann": true,
+      "type": "roulette"
+    },
+
+    "last": {
+      "useBoltzmann": true,
+      "type": "roulette"
+    }
+  },
+
+  "replacer": {
+    "mix": 0.5,
+
+    "first": {
+      "useBoltzmann": true,
+      "type": "roulette"
+    },
+
+    "last": {
+      "useBoltzmann": true,
+      "type": "roulette"
+    }
+  }
 }

@@ -1,6 +1,8 @@
 package ar.edu.itba.sia.g4.genetics.cli;
 
 import ar.edu.itba.sia.g4.genetics.config.AppConfig;
+import ar.edu.itba.sia.g4.genetics.config.SelectorConfig;
+import ar.edu.itba.sia.g4.genetics.config.SelectorsConfig;
 import ar.edu.itba.sia.g4.genetics.dnd.DNDCharacter;
 import ar.edu.itba.sia.g4.genetics.dnd.DNDCharacterSoup;
 import ar.edu.itba.sia.g4.genetics.dnd.Item;
@@ -14,6 +16,7 @@ import ar.edu.itba.sia.g4.genetics.engine.Darwin;
 import ar.edu.itba.sia.g4.genetics.engine.GeneticEngine;
 import ar.edu.itba.sia.g4.genetics.engine.MixAllReplacer;
 import ar.edu.itba.sia.g4.genetics.engine.Replacer;
+import ar.edu.itba.sia.g4.genetics.engine.SelectorMix;
 import ar.edu.itba.sia.g4.genetics.problem.Combinator;
 import ar.edu.itba.sia.g4.genetics.problem.EvolutionaryTarget;
 import ar.edu.itba.sia.g4.genetics.problem.Mutator;
@@ -73,38 +76,92 @@ public class Main {
         return null;
     }
 
-    private static Selector<DNDCharacter> getSelector(AppConfig config) {
-
-        return null;
+    private static Profession getProfession(AppConfig config) {
+        return Profession.valueOf(config.getProfession().trim().toUpperCase());
     }
 
-    public static void main(String... args) {
-        CommandLineOptions options = parseArguments(args);
-        AppConfig config = loadConfig(options.getConfig());
+    private static Selector<DNDCharacter> getSelector(SelectorConfig selectorConfig) {
+        switch (selectorConfig.getType()) {
+        case "roulette":
+            return new RouletteSelector<>(selectorConfig.isUseBoltzmann());
+        default:
+            throw new IllegalArgumentException("No such selector");
+        }
+    }
 
-        logger.info("Loading files");
+    private static Selector<DNDCharacter> getSelector(AppConfig config) {
+        SelectorsConfig selectors = config.getSelector();
+        Selector<DNDCharacter> first = getSelector(selectors.getFirst());
+        Selector<DNDCharacter> last = getSelector(selectors.getLast());
+        return new SelectorMix<>(first, last, selectors.getMix());
+    }
+
+    private static Selector<DNDCharacter> getReplacer(AppConfig config) {
+        SelectorsConfig selectors = config.getReplacer();
+        Selector<DNDCharacter> first = getSelector(selectors.getFirst());
+        Selector<DNDCharacter> last = getSelector(selectors.getLast());
+        return new SelectorMix<>(first, last, selectors.getMix());
+    }
+
+    private static Replacer<DNDCharacter> getReplacerAlgo(AppConfig config) {
+        Selector<DNDCharacter> selector = getSelector(config);
+        Selector<DNDCharacter> replacer = getReplacer(config);
+        double generationalGap = config.getGenerationalGap();
+
+        switch (config.getReplacementAlgorithm()) {
+        case "mix-all":
+            return new MixAllReplacer<>(selector, replacer, generationalGap);
+        default:
+            throw new IllegalArgumentException("No such replacement algorithm");
+        }
+    }
+
+    private static Combinator<DNDCharacter> getCombinator(AppConfig config) {
+        return new SinglePointCrosser();
+    }
+
+    private static Mutator<DNDCharacter> getMutator(AppConfig config, DNDCharacterSoup genesisPool) {
+        return new OneAlleleMutator((ind, gen) -> 0.02, genesisPool);
+    }
+
+    private static EvolutionaryTarget<DNDCharacter> getTarget(AppConfig config) {
+        return new IterationTarget(config.getTarget().getIterations());
+    }
+
+    private static DNDCharacterSoup loadPrimordialSoup(AppConfig config) {
         List<Item> gauntlets = loadItemCollection(config, "gauntlets");
         List<Item> helmets = loadItemCollection(config, "helmets");
         List<Item> boots = loadItemCollection(config, "boots");
         List<Item> weapons = loadItemCollection(config, "weapons");
         List<Item> chestplates = loadItemCollection(config, "chestplates");
 
+        Profession profession = getProfession(config);
+        int populationSize = config.getPopulationSize();
+
         logger.info("Generating warriors");
-        DNDCharacterSoup genesisPool = new SingleClassDNDCharacterSoup(config.getPopulationSize(), Profession.WARRIOR1)
-            .setBoots(boots)
-            .setChestplates(chestplates)
-            .setGauntlets(gauntlets)
-            .setWeapons(weapons)
-            .setHelmets(helmets);
+        DNDCharacterSoup genesisPool = new SingleClassDNDCharacterSoup(populationSize, profession)
+         .setBoots(boots)
+         .setChestplates(chestplates)
+         .setGauntlets(gauntlets)
+         .setWeapons(weapons)
+         .setHelmets(helmets);
+        return genesisPool;
+    }
+
+    public static void main(String... args) {
+        CommandLineOptions options = parseArguments(args);
+        AppConfig config = loadConfig(options.getConfig());
+
+        DNDCharacterSoup genesisPool = loadPrimordialSoup(config);
         List<DNDCharacter> population = genesisPool.miracleOfLife();
 
-        EvolutionaryTarget<DNDCharacter> nilTarget = new IterationTarget(10000);
-        Mutator<DNDCharacter> oneAlleleMutator = new OneAlleleMutator((ind, gen) -> 0.02, genesisPool);
-        Combinator<DNDCharacter> singlePointCrosser = new SinglePointCrosser();
-        Selector<DNDCharacter> selector = new RouletteSelector(false);
-        Replacer<DNDCharacter> replacer = new MixAllReplacer<>(selector, selector, config.getGenerationalGap());
+        EvolutionaryTarget<DNDCharacter> target = getTarget(config);
+        Mutator<DNDCharacter> mutator = getMutator(config, genesisPool);
+        Combinator<DNDCharacter> crosser = getCombinator(config);
+        Replacer<DNDCharacter> replacer = getReplacerAlgo(config);
 
-        GeneticEngine<DNDCharacter> charles = new Darwin(nilTarget, singlePointCrosser, oneAlleleMutator, replacer);
+        GeneticEngine<DNDCharacter> charles = new Darwin(target, crosser, mutator, replacer);
+
         logger.info("Running the engine");
         long startTime = System.currentTimeMillis();
         List<DNDCharacter> evolved = charles.evolve(population);
