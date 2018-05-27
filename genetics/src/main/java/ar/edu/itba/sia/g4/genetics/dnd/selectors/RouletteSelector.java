@@ -41,9 +41,4 @@ public class RouletteSelector<T extends Species> extends BaseSelector<T> impleme
          .collect(Collectors.toList());
     }
 
-    @Override
-    protected double getTemperature(long generation) {
-        return 1.0 / (generation + 1) + 1;
-    }
-
 }
