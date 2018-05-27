@@ -19,8 +19,8 @@ public class DoublePointCrosser implements Combinator<DNDCharacter> {
         while( secondPoint == firstPoint){
             secondPoint = new Random().nextInt(6);
         }
-        Object[] offspring1Cromosome = papi.getCromosome();
-        Object[] offspring2Cromosome = mami.getCromosome();
+        Object[] offspring1Cromosome = papi.getChromosome();
+        Object[] offspring2Cromosome = mami.getChromosome();
         Object allele;
         for(int i = firstPoint; i != secondPoint; i++){
             allele = offspring1Cromosome[i];
