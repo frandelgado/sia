@@ -8,11 +8,17 @@
     "boots": "items-chicos/botas.tsv"
   },
 
-  "populationSize": 1000,
+  "populationSize": 10,
   "generationalGap": 0.75,
+  "replacementAlgorithm": "mix-all",
 
   "target": {
-    "iterations": 1000
+    "iterations": 100
+  },
+
+  "mutator": {
+    "type": "one-allele",
+    "chance": 0.02
   },
 
   "selector": {

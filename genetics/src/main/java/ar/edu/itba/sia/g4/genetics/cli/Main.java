@@ -1,6 +1,7 @@
 package ar.edu.itba.sia.g4.genetics.cli;
 
 import ar.edu.itba.sia.g4.genetics.config.AppConfig;
+import ar.edu.itba.sia.g4.genetics.config.MutatorConfig;
 import ar.edu.itba.sia.g4.genetics.config.SelectorConfig;
 import ar.edu.itba.sia.g4.genetics.config.SelectorsConfig;
 import ar.edu.itba.sia.g4.genetics.dnd.DNDCharacter;
@@ -63,7 +64,6 @@ public class Main {
         }
     }
 
-
     private static AppConfig loadConfig(File config) {
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -108,7 +108,7 @@ public class Main {
         Selector<DNDCharacter> replacer = getReplacer(config);
         double generationalGap = config.getGenerationalGap();
 
-        switch (config.getReplacementAlgorithm()) {
+        switch (config.getReplacementAlgorithm().trim().toLowerCase()) {
         case "mix-all":
             return new MixAllReplacer<>(selector, replacer, generationalGap);
         default:
@@ -121,7 +121,14 @@ public class Main {
     }
 
     private static Mutator<DNDCharacter> getMutator(AppConfig config, DNDCharacterSoup genesisPool) {
-        return new OneAlleleMutator((ind, gen) -> 0.02, genesisPool);
+        MutatorConfig mutatorConfig = config.getMutator();
+        switch (mutatorConfig.getType().trim().toLowerCase()) {
+        case "one-allele":
+            return new OneAlleleMutator((ind, gen) -> mutatorConfig.getChance(), genesisPool);
+
+        default:
+            throw new IllegalArgumentException("No such mutator");
+        }
     }
 
     private static EvolutionaryTarget<DNDCharacter> getTarget(AppConfig config) {
