@@ -1,16 +1,15 @@
 package ar.edu.itba.sia.g4.genetics.config;
 
 import java.io.Serializable;
+import java.util.Map;
 
 public class AppConfig implements Serializable {
 
     private double generationalGap;
-
     private int populationSize;
-
     private String replacementAlgorithm;
-
     private Items items;
+
 
     public double getGenerationalGap() {
         return generationalGap;

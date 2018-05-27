@@ -22,8 +22,8 @@ public class KeepSomeAncestorsReplacer<T extends Species> implements Replacer<T>
     }
 
     @Override
-    public List<T> getParents(List<T> population, int populationLimit) {
-        return selector.select(population, populationLimit);
+    public List<T> getParents(List<T> population, int populationLimit, long generation) {
+        return selector.select(population, populationLimit, generation);
     }
 
     @Override
@@ -32,9 +32,9 @@ public class KeepSomeAncestorsReplacer<T extends Species> implements Replacer<T>
     }
 
     @Override
-    public List<T> mix(List<T> original, List<T> children) {
+    public List<T> mix(List<T> original, List<T> children, long generation) {
         int kComplement = original.size() - children.size();
-        List<T> keep = replacer.select(original, kComplement);
+        List<T> keep = replacer.select(original, kComplement, generation);
         return Stream.concat(keep.stream(), children.stream())
          .collect(Collectors.toList());
     }

@@ -2,10 +2,7 @@ package ar.edu.itba.sia.g4.genetics.dnd;
 
 import ar.edu.itba.sia.g4.genetics.problem.Species;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 public class DNDCharacter implements Species {
     private final Profession profession;
@@ -80,11 +77,11 @@ public class DNDCharacter implements Species {
     }
 
     private static double getATM(double height) {
-        return 0.5 - Math.pow(3 * height - 5, 4) + Math.pow(3 * height - 5, 2) + height * 0.5;
+        return 0.5 - Math.pow(3. * height - 5, 4) + Math.pow(3. * height - 5, 2) + height * 0.5;
     }
 
     private static double getDEM(double height) {
-        return 2 + Math.pow(3 * height - 5, 4) - Math.pow(3 * height - 5, 2) - height * 0.5;
+        return 2. + Math.pow(3. * height - 5, 4) - Math.pow(3. * height - 5, 2) - height * 0.5;
     }
 
     public Item[] getItems() {
@@ -144,7 +141,7 @@ public class DNDCharacter implements Species {
           "Character %s <str %.2f, agi %.2f, exp %.2f, res %.2f, hp %.2f>\n" +
            "               Class: \t%s\n" +
            "       !       Height \t%f\n" +
-           "      .-.      \n" +
+           "      .-.      atk: %f \tdef: %f\n" +
            "    __|=|__    HELMET \t%s \n" +
            "   (_/`-`\\_)   \n" +
            "   //\\___/\\\\   WEAPON \t%s \n" +
@@ -156,7 +153,7 @@ public class DNDCharacter implements Species {
            "",
          this.hashCode(),
          str, agi, exp, res, hp,
-         profession.toString(), height,
+         profession.toString(), height, atk, def,
          items[0], items[1], items[2], items[3], items[4],
          getFitness());
     }

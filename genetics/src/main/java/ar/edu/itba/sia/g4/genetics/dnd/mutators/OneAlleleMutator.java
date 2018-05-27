@@ -2,6 +2,7 @@ package ar.edu.itba.sia.g4.genetics.dnd.mutators;
 
 import ar.edu.itba.sia.g4.genetics.dnd.DNDCharacter;
 import ar.edu.itba.sia.g4.genetics.dnd.DNDCharacterSoup;
+import ar.edu.itba.sia.g4.genetics.dnd.SingleClassDNDCharacterSoup;
 import ar.edu.itba.sia.g4.genetics.dnd.Item;
 import ar.edu.itba.sia.g4.genetics.problem.Mutator;
 
@@ -9,8 +10,8 @@ import java.util.Random;
 
 public class OneAlleleMutator implements Mutator<DNDCharacter> {
     private final Random random;
-    private ProbabilityFunction probFunc;
-    private DNDCharacterSoup soup;
+    private final ProbabilityFunction probFunc;
+    private final DNDCharacterSoup soup;
 
     public OneAlleleMutator(ProbabilityFunction probFunc, DNDCharacterSoup soup){
         this.probFunc = probFunc;

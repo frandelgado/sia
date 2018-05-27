@@ -22,8 +22,8 @@ public class MixAllReplacer<T extends Species> implements Replacer<T> {
     }
 
     @Override
-    public List<T> getParents(List<T> population, int populationLimit) {
-        return selector.select(population, populationLimit);
+    public List<T> getParents(List<T> population, int populationLimit, long generation) {
+        return selector.select(population, populationLimit, generation);
     }
 
     @Override
@@ -32,9 +32,9 @@ public class MixAllReplacer<T extends Species> implements Replacer<T> {
     }
 
     @Override
-    public List<T> mix(List<T> originalPopulation, List<T> newChildren) {
+    public List<T> mix(List<T> originalPopulation, List<T> newChildren, long generation) {
         List<T> everyone = Stream.concat(newChildren.stream(), originalPopulation.stream())
          .collect(Collectors.toList());
-        return replacer.select(everyone, originalPopulation.size());
+        return replacer.select(everyone, originalPopulation.size(), generation);
     }
 }

@@ -3,7 +3,6 @@ package ar.edu.itba.sia.g4.genetics.cli;
 import ar.edu.itba.sia.g4.genetics.dnd.Item;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,7 +12,7 @@ import java.util.stream.Collectors;
 public class ItemLoader {
     public static List<Item> loadFromFile(Path path) {
         try (BufferedReader reader = Files.newBufferedReader(path)) {
-            return reader.lines().skip(1).parallel()
+            return reader.lines().skip(1)
              .map(ItemLoader::itemFromLine)
              .collect(Collectors.toList());
         } catch (IOException e) {

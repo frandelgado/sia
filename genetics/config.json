@@ -7,5 +7,5 @@
     "boots": "items/botas.tsv"
   },
   "populationSize": 1000,
-  "generationalGap": 0.50
+  "generationalGap": 0.75
 }

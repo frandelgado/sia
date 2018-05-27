@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class Warrior1DNDCharacterSoup implements PrimordialSoup<DNDCharacter>, DNDCharacterSoup {
+public class SingleClassDNDCharacterSoup implements PrimordialSoup<DNDCharacter>, DNDCharacterSoup {
     private final int population;
     private static final double MIN_HEIGHT = 1.3;
     private static final double MAX_HEIGHT = 2.0;
@@ -16,14 +16,17 @@ public class Warrior1DNDCharacterSoup implements PrimordialSoup<DNDCharacter>, D
     private List<Item> gauntlets;
     private List<Item> boots;
     private final Random rnd;
+    private final Profession profession;
 
-    public Warrior1DNDCharacterSoup(int population) {
+    public SingleClassDNDCharacterSoup(int population, Profession profession) {
         this.population = population;
+        this.profession = profession;
         this.rnd = new Random();
     }
 
-    public Warrior1DNDCharacterSoup(int population, long seed) {
+    public SingleClassDNDCharacterSoup(int population, Profession profession, long seed) {
         this.population = population;
+        this.profession = profession;
         this.rnd = new Random(seed);
     }
 
@@ -39,14 +42,13 @@ public class Warrior1DNDCharacterSoup implements PrimordialSoup<DNDCharacter>, D
     }
 
     private DNDCharacter generate(double randomSeed) {
-        Profession warrior = Profession.WARRIOR1;
         Item helmet = select(getHelmets(), (int) Math.round(randomSeed * Integer.MAX_VALUE));
         Item weapon = select(getWeapons(), helmet.hashCode());
         Item chestplate = select(getChestplates(), weapon.hashCode());
         Item gauntlets = select(getGauntlets(), chestplate.hashCode());
         Item boots = select(getBoots(), gauntlets.hashCode());
         double height = MIN_HEIGHT + (MAX_HEIGHT - MIN_HEIGHT) * randomSeed;
-        return new DNDCharacter(warrior, helmet, weapon, chestplate, gauntlets, boots, height);
+        return new DNDCharacter(profession, helmet, weapon, chestplate, gauntlets, boots, height);
     }
 
     @Override
@@ -74,13 +76,14 @@ public class Warrior1DNDCharacterSoup implements PrimordialSoup<DNDCharacter>, D
         return select(getBoots(), (int) Math.round(this.rnd.nextDouble() * Integer.MAX_VALUE));
     }
 
+
     @Override
-    public  List<Item> getHelmets() {
+    public List<Item> getHelmets() {
         return helmets;
     }
 
     @Override
-    public Warrior1DNDCharacterSoup setHelmets(List<Item> helmets) {
+    public SingleClassDNDCharacterSoup setHelmets(List<Item> helmets) {
         this.helmets = helmets;
         return this;
     }
@@ -91,7 +94,7 @@ public class Warrior1DNDCharacterSoup implements PrimordialSoup<DNDCharacter>, D
     }
 
     @Override
-    public Warrior1DNDCharacterSoup setWeapons(List<Item> weapons) {
+    public SingleClassDNDCharacterSoup setWeapons(List<Item> weapons) {
         this.weapons = weapons;
         return this;
     }
@@ -102,7 +105,7 @@ public class Warrior1DNDCharacterSoup implements PrimordialSoup<DNDCharacter>, D
     }
 
     @Override
-    public Warrior1DNDCharacterSoup setChestplates(List<Item> chestplates) {
+    public SingleClassDNDCharacterSoup setChestplates(List<Item> chestplates) {
         this.chestplates = chestplates;
         return this;
     }
@@ -113,7 +116,7 @@ public class Warrior1DNDCharacterSoup implements PrimordialSoup<DNDCharacter>, D
     }
 
     @Override
-    public Warrior1DNDCharacterSoup setGauntlets(List<Item> gauntlets) {
+    public SingleClassDNDCharacterSoup setGauntlets(List<Item> gauntlets) {
         this.gauntlets = gauntlets;
         return this;
     }
@@ -124,10 +127,8 @@ public class Warrior1DNDCharacterSoup implements PrimordialSoup<DNDCharacter>, D
     }
 
     @Override
-    public Warrior1DNDCharacterSoup setBoots(List<Item> boots) {
+    public SingleClassDNDCharacterSoup setBoots(List<Item> boots) {
         this.boots = boots;
         return this;
     }
-
-
 }

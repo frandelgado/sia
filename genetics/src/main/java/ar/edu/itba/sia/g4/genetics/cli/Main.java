@@ -4,20 +4,19 @@ import ar.edu.itba.sia.g4.genetics.config.AppConfig;
 import ar.edu.itba.sia.g4.genetics.dnd.DNDCharacter;
 import ar.edu.itba.sia.g4.genetics.dnd.DNDCharacterSoup;
 import ar.edu.itba.sia.g4.genetics.dnd.Item;
-import ar.edu.itba.sia.g4.genetics.dnd.Warrior1DNDCharacterSoup;
+import ar.edu.itba.sia.g4.genetics.dnd.Profession;
+import ar.edu.itba.sia.g4.genetics.dnd.SingleClassDNDCharacterSoup;
 import ar.edu.itba.sia.g4.genetics.dnd.crossers.SinglePointCrosser;
-import ar.edu.itba.sia.g4.genetics.dnd.mutators.ProbabilityFunction;
 import ar.edu.itba.sia.g4.genetics.dnd.mutators.OneAlleleMutator;
 import ar.edu.itba.sia.g4.genetics.dnd.selectors.RouletteSelector;
-import ar.edu.itba.sia.g4.genetics.dnd.targets.NilTarget;
+import ar.edu.itba.sia.g4.genetics.dnd.targets.IterationTarget;
 import ar.edu.itba.sia.g4.genetics.engine.Darwin;
+import ar.edu.itba.sia.g4.genetics.engine.GeneticEngine;
 import ar.edu.itba.sia.g4.genetics.engine.MixAllReplacer;
-import ar.edu.itba.sia.g4.genetics.engine.NewGenerationReplacer;
 import ar.edu.itba.sia.g4.genetics.engine.Replacer;
 import ar.edu.itba.sia.g4.genetics.problem.Combinator;
 import ar.edu.itba.sia.g4.genetics.problem.EvolutionaryTarget;
 import ar.edu.itba.sia.g4.genetics.problem.Mutator;
-import ar.edu.itba.sia.g4.genetics.problem.PrimordialSoup;
 import ar.edu.itba.sia.g4.genetics.problem.Selector;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.kohsuke.args4j.CmdLineException;
@@ -62,7 +61,7 @@ public class Main {
     }
 
 
-    public static AppConfig loadConfig(File config) {
+    private static AppConfig loadConfig(File config) {
         ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.readValue(config, AppConfig.class);
@@ -71,6 +70,11 @@ public class Main {
             System.err.println(e.getMessage());
             System.exit(-1);
         }
+        return null;
+    }
+
+    private static Selector<DNDCharacter> getSelector(AppConfig config) {
+
         return null;
     }
 
@@ -86,7 +90,7 @@ public class Main {
         List<Item> chestplates = loadItemCollection(config, "chestplates");
 
         logger.info("Generating warriors");
-        DNDCharacterSoup genesisPool = new Warrior1DNDCharacterSoup(config.getPopulationSize())
+        DNDCharacterSoup genesisPool = new SingleClassDNDCharacterSoup(config.getPopulationSize(), Profession.WARRIOR1)
             .setBoots(boots)
             .setChestplates(chestplates)
             .setGauntlets(gauntlets)
@@ -94,16 +98,19 @@ public class Main {
             .setHelmets(helmets);
         List<DNDCharacter> population = genesisPool.miracleOfLife();
 
-        EvolutionaryTarget<DNDCharacter> nilTarget = new NilTarget();
+        EvolutionaryTarget<DNDCharacter> nilTarget = new IterationTarget(10000);
         Mutator<DNDCharacter> oneAlleleMutator = new OneAlleleMutator((ind, gen) -> 0.02, genesisPool);
         Combinator<DNDCharacter> singlePointCrosser = new SinglePointCrosser();
-        Selector<DNDCharacter> selector = new RouletteSelector();
+        Selector<DNDCharacter> selector = new RouletteSelector(false);
         Replacer<DNDCharacter> replacer = new MixAllReplacer<>(selector, selector, config.getGenerationalGap());
 
-        Darwin<DNDCharacter> charles = new Darwin(nilTarget, singlePointCrosser, oneAlleleMutator, replacer);
+        GeneticEngine<DNDCharacter> charles = new Darwin(nilTarget, singlePointCrosser, oneAlleleMutator, replacer);
         logger.info("Running the engine");
+        long startTime = System.currentTimeMillis();
         List<DNDCharacter> evolved = charles.evolve(population);
+        long stopTime = System.currentTimeMillis();
 
         evolved.forEach(p -> System.out.println(p));
+        logger.info("Elapsed {}ms", stopTime - startTime);
     }
 }

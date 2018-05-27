@@ -53,7 +53,7 @@ public class Darwin<T extends Species> implements GeneticEngine<T> {
         int k = (int)(replacer.getGenerationalGapRatio() * population.size());
 
         // select some k parents
-        List<T> parents = replacer.getParents(population, k);
+        List<T> parents = replacer.getParents(population, k, generation);
         // make some couples (k / 2 + 1)
         List<T> children = combinator.pickCouples(parents, k / 2 + 1)
          .stream().parallel()
@@ -70,7 +70,7 @@ public class Darwin<T extends Species> implements GeneticEngine<T> {
          .limit(k)
          .collect(Collectors.toList());
         // use replacement method (#N, #k) -> #N
-        return replacer.mix(population, children);
+        return replacer.mix(population, children, generation);
     }
     
     private Couple<T> breedPair(Couple<T> couple, long generation) {

@@ -19,21 +19,21 @@ public interface DNDCharacterSoup extends PrimordialSoup<DNDCharacter> {
 
     List<Item> getHelmets();
 
-    Warrior1DNDCharacterSoup setHelmets(List<Item> helmets);
+    DNDCharacterSoup setHelmets(List<Item> helmets);
 
     List<Item> getWeapons();
 
-    Warrior1DNDCharacterSoup setWeapons(List<Item> weapons);
+    DNDCharacterSoup setWeapons(List<Item> weapons);
 
     List<Item> getChestplates();
 
-    Warrior1DNDCharacterSoup setChestplates(List<Item> chestplates);
+    DNDCharacterSoup setChestplates(List<Item> chestplates);
 
     List<Item> getGauntlets();
 
-    Warrior1DNDCharacterSoup setGauntlets(List<Item> gauntlets);
+    DNDCharacterSoup setGauntlets(List<Item> gauntlets);
 
     List<Item> getBoots();
 
-    Warrior1DNDCharacterSoup setBoots(List<Item> boots);
+    DNDCharacterSoup setBoots(List<Item> boots);
 }
