@@ -15,7 +15,7 @@ public class SinglePointCrosser implements Combinator<DNDCharacter> {
     public Couple<DNDCharacter> breed(Couple<DNDCharacter> couple) {
         DNDCharacter papi = couple.getHead();
         DNDCharacter mami = couple.getTail();
-        
+
         int pointIndex = new Random().nextInt(6);
         Object[] offspring1Chromosome = papi.getChromosome();
         Object[] offspring2Chromosome = mami.getChromosome();
