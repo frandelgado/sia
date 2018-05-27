@@ -9,6 +9,7 @@ import ar.edu.itba.sia.g4.genetics.dnd.DNDCharacterSoup;
 import ar.edu.itba.sia.g4.genetics.dnd.Item;
 import ar.edu.itba.sia.g4.genetics.dnd.Profession;
 import ar.edu.itba.sia.g4.genetics.dnd.SingleClassDNDCharacterSoup;
+import ar.edu.itba.sia.g4.genetics.dnd.crossers.DoublePointCrosser;
 import ar.edu.itba.sia.g4.genetics.dnd.crossers.SinglePointCrosser;
 import ar.edu.itba.sia.g4.genetics.dnd.mutators.OneAlleleMutator;
 import ar.edu.itba.sia.g4.genetics.dnd.selectors.RouletteSelector;
@@ -117,7 +118,7 @@ public class Main {
     }
 
     private static Combinator<DNDCharacter> getCombinator(AppConfig config) {
-        return new SinglePointCrosser();
+        return new DoublePointCrosser();
     }
 
     private static Mutator<DNDCharacter> getMutator(AppConfig config, DNDCharacterSoup genesisPool) {
