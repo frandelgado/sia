@@ -1,7 +1,6 @@
 package ar.edu.itba.sia.g4.genetics.config;
 
 import java.io.Serializable;
-import java.util.Map;
 
 public class AppConfig implements Serializable {
 
@@ -9,6 +8,11 @@ public class AppConfig implements Serializable {
     private int populationSize;
     private String replacementAlgorithm;
     private Items items;
+    private String profession;
+    private MutatorConfig mutator;
+    private SelectorsConfig selector;
+    private SelectorsConfig replacer;
+    private TargetConfig target;
 
 
     public double getGenerationalGap() {
@@ -44,6 +48,51 @@ public class AppConfig implements Serializable {
 
     public AppConfig setItems(Items items) {
         this.items = items;
+        return this;
+    }
+
+    public String getProfession() {
+        return profession;
+    }
+
+    public AppConfig setProfession(String profession) {
+        this.profession = profession;
+        return this;
+    }
+
+    public MutatorConfig getMutator() {
+        return mutator;
+    }
+
+    public AppConfig setMutator(MutatorConfig mutator) {
+        this.mutator = mutator;
+        return this;
+    }
+
+    public SelectorsConfig getSelector() {
+        return selector;
+    }
+
+    public AppConfig setSelector(SelectorsConfig selector) {
+        this.selector = selector;
+        return this;
+    }
+
+    public SelectorsConfig getReplacer() {
+        return replacer;
+    }
+
+    public AppConfig setReplacer(SelectorsConfig replacer) {
+        this.replacer = replacer;
+        return this;
+    }
+
+    public TargetConfig getTarget() {
+        return target;
+    }
+
+    public AppConfig setTarget(TargetConfig target) {
+        this.target = target;
         return this;
     }
 }
