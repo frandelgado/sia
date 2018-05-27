@@ -12,6 +12,7 @@ import ar.edu.itba.sia.g4.genetics.dnd.SingleClassDNDCharacterSoup;
 import ar.edu.itba.sia.g4.genetics.dnd.crossers.DoublePointCrosser;
 import ar.edu.itba.sia.g4.genetics.dnd.crossers.SinglePointCrosser;
 import ar.edu.itba.sia.g4.genetics.dnd.mutators.OneAlleleMutator;
+import ar.edu.itba.sia.g4.genetics.dnd.selectors.RankingSelector;
 import ar.edu.itba.sia.g4.genetics.dnd.selectors.RouletteSelector;
 import ar.edu.itba.sia.g4.genetics.dnd.targets.IterationTarget;
 import ar.edu.itba.sia.g4.genetics.engine.Darwin;
@@ -85,6 +86,8 @@ public class Main {
         switch (selectorConfig.getType()) {
         case "roulette":
             return new RouletteSelector<>(selectorConfig.isUseBoltzmann());
+        case "ranking":
+            return new RankingSelector<>(selectorConfig.isUseBoltzmann());
         default:
             throw new IllegalArgumentException("No such selector");
         }
