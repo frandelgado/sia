@@ -22,6 +22,8 @@ import ar.edu.itba.sia.g4.genetics.problem.Combinator;
 import ar.edu.itba.sia.g4.genetics.problem.EvolutionaryTarget;
 import ar.edu.itba.sia.g4.genetics.problem.Mutator;
 import ar.edu.itba.sia.g4.genetics.problem.Selector;
+import ar.edu.itba.sia.g4.genetics.problem.Species;
+import ch.qos.logback.classic.Level;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -38,11 +40,9 @@ public class Main {
 
     private static CommandLineOptions parseArguments(String... args) {
         CommandLineOptions options = new CommandLineOptions();
-        logger.debug("Parsing arguments");
         try {
             CmdLineParser parser = new CmdLineParser(options);
             parser.parseArgument(args);
-            logger.debug("Successfully parsed arguments");
             return options;
         } catch (CmdLineException e) {
             logger.error("Could not parse the cli", e);
@@ -155,9 +155,33 @@ public class Main {
         return genesisPool;
     }
 
+    private static void setupLogging(CommandLineOptions options) {
+        ch.qos.logback.classic.Logger rootLogger =
+         (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
+        if (options.isVerbose()) {
+            rootLogger.setLevel(Level.INFO);
+            return;
+        }
+        rootLogger.setLevel(Level.WARN);
+    }
+
+    private static void attachInspectors(CommandLineOptions options, Darwin<DNDCharacter> charles) {
+        if (options.isStats()) {
+            charles.attachInspector((prev, cur, generation) -> {
+                double oldAvgFitness = prev.parallelStream().mapToDouble(Species::getFitness).average().orElse(0);
+                double avgFitness = cur.parallelStream().mapToDouble(Species::getFitness).average().orElse(0);
+                logger.info("Generation {}", generation);
+                logger.info("Avg fitness {}", avgFitness);
+                logger.info("Delta fitness {}", -oldAvgFitness + avgFitness);
+                logger.info("Fittest {}", cur.parallelStream().mapToDouble(Species::getFitness).max().orElse(0));
+            });
+        }
+    }
+
     public static void main(String... args) {
         CommandLineOptions options = parseArguments(args);
         AppConfig config = loadConfig(options.getConfig());
+        setupLogging(options);
 
         DNDCharacterSoup genesisPool = loadPrimordialSoup(config);
         List<DNDCharacter> population = genesisPool.miracleOfLife();
@@ -167,14 +191,18 @@ public class Main {
         Combinator<DNDCharacter> crosser = getCombinator(config);
         Replacer<DNDCharacter> replacer = getReplacerAlgo(config);
 
-        GeneticEngine<DNDCharacter> charles = new Darwin(target, crosser, mutator, replacer);
+        Darwin<DNDCharacter> charles = new Darwin(target, crosser, mutator, replacer);
+        attachInspectors(options, charles);
 
         logger.info("Running the engine");
         long startTime = System.currentTimeMillis();
         List<DNDCharacter> evolved = charles.evolve(population);
         long stopTime = System.currentTimeMillis();
 
-        evolved.forEach(p -> System.out.println(p));
+        evolved.forEach(p -> {
+            System.out.println("---");
+            System.out.println(p);
+        });
         logger.info("Elapsed {}ms", stopTime - startTime);
     }
 }

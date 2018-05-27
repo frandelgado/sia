@@ -8,6 +8,7 @@ import ar.edu.itba.sia.g4.genetics.problem.Species;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -18,12 +19,27 @@ public class Darwin<T extends Species> implements GeneticEngine<T> {
     private final Mutator<T> mutator;
     private final Replacer<T> replacer;
     private final static Logger logger = LoggerFactory.getLogger(Darwin.class);
+    private final List<Inspector<T>> inspectors = new LinkedList<>();
 
     public Darwin(EvolutionaryTarget<T> target, Combinator<T> combinator, Mutator<T> mutator, Replacer<T> replacer) {
         this.target = target;
         this.combinator = combinator;
         this.mutator = mutator;
         this.replacer = replacer;
+    }
+
+    public Inspector<T> attachInspector(Inspector<T> inspector) {
+        if (!inspectors.contains(inspector)) {
+            this.inspectors.add(inspector);
+        }
+        return inspector;
+    }
+
+    public Inspector<T> detachInspector(Inspector<T> inspector) {
+        if (inspectors.contains(inspector)) {
+            inspectors.remove(inspector);
+        }
+        return inspector;
     }
 
     public List<T> evolve(List<T> population) {
@@ -40,12 +56,8 @@ public class Darwin<T extends Species> implements GeneticEngine<T> {
     }
 
     private void inspectGeneration(List<T> prev, List<T> cur, long generation) {
-        double oldAvgFitness = prev.parallelStream().mapToDouble(Species::getFitness).average().orElse(0);
-        double avgFitness = cur.parallelStream().mapToDouble(Species::getFitness).average().orElse(0);
-        logger.info("Generation {}", generation);
-        logger.info("Avg fitness {}", avgFitness);
-        logger.info("Delta fitness {}", -oldAvgFitness + avgFitness);
-        logger.info("Fittest {}", cur.parallelStream().mapToDouble(Species::getFitness).max().orElse(0));
+        logger.debug("Forwarding to inspectors");
+        inspectors.forEach(inspector -> inspector.onGeneration(prev, cur, generation));
     }
 
     private List<T> getNextGeneration(List<T> population, long generation) {

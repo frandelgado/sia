@@ -137,7 +137,6 @@ public class DNDCharacter implements Species {
         double hp = computeHp();
 
         return String.format(
-          "---\n" +
           "Character %s <str %.2f, agi %.2f, exp %.2f, res %.2f, hp %.2f>\n" +
            "               Class: \t%s\n" +
            "       !       Height \t%f\n" +
