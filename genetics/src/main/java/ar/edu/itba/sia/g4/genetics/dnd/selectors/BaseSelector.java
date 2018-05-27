@@ -42,6 +42,8 @@ public abstract class BaseSelector<T extends Species> implements Selector<T> {
         return Arrays.stream(fitnesses).map(d -> d / avg).toArray();
     }
 
-    protected abstract double getTemperature(long generation);
+    protected  double getTemperature(long generation){
+        return 1.0 / (generation + 1) + 1;
+    }
     protected abstract List<T> doSelection(List<SelectorPair<T>> population, int populationLimit, long generation);
 }
