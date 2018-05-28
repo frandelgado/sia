@@ -3,7 +3,6 @@ package ar.edu.itba.sia.g4.genetics.dnd.selectors;
 import ar.edu.itba.sia.g4.genetics.problem.Selector;
 import ar.edu.itba.sia.g4.genetics.problem.Species;
 
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;

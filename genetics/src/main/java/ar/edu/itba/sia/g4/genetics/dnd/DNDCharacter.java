@@ -9,9 +9,6 @@ public class DNDCharacter implements Species {
     private final Item[] items;
     private final double height;
 
-    private final double ATM;
-    private final double DEM;
-
     private final double atk;
     private final double def;
 
@@ -22,8 +19,8 @@ public class DNDCharacter implements Species {
         this.height = height;
         this.profession = profession;
 
-        ATM = getATM(height);
-        DEM = getDEM(height);
+        double ATM = getATM(height);
+        double DEM = getDEM(height);
 
         double str = computeStr();
         double agi = computeAgi();
@@ -122,7 +119,7 @@ public class DNDCharacter implements Species {
         int result;
         long temp;
         result = profession.hashCode();
-        result = 31 * result + items.hashCode();
+        result = 31 * result + Arrays.hashCode(items);
         temp = Double.doubleToLongBits(height);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;

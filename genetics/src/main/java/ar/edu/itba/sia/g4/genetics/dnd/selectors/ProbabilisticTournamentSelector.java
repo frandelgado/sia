@@ -1,12 +1,9 @@
 package ar.edu.itba.sia.g4.genetics.dnd.selectors;
 
-import ar.edu.itba.sia.g4.genetics.dnd.DNDCharacter;
-import ar.edu.itba.sia.g4.genetics.problem.Couple;
 import ar.edu.itba.sia.g4.genetics.problem.Selector;
 import ar.edu.itba.sia.g4.genetics.problem.Species;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ProbabilisticTournamentSelector <T extends Species> extends BaseSelector<T> implements Selector<T> {
 

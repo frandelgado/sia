@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ItemLoader {
+class ItemLoader {
     public static List<Item> loadFromFile(Path path) {
         try (BufferedReader reader = Files.newBufferedReader(path)) {
             return reader.lines().skip(1)

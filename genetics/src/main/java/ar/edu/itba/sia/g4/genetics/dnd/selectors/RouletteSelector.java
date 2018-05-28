@@ -1,6 +1,5 @@
 package ar.edu.itba.sia.g4.genetics.dnd.selectors;
 
-import ar.edu.itba.sia.g4.genetics.dnd.DNDCharacter;
 import ar.edu.itba.sia.g4.genetics.problem.Selector;
 import ar.edu.itba.sia.g4.genetics.problem.Species;
 

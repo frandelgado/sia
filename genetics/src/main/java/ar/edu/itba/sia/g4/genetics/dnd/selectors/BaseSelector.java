@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
 public abstract class BaseSelector<T extends Species> implements Selector<T> {
     private final boolean useBoltzmann;
 
-    public BaseSelector(boolean useBoltzmann) {
+    BaseSelector(boolean useBoltzmann) {
         this.useBoltzmann = useBoltzmann;
     }
 
@@ -42,7 +42,7 @@ public abstract class BaseSelector<T extends Species> implements Selector<T> {
         return Arrays.stream(fitnesses).map(d -> d / avg).toArray();
     }
 
-    protected  double getTemperature(long generation){
+    double getTemperature(long generation){
         return 1.0 / (generation + 1) + 1;
     }
     protected abstract List<T> doSelection(List<SelectorPair<T>> population, int populationLimit, long generation);

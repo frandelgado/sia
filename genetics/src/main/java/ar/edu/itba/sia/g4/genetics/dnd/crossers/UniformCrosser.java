@@ -10,6 +10,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+@SuppressWarnings("ALL")
 public class UniformCrosser implements Combinator<DNDCharacter> {
     @Override
     public Couple<DNDCharacter> breed(Couple<DNDCharacter> couple) {

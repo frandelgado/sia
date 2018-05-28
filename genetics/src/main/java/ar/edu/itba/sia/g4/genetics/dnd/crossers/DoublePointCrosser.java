@@ -10,6 +10,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+@SuppressWarnings("ALL")
 public class DoublePointCrosser implements Combinator<DNDCharacter> {
     @Override
     public Couple<DNDCharacter> breed(Couple<DNDCharacter> couple) {
@@ -50,7 +51,7 @@ public class DoublePointCrosser implements Combinator<DNDCharacter> {
     public List<Couple<DNDCharacter>> pickCouples(List<DNDCharacter> p, int couples) {
         Random random = new Random();
         return random.ints(0, p.size()).parallel()
-                .mapToObj(i -> new Couple<DNDCharacter>(p.get(i), p.get((i + 1) % p.size())))
+                .mapToObj(i -> new Couple<>(p.get(i), p.get((i + 1) % p.size())))
                 .limit(couples)
                 .collect(Collectors.toList());
     }

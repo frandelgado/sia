@@ -30,7 +30,7 @@ guías on-line para la instalación del tooling. Para mac, recomendamos:
 ```
 
 ## Docker
-Utilizamos Docker 16.05 o superior ya que tiene soporte para multi-stage builds.
+Utilizamos Docker 17.06 o superior ya que tiene soporte para multi-stage builds.
 
 # Building
 

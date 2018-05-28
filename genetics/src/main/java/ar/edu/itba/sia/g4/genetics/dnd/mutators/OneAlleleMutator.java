@@ -2,7 +2,6 @@ package ar.edu.itba.sia.g4.genetics.dnd.mutators;
 
 import ar.edu.itba.sia.g4.genetics.dnd.DNDCharacter;
 import ar.edu.itba.sia.g4.genetics.dnd.DNDCharacterSoup;
-import ar.edu.itba.sia.g4.genetics.dnd.SingleClassDNDCharacterSoup;
 import ar.edu.itba.sia.g4.genetics.dnd.Item;
 import ar.edu.itba.sia.g4.genetics.problem.Mutator;
 

@@ -11,7 +11,6 @@ import ar.edu.itba.sia.g4.genetics.dnd.Item;
 import ar.edu.itba.sia.g4.genetics.dnd.Profession;
 import ar.edu.itba.sia.g4.genetics.dnd.SingleClassDNDCharacterSoup;
 import ar.edu.itba.sia.g4.genetics.dnd.crossers.DoublePointCrosser;
-import ar.edu.itba.sia.g4.genetics.dnd.crossers.SinglePointCrosser;
 import ar.edu.itba.sia.g4.genetics.dnd.mutators.OneAlleleMutator;
 import ar.edu.itba.sia.g4.genetics.dnd.selectors.RankingSelector;
 import ar.edu.itba.sia.g4.genetics.dnd.selectors.EliteSelector;
@@ -22,7 +21,6 @@ import ar.edu.itba.sia.g4.genetics.dnd.targets.IterationTarget;
 import ar.edu.itba.sia.g4.genetics.dnd.targets.OptimumTarget;
 import ar.edu.itba.sia.g4.genetics.dnd.targets.TimeTarget;
 import ar.edu.itba.sia.g4.genetics.engine.Darwin;
-import ar.edu.itba.sia.g4.genetics.engine.GeneticEngine;
 import ar.edu.itba.sia.g4.genetics.engine.MixAllReplacer;
 import ar.edu.itba.sia.g4.genetics.engine.Replacer;
 import ar.edu.itba.sia.g4.genetics.engine.SelectorMix;
@@ -43,6 +41,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 
+@SuppressWarnings("ALL")
 public class Main {
     private final static Logger logger = LoggerFactory.getLogger(Main.class);
 
@@ -228,7 +227,7 @@ public class Main {
         Combinator<DNDCharacter> crosser = getCombinator(config);
         Replacer<DNDCharacter> replacer = getReplacerAlgo(config);
 
-        Darwin<DNDCharacter> charles = new Darwin(target, crosser, mutator, replacer);
+        Darwin<DNDCharacter> charles = new Darwin<>(target, crosser, mutator, replacer);
         attachInspectors(options, charles);
 
         logger.info("Running the engine");
