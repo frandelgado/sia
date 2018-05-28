@@ -1,20 +1,22 @@
 {
   "profession": "WARRIOR1",
   "items": {
-    "gauntlets": "items/guantes.tsv",
-    "weapons": "items/armas.tsv",
-    "chestplates": "items/pecheras.tsv",
-    "helmets": "items/cascos.tsv",
-    "boots": "items/botas.tsv"
+
+    "gauntlets": "items-grandes/guantes.tsv",
+    "weapons": "items-grandes/armas.tsv",
+    "chestplates": "items-grandes/pecheras.tsv",
+    "helmets": "items-grandes/cascos.tsv",
+    "boots": "items-grandes/botas.tsv"
   },
 
-  "populationSize": 10,
+  "populationSize": 1000,
   "generationalGap": 0.75,
   "replacementAlgorithm": "mix-all",
 
   "target": {
     "type": "time",
-    "seconds": 60
+    "seconds": 60,
+    "iterations": 100000
   },
 
   "mutator": {
