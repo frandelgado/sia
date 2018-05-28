@@ -52,6 +52,7 @@ public class Darwin<T extends Species> implements GeneticEngine<T> {
             assert previousPopulation.size() == currentPopulation.size();
             inspectGeneration(previousPopulation, currentPopulation, generation);
         } while (target.shouldEvolve(previousPopulation, currentPopulation, generation++));
+        logger.info("Evaluated {} generations", generation);
         return currentPopulation;
     }
 

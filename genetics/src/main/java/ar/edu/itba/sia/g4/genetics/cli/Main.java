@@ -20,6 +20,7 @@ import ar.edu.itba.sia.g4.genetics.dnd.selectors.RouletteSelector;
 import ar.edu.itba.sia.g4.genetics.dnd.selectors.UniversalSelector;
 import ar.edu.itba.sia.g4.genetics.dnd.targets.IterationTarget;
 import ar.edu.itba.sia.g4.genetics.dnd.targets.OptimumTarget;
+import ar.edu.itba.sia.g4.genetics.dnd.targets.TimeTarget;
 import ar.edu.itba.sia.g4.genetics.engine.Darwin;
 import ar.edu.itba.sia.g4.genetics.engine.GeneticEngine;
 import ar.edu.itba.sia.g4.genetics.engine.MixAllReplacer;
@@ -152,7 +153,9 @@ public class Main {
         case "iterations":
             return new IterationTarget(targetConfig.getIterations());
         case "optimum":
-            return new OptimumTarget<DNDCharacter>(targetConfig.getDelta(), targetConfig.getIterations());
+            return new OptimumTarget<>(targetConfig.getDelta(), targetConfig.getIterations());
+        case "time":
+            return new TimeTarget<>(targetConfig.getSeconds());
         default:
             throw new IllegalArgumentException("No such target");
         }

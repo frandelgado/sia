@@ -4,6 +4,7 @@ public class TargetConfig {
     private String type;
     private int iterations;
     private double delta;
+    private int seconds;
 
     public int getIterations() {
         return iterations;
@@ -29,6 +30,15 @@ public class TargetConfig {
 
     public TargetConfig setDelta(double delta) {
         this.delta = delta;
+        return this;
+    }
+
+    public int getSeconds() {
+        return seconds;
+    }
+
+    public TargetConfig setSeconds(int seconds) {
+        this.seconds = seconds;
         return this;
     }
 }
