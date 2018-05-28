@@ -1,11 +1,11 @@
 {
   "profession": "WARRIOR1",
   "items": {
-    "gauntlets": "items-chicos/guantes.tsv",
-    "weapons": "items-chicos/armas.tsv",
-    "chestplates": "items-chicos/pecheras.tsv",
-    "helmets": "items-chicos/cascos.tsv",
-    "boots": "items-chicos/botas.tsv"
+    "gauntlets": "items/guantes.tsv",
+    "weapons": "items/armas.tsv",
+    "chestplates": "items/pecheras.tsv",
+    "helmets": "items/cascos.tsv",
+    "boots": "items/botas.tsv"
   },
 
   "populationSize": 10,
