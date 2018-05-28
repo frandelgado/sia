@@ -13,6 +13,7 @@
   "replacementAlgorithm": "mix-all",
 
   "target": {
+    "type": "iterations",
     "iterations": 100
   },
 

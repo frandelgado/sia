@@ -4,6 +4,7 @@ import ar.edu.itba.sia.g4.genetics.config.AppConfig;
 import ar.edu.itba.sia.g4.genetics.config.MutatorConfig;
 import ar.edu.itba.sia.g4.genetics.config.SelectorConfig;
 import ar.edu.itba.sia.g4.genetics.config.SelectorsConfig;
+import ar.edu.itba.sia.g4.genetics.config.TargetConfig;
 import ar.edu.itba.sia.g4.genetics.dnd.DNDCharacter;
 import ar.edu.itba.sia.g4.genetics.dnd.DNDCharacterSoup;
 import ar.edu.itba.sia.g4.genetics.dnd.Item;
@@ -18,6 +19,7 @@ import ar.edu.itba.sia.g4.genetics.dnd.selectors.ProbabilisticTournamentSelector
 import ar.edu.itba.sia.g4.genetics.dnd.selectors.RouletteSelector;
 import ar.edu.itba.sia.g4.genetics.dnd.selectors.UniversalSelector;
 import ar.edu.itba.sia.g4.genetics.dnd.targets.IterationTarget;
+import ar.edu.itba.sia.g4.genetics.dnd.targets.OptimumTarget;
 import ar.edu.itba.sia.g4.genetics.engine.Darwin;
 import ar.edu.itba.sia.g4.genetics.engine.GeneticEngine;
 import ar.edu.itba.sia.g4.genetics.engine.MixAllReplacer;
@@ -145,7 +147,15 @@ public class Main {
     }
 
     private static EvolutionaryTarget<DNDCharacter> getTarget(AppConfig config) {
-        return new IterationTarget(config.getTarget().getIterations());
+        TargetConfig targetConfig = config.getTarget();
+        switch (targetConfig.getType().trim().toLowerCase()) {
+        case "iterations":
+            return new IterationTarget(targetConfig.getIterations());
+        case "optimum":
+            return new OptimumTarget<DNDCharacter>(targetConfig.getDelta(), targetConfig.getIterations());
+        default:
+            throw new IllegalArgumentException("No such target");
+        }
     }
 
     private static DNDCharacterSoup loadPrimordialSoup(AppConfig config) {
