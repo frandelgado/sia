@@ -196,10 +196,21 @@ public class Main {
             charles.attachInspector((prev, cur, generation) -> {
                 double oldAvgFitness = prev.parallelStream().mapToDouble(Species::getFitness).average().orElse(0);
                 double avgFitness = cur.parallelStream().mapToDouble(Species::getFitness).average().orElse(0);
+                double fittest = cur.parallelStream().mapToDouble(Species::getFitness).max().orElse(0);
+                double leastFit = cur.parallelStream().mapToDouble(Species::getFitness).min().orElse(0);
                 logger.info("Generation {}", generation);
                 logger.info("Avg fitness {}", avgFitness);
                 logger.info("Delta fitness {}", -oldAvgFitness + avgFitness);
-                logger.info("Fittest {}", cur.parallelStream().mapToDouble(Species::getFitness).max().orElse(0));
+                logger.info("Least fit {}", leastFit);
+                logger.info("Fitness Breach {}", fittest - leastFit);
+                logger.info("Fittest {}", fittest);
+                // me gustaria precalcular este sum en uno de los streams pasados.
+                double sum = cur.parallelStream().mapToDouble(Species::getFitness).sum();
+                double variance = cur.parallelStream().
+                        mapToDouble(Species::getFitness)
+                        .map(f -> (f/sum )* Math.pow(f-avgFitness,2))
+                        .sum();
+                logger.info("Variance {}",variance);
             });
         }
     }
