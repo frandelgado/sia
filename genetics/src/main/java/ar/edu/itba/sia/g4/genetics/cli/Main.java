@@ -12,6 +12,7 @@ import ar.edu.itba.sia.g4.genetics.dnd.Profession;
 import ar.edu.itba.sia.g4.genetics.dnd.SingleClassDNDCharacterSoup;
 import ar.edu.itba.sia.g4.genetics.dnd.crossers.DoublePointCrosser;
 import ar.edu.itba.sia.g4.genetics.dnd.mutators.OneAlleleMutator;
+import ar.edu.itba.sia.g4.genetics.dnd.mutators.ProbabilityFunction;
 import ar.edu.itba.sia.g4.genetics.dnd.selectors.RankingSelector;
 import ar.edu.itba.sia.g4.genetics.dnd.selectors.EliteSelector;
 import ar.edu.itba.sia.g4.genetics.dnd.selectors.ProbabilisticTournamentSelector;
@@ -19,6 +20,7 @@ import ar.edu.itba.sia.g4.genetics.dnd.selectors.RouletteSelector;
 import ar.edu.itba.sia.g4.genetics.dnd.selectors.UniversalSelector;
 import ar.edu.itba.sia.g4.genetics.dnd.targets.IterationTarget;
 import ar.edu.itba.sia.g4.genetics.dnd.targets.OptimumTarget;
+import ar.edu.itba.sia.g4.genetics.dnd.targets.StructureTarget;
 import ar.edu.itba.sia.g4.genetics.dnd.targets.TimeTarget;
 import ar.edu.itba.sia.g4.genetics.engine.Darwin;
 import ar.edu.itba.sia.g4.genetics.engine.MixAllReplacer;
@@ -137,9 +139,19 @@ public class Main {
 
     private static Mutator<DNDCharacter> getMutator(AppConfig config, DNDCharacterSoup genesisPool) {
         MutatorConfig mutatorConfig = config.getMutator();
+
+        ProbabilityFunction probFunc = null;
+        if(mutatorConfig.uniformProbFunc()){
+            probFunc = ((ind, gen) -> mutatorConfig.getChance());
+        }
+        else{
+            double lambda = mutatorConfig.getLambda();
+            probFunc = ((ind,gen) -> lambda*Math.exp(-lambda*gen));
+        }
+
         switch (mutatorConfig.getType().trim().toLowerCase()) {
         case "one-allele":
-            return new OneAlleleMutator((ind, gen) -> mutatorConfig.getChance(), genesisPool);
+            return new OneAlleleMutator(probFunc, genesisPool);
 
         default:
             throw new IllegalArgumentException("No such mutator");
@@ -155,6 +167,8 @@ public class Main {
             return new OptimumTarget<>(targetConfig.getDelta(), targetConfig.getIterations());
         case "time":
             return new TimeTarget<>(targetConfig.getSeconds());
+        case "structure":
+            return new StructureTarget<>(targetConfig.getIterations(), targetConfig.getDelta());
         default:
             throw new IllegalArgumentException("No such target");
         }
