@@ -10,6 +10,9 @@ public class IterationTarget implements EvolutionaryTarget<DNDCharacter> {
 
     public IterationTarget(long iterations) {
         this.iterations = iterations;
+        if (iterations <= 0) {
+            throw new IllegalArgumentException("Iterations must be > 0");
+        }
     }
 
     @Override
