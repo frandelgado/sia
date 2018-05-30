@@ -3,8 +3,11 @@ package ar.edu.itba.sia.g4.genetics.dnd.targets;
 import ar.edu.itba.sia.g4.genetics.problem.EvolutionaryTarget;
 import ar.edu.itba.sia.g4.genetics.problem.Species;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class StructureTarget<T extends Species> implements EvolutionaryTarget<T> {
     private final int iterations;
@@ -15,8 +18,8 @@ public class StructureTarget<T extends Species> implements EvolutionaryTarget<T>
         this.iterations = iterations;
         this.generations = new LinkedList<>();
         this.delta = delta;
-        if (iterations <= 0) {
-            throw new IllegalArgumentException("Iterations must be > 0");
+        if (iterations <= 1) {
+            throw new IllegalArgumentException("Iterations must be > 1");
         }
     }
 
@@ -25,15 +28,32 @@ public class StructureTarget<T extends Species> implements EvolutionaryTarget<T>
         if (generation == 0) {
             generations.add(prev);
         }
-        long survivors = curr.stream().parallel()
-         .filter(p -> generations.stream().allMatch(l -> l.contains(p)))
-         .count();
-
         generations.add(curr);
-        if (generations.size() >= iterations) {
-            generations.remove(0);
+        if (generations.size() < iterations) {
+            return true;
         }
+        generations.remove(0);
+        List<List<T>> auxGenerations = new LinkedList<>();
 
-        return survivors < delta * curr.size();
+        generations.stream().forEach(gen -> {
+            auxGenerations.add(gen.parallelStream()
+                    .map(item -> (T)item.deepCopy())
+                    .collect(Collectors.toList()));
+        });
+
+        long sharedPopulation = curr.stream().filter((T currItem) -> {
+            if(auxGenerations.parallelStream()
+                .allMatch(gen -> gen.parallelStream()
+                        .anyMatch(item -> item.equals(currItem)))){
+            auxGenerations.parallelStream().forEach(gen -> gen.remove(currItem));
+            return true;
+        }
+        return false;
+        }).count();
+        System.out.println("gen: " + generation);
+        System.out.println("shared: " + sharedPopulation);
+        System.out.println("delta: " + delta * curr.size());
+        return sharedPopulation < delta * curr.size();
     }
+
 }

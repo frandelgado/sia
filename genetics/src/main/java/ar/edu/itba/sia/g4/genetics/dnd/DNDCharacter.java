@@ -38,6 +38,11 @@ public class DNDCharacter implements Species {
         return getStatBias() * atk + (1 - getStatBias()) * def;
     }
 
+    @Override
+    public Object deepCopy() {
+        return new DNDCharacter(this.profession, this.items[0], this.items[1], this.items[2], this.items[3], this.items[4], this.height);
+    }
+
     /**
      * Split between attack and def., with 0 <= bias <= 1. The
      * bias represents the percentage of attack and the complement

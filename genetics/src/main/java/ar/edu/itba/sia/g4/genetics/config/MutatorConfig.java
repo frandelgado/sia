@@ -4,7 +4,7 @@ public class MutatorConfig {
     private String type;
     private double chance;
     public double lambda;
-    private boolean uniform;
+    public boolean uniform;
 
 
     public String getType() {

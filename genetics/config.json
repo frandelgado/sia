@@ -14,14 +14,15 @@
   "replacementAlgorithm": "mix-all",
 
   "target": {
-    "type": "time",
-    "seconds": 60,
-    "iterations": 100000
+    "type": "structure",
+    "iterations": 10,
+    "delta": 0.999
   },
 
   "mutator": {
     "type": "one-allele",
-    "chance": 0.02
+    "uniform": true,
+    "chance": 1
   },
 
   "selector": {
