@@ -33,13 +33,10 @@ public class StructureTarget<T extends Species> implements EvolutionaryTarget<T>
             return true;
         }
         generations.remove(0);
-        List<List<T>> auxGenerations = new LinkedList<>();
 
-        generations.stream().forEach(gen -> {
-            auxGenerations.add(gen.parallelStream()
-                    .map(item -> (T)item.deepCopy())
-                    .collect(Collectors.toList()));
-        });
+        List<List<T>> auxGenerations = generations.stream().map(gen ->
+            gen.parallelStream().map(item -> ((T)item.deepCopy())).collect(Collectors.toList())
+        ).collect(Collectors.toList());
 
         long sharedPopulation = curr.stream().filter((T currItem) -> {
             if(auxGenerations.parallelStream()

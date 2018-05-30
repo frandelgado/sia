@@ -22,7 +22,7 @@
   "mutator": {
     "type": "one-allele",
     "uniform": true,
-    "chance": 1
+    "chance": 0.05
   },
 
   "selector": {
