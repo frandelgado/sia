@@ -20,7 +20,9 @@ public class TSVWriter {
     }
 
     public static TSVWriter toFile(Path path) throws IOException {
-        return new TSVWriter(Files.newBufferedWriter(path));
+        try (BufferedWriter writer = Files.newBufferedWriter(path)) {
+            return new TSVWriter(writer);
+        }
     }
 
     public TSVWriter writeHeader(String... items) throws IOException {
@@ -28,11 +30,13 @@ public class TSVWriter {
             throw new IllegalArgumentException("Can't write header twice...");
         }
         writer.write(String.join("\t", items));
+        writer.newLine();
         headerWritten = true;
         return this;
     }
     public TSVWriter writeLine(String... items) throws IOException {
         writer.write(String.join("\t", items));
+        writer.newLine();
         return this;
     }
 }
