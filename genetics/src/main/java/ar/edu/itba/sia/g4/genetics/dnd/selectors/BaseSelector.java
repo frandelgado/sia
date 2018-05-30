@@ -43,7 +43,7 @@ public abstract class BaseSelector<T extends Species> implements Selector<T> {
     }
 
     double getTemperature(long generation){
-        return 1.0 / (generation + 1) + 1;
+        return 1.0 / 0.001*(generation + 1) + 1;
     }
     protected abstract List<T> doSelection(List<SelectorPair<T>> population, int populationLimit, long generation);
 }

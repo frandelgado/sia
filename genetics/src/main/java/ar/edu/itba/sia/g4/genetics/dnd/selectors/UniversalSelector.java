@@ -42,10 +42,5 @@ public class UniversalSelector<T extends Species> extends BaseSelector<T> implem
             .collect(Collectors.toList());
     }
 
-    @Override
-    protected double getTemperature(long generation) {
-        return 1.0 / (generation + 1) + 1;
-    }
-
 }
 
