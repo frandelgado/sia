@@ -38,7 +38,7 @@ public class SingleClassDNDCharacterSoup implements PrimordialSoup<DNDCharacter>
     }
 
     private Item select(List<Item> items, int hash) {
-        return items.get(Math.abs(hash) % items.size());
+        return items.get(Math.abs(hash + this.rnd.nextInt()) % items.size());
     }
 
     private DNDCharacter generate(double randomSeed) {
