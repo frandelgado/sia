@@ -16,7 +16,7 @@ public class StatsInspector<T extends Species> implements Inspector<T>, AutoClos
 
     public StatsInspector(Path path) throws IOException {
         this.writer = TSVWriter.toFile(path);
-        writer.writeHeader("avgFitness", "fittest", "variance");
+        writer.writeHeader("avgFitness", "fittest", "fitness breach");
     }
 
     @Override
@@ -41,7 +41,7 @@ public class StatsInspector<T extends Species> implements Inspector<T>, AutoClos
         try {
             if (generation % 1000 == 0) {
                 writer.writeLine(String.valueOf(avgFitness),
-                 String.valueOf(fittest), String.valueOf(variance));
+                 String.valueOf(fittest), String.valueOf(fittest-leastFit));
             }
         } catch (IOException e) {
             logger.error("Oops");
