@@ -33,12 +33,12 @@
 
     "first": {
       "useBoltzmann": true,
-      "type": "roulette"
+      "type": "universal"
     },
 
     "last": {
       "useBoltzmann": true,
-      "type": "roulette"
+      "type": "universal"
     }
   },
 

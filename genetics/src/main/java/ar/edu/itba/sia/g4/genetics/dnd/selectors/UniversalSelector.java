@@ -31,7 +31,7 @@ public class UniversalSelector<T extends Species> extends BaseSelector<T> implem
             accum[i] = sum;
         }
         double r = random.nextDouble();
-        return IntStream.range(1, populationLimit).parallel()
+        return IntStream.range(1, populationLimit + 1).parallel()
             .map(j -> {
                 double rj = (r + j - 1)/populationLimit;
                 int idx = Arrays.binarySearch(accum, rj);
@@ -39,6 +39,7 @@ public class UniversalSelector<T extends Species> extends BaseSelector<T> implem
             })
             .mapToObj(population::get)
             .map(SelectorPair::getThing)
+            .limit(populationLimit)
             .collect(Collectors.toList());
     }
 

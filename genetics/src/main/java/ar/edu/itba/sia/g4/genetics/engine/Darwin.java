@@ -83,7 +83,10 @@ public class Darwin<T extends Species> implements GeneticEngine<T> {
          .limit(k)
          .collect(Collectors.toList());
         // use replacement method (#N, #k) -> #N
-        return replacer.mix(population, children, generation);
+        assert parents.size() == children.size();
+        List<T> newGeneration = replacer.mix(population, children, generation);
+        assert population.size() == newGeneration.size();
+        return newGeneration;
     }
     
     private Couple<T> breedPair(Couple<T> couple, long generation) {
