@@ -27,6 +27,7 @@ import ar.edu.itba.sia.g4.genetics.dnd.targets.OptimumTarget;
 import ar.edu.itba.sia.g4.genetics.dnd.targets.StructureTarget;
 import ar.edu.itba.sia.g4.genetics.dnd.targets.TimeTarget;
 import ar.edu.itba.sia.g4.genetics.engine.Darwin;
+import ar.edu.itba.sia.g4.genetics.engine.Inspector;
 import ar.edu.itba.sia.g4.genetics.engine.KeepSomeAncestorsReplacer;
 import ar.edu.itba.sia.g4.genetics.engine.MixAllReplacer;
 import ar.edu.itba.sia.g4.genetics.engine.NewGenerationReplacer;
@@ -47,6 +48,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.LinkedList;
 import java.util.List;
 
 @SuppressWarnings("ALL")
@@ -225,40 +227,11 @@ public class Main {
         rootLogger.setLevel(Level.WARN);
     }
 
-    private static void attachInspectors(CommandLineOptions options, Darwin<DNDCharacter> charles) {
-
-        try (TSVWriter writer = TSVWriter.toFile(Paths.get("results.tsv"))) {
-            writer.writeHeader("avgFitness", "fittest", "variance");
-
+    private static StatsInspector<DNDCharacter> attachInspectors(CommandLineOptions options, Darwin<DNDCharacter> charles) {
+        StatsInspector<DNDCharacter> statsInspector = null;
+        try {
             if (options.isStats()) {
-                charles.attachInspector((prev, cur, generation) -> {
-                    double oldAvgFitness = prev.parallelStream().mapToDouble(Species::getFitness).average().orElse(0);
-                    double avgFitness = cur.parallelStream().mapToDouble(Species::getFitness).average().orElse(0);
-                    double fittest = cur.parallelStream().mapToDouble(Species::getFitness).max().orElse(0);
-                    double leastFit = cur.parallelStream().mapToDouble(Species::getFitness).min().orElse(0);
-                    logger.info("Generation {}", generation);
-                    logger.info("Avg fitness {}", avgFitness);
-                    logger.info("Delta fitness {}", -oldAvgFitness + avgFitness);
-                    logger.info("Least fit {}", leastFit);
-                    logger.info("Fitness Breach {}", fittest - leastFit);
-                    logger.info("Fittest {}", fittest);
-                    // me gustaria precalcular este sum en uno de los streams pasados.
-                    double sum = cur.parallelStream().mapToDouble(Species::getFitness).sum();
-                    double variance = cur.parallelStream().
-                            mapToDouble(Species::getFitness)
-                            .map(f -> (f/sum )* Math.pow(f-avgFitness,2))
-                            .sum();
-                    logger.info("Variance {}",variance);
-                    try {
-                        if (generation % 1000 == 0) {
-                            writer.writeLine(String.valueOf(avgFitness),
-                             String.valueOf(fittest), String.valueOf(variance));
-                        }
-                    } catch (IOException e) {
-                        logger.error("Oops");
-                    }
-
-                });
+                statsInspector = (StatsInspector) charles.attachInspector(new StatsInspector<>(Paths.get("results.tsv")));
             }
         } catch (IOException e) {
             logger.error("Can't open results file", e);
@@ -271,6 +244,7 @@ public class Main {
                 }
             });
         }
+        return statsInspector;
     }
 
     public static void main(String... args) {
@@ -287,7 +261,7 @@ public class Main {
         Replacer<DNDCharacter> replacer = getReplacerAlgo(config);
 
         Darwin<DNDCharacter> charles = new Darwin<>(target, crosser, mutator, replacer);
-        attachInspectors(options, charles);
+        StatsInspector<DNDCharacter> insp = attachInspectors(options, charles);
 
         logger.info("Running the engine");
         long startTime = System.currentTimeMillis();
@@ -298,6 +272,13 @@ public class Main {
             System.out.println("---");
             System.out.println(p);
         });
+        if (insp != null) {
+            try {
+                insp.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         logger.info("Elapsed {}ms", stopTime - startTime);
     }
 }
