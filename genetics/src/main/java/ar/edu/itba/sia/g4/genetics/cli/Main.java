@@ -211,6 +211,11 @@ public class Main {
     }
 
     private static void attachInspectors(CommandLineOptions options, Darwin<DNDCharacter> charles) {
+        TSVWriter writer;
+        try {
+            writer = TSVWriter.toFile(Paths.get("results.tsv"));
+            writer.writeHeader("generation", "avg fitness", "delta fitness", "least fit", "fitness breach", "fittest", "variance");
+
         if (options.isStats()) {
             charles.attachInspector((prev, cur, generation) -> {
                 double oldAvgFitness = prev.parallelStream().mapToDouble(Species::getFitness).average().orElse(0);
@@ -230,7 +235,20 @@ public class Main {
                         .map(f -> (f/sum )* Math.pow(f-avgFitness,2))
                         .sum();
                 logger.info("Variance {}",variance);
+                try {
+                    writer.writeLine(String.valueOf(generation), String.valueOf(avgFitness),
+                     String.valueOf(avgFitness - oldAvgFitness), String.valueOf(leastFit),
+                     String.valueOf(fittest - leastFit),
+                     String.valueOf(fittest), String.valueOf(variance));
+                } catch (IOException e) {
+                    logger.error("Oops");
+                }
+
             });
+        }
+        } catch (IOException e) {
+            logger.error("Can't open results file", e);
+            System.exit(8);
         }
         if (options.isVerbose()) {
             charles.attachInspector((prev, cur, generation) -> {
