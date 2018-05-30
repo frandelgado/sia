@@ -32,4 +32,18 @@ public class MutatorConfig {
         this.chance = chance;
         return this;
     }
+
+    public MutatorConfig setLambda(double lambda) {
+        this.lambda = lambda;
+        return this;
+    }
+
+    public boolean isUniform() {
+        return uniform;
+    }
+
+    public MutatorConfig setUniform(boolean uniform) {
+        this.uniform = uniform;
+        return this;
+    }
 }

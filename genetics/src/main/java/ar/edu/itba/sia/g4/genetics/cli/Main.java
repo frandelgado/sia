@@ -23,7 +23,9 @@ import ar.edu.itba.sia.g4.genetics.dnd.targets.OptimumTarget;
 import ar.edu.itba.sia.g4.genetics.dnd.targets.StructureTarget;
 import ar.edu.itba.sia.g4.genetics.dnd.targets.TimeTarget;
 import ar.edu.itba.sia.g4.genetics.engine.Darwin;
+import ar.edu.itba.sia.g4.genetics.engine.KeepSomeAncestorsReplacer;
 import ar.edu.itba.sia.g4.genetics.engine.MixAllReplacer;
+import ar.edu.itba.sia.g4.genetics.engine.NewGenerationReplacer;
 import ar.edu.itba.sia.g4.genetics.engine.Replacer;
 import ar.edu.itba.sia.g4.genetics.engine.SelectorMix;
 import ar.edu.itba.sia.g4.genetics.problem.Combinator;
@@ -128,6 +130,10 @@ public class Main {
         switch (config.getReplacementAlgorithm().trim().toLowerCase()) {
         case "mix-all":
             return new MixAllReplacer<>(selector, replacer, generationalGap);
+        case "renew-all":
+            return new NewGenerationReplacer<>();
+        case "keep-some":
+            return new KeepSomeAncestorsReplacer<>(selector, replacer, generationalGap);
         default:
             throw new IllegalArgumentException("No such replacement algorithm");
         }
@@ -146,7 +152,7 @@ public class Main {
         }
         else{
             double lambda = mutatorConfig.getLambda();
-            probFunc = ((ind,gen) -> lambda*Math.exp(-lambda*gen));
+            probFunc = ((ind, gen) -> lambda * Math.exp(-lambda*gen));
         }
 
         switch (mutatorConfig.getType().trim().toLowerCase()) {
@@ -226,6 +232,13 @@ public class Main {
                 logger.info("Variance {}",variance);
             });
         }
+        if (options.isVerbose()) {
+            charles.attachInspector((prev, cur, generation) -> {
+                if (generation % 1000 == 0) {
+                    logger.info("Generation {}", generation);
+                }
+            });
+        }
     }
 
     public static void main(String... args) {
@@ -249,7 +262,7 @@ public class Main {
         List<DNDCharacter> evolved = charles.evolve(population);
         long stopTime = System.currentTimeMillis();
 
-        evolved.forEach(p -> {
+        evolved.stream().distinct().forEach(p -> {
             System.out.println("---");
             System.out.println(p);
         });
