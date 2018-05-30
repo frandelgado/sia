@@ -29,7 +29,7 @@ public class StructureTarget<T extends Species> implements EvolutionaryTarget<T>
             generations.add(prev);
         }
         generations.add(curr);
-        if (generations.size() < iterations) {
+        if (generations.size() <= iterations) {
             return true;
         }
         generations.remove(0);

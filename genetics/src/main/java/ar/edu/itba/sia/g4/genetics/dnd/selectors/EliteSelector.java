@@ -26,7 +26,7 @@ public class EliteSelector<T extends Species> extends BaseSelector<T> implements
     protected List<T> doSelection(List<SelectorPair<T>> population, int populationLimit, long generation) {
 
         List<T> selected = population.stream()
-                .sorted(Comparator.comparing(SelectorPair::getFitness))
+                .sorted(Comparator.comparing((SelectorPair sp) -> sp.getFitness()).reversed())
                 .map(SelectorPair::getThing)
                 .collect(Collectors.toList());
 

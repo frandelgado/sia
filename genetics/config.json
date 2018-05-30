@@ -9,14 +9,14 @@
     "boots": "items-grandes/botas.tsv"
   },
 
-  "populationSize": 1000,
+  "populationSize": 2800,
   "generationalGap": 0.75,
   "replacementAlgorithm": "mix-all",
 
   "target": {
     "type": "structure",
     "iterations": 10,
-    "delta": 0.999
+    "delta": 0.90
   },
 
   "mutator": {
@@ -30,12 +30,12 @@
 
     "first": {
       "useBoltzmann": true,
-      "type": "roulette"
+      "type": "elite"
     },
 
     "last": {
       "useBoltzmann": true,
-      "type": "roulette"
+      "type": "elite"
     }
   },
 
@@ -44,12 +44,12 @@
 
     "first": {
       "useBoltzmann": true,
-      "type": "roulette"
+      "type": "elite"
     },
 
     "last": {
       "useBoltzmann": true,
-      "type": "roulette"
+      "type": "elite"
     }
   }
 }
