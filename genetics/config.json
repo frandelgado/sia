@@ -19,6 +19,11 @@
     "delta": 0.90
   },
 
+  "crosser": {
+    "type": "annular",
+    "chance": 0.8
+  },
+
   "mutator": {
     "type": "one-allele",
     "uniform": true,

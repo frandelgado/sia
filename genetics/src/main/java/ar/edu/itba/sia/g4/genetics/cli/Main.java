@@ -1,6 +1,7 @@
 package ar.edu.itba.sia.g4.genetics.cli;
 
 import ar.edu.itba.sia.g4.genetics.config.AppConfig;
+import ar.edu.itba.sia.g4.genetics.config.CrosserConfig;
 import ar.edu.itba.sia.g4.genetics.config.MutatorConfig;
 import ar.edu.itba.sia.g4.genetics.config.SelectorConfig;
 import ar.edu.itba.sia.g4.genetics.config.SelectorsConfig;
@@ -10,7 +11,10 @@ import ar.edu.itba.sia.g4.genetics.dnd.DNDCharacterSoup;
 import ar.edu.itba.sia.g4.genetics.dnd.Item;
 import ar.edu.itba.sia.g4.genetics.dnd.Profession;
 import ar.edu.itba.sia.g4.genetics.dnd.SingleClassDNDCharacterSoup;
+import ar.edu.itba.sia.g4.genetics.dnd.crossers.AnnularCrosser;
 import ar.edu.itba.sia.g4.genetics.dnd.crossers.DoublePointCrosser;
+import ar.edu.itba.sia.g4.genetics.dnd.crossers.SinglePointCrosser;
+import ar.edu.itba.sia.g4.genetics.dnd.crossers.UniformCrosser;
 import ar.edu.itba.sia.g4.genetics.dnd.mutators.OneAlleleMutator;
 import ar.edu.itba.sia.g4.genetics.dnd.mutators.ProbabilityFunction;
 import ar.edu.itba.sia.g4.genetics.dnd.selectors.RankingSelector;
@@ -140,7 +144,19 @@ public class Main {
     }
 
     private static Combinator<DNDCharacter> getCombinator(AppConfig config) {
-        return new DoublePointCrosser();
+        CrosserConfig crosserConfig = config.getCrosser();
+        switch (crosserConfig.getType().trim().toLowerCase()) {
+        case "annular":
+            return new AnnularCrosser(crosserConfig.getChance());
+        case "single-point":
+            return new SinglePointCrosser(crosserConfig.getChance());
+        case "double-point":
+            return new DoublePointCrosser(crosserConfig.getChance());
+        case "uniform":
+            return new UniformCrosser(crosserConfig.getChance());
+        default:
+            throw new IllegalArgumentException("No such crosser");
+        }
     }
 
     private static Mutator<DNDCharacter> getMutator(AppConfig config, DNDCharacterSoup genesisPool) {
@@ -158,7 +174,6 @@ public class Main {
         switch (mutatorConfig.getType().trim().toLowerCase()) {
         case "one-allele":
             return new OneAlleleMutator(probFunc, genesisPool);
-
         default:
             throw new IllegalArgumentException("No such mutator");
         }

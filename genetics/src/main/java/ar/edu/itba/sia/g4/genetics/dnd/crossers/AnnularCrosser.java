@@ -10,7 +10,16 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("ALL")
-public class AnnularCrosser implements Combinator<DNDCharacter> {
+public class AnnularCrosser extends
+ MixByChance<DNDCharacter> implements Combinator<DNDCharacter> {
+    public AnnularCrosser(double chance, Random rnd) {
+        super(chance, rnd);
+    }
+
+    public AnnularCrosser(double chance) {
+        super(chance);
+    }
+
     @Override
     public Couple<DNDCharacter> breed(Couple<DNDCharacter> parents) {
         DNDCharacter papi = parents.getHead();
@@ -40,11 +49,6 @@ public class AnnularCrosser implements Combinator<DNDCharacter> {
                 (Item) offspring2Chromosome[1],(Item) offspring2Chromosome[2], (Item) offspring2Chromosome[3],
                 (Item) offspring2Chromosome[4], (double) offspring2Chromosome[5]);
         return new Couple<>(offspring1, offspring2);
-    }
-
-    @Override
-    public boolean shouldBreed(Couple<DNDCharacter> parents, long generation) {
-        return true;
     }
 
     @Override

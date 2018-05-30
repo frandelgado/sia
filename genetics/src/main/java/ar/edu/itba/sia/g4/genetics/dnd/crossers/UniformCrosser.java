@@ -11,7 +11,15 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @SuppressWarnings("ALL")
-public class UniformCrosser implements Combinator<DNDCharacter> {
+public class UniformCrosser extends MixByChance<DNDCharacter> implements Combinator<DNDCharacter> {
+    public UniformCrosser(double chance, Random rnd) {
+        super(chance, rnd);
+    }
+
+    public UniformCrosser(double chance) {
+        super(chance);
+    }
+
     @Override
     public Couple<DNDCharacter> breed(Couple<DNDCharacter> couple) {
         DNDCharacter papi = couple.getHead();
@@ -33,11 +41,6 @@ public class UniformCrosser implements Combinator<DNDCharacter> {
                 (Item) offspring2Chromosome[1],(Item) offspring2Chromosome[2], (Item) offspring2Chromosome[3],
                 (Item) offspring2Chromosome[4], (double) offspring2Chromosome[5]);
         return new Couple<>(offspring1, offspring2);
-    }
-
-    @Override
-    public boolean shouldBreed(Couple<DNDCharacter> parents, long generation) {
-        return true;
     }
 
     @Override

@@ -13,6 +13,7 @@ public class AppConfig implements Serializable {
     private SelectorsConfig selector;
     private SelectorsConfig replacer;
     private TargetConfig target;
+    private CrosserConfig crosser;
 
 
     public double getGenerationalGap() {
@@ -93,6 +94,15 @@ public class AppConfig implements Serializable {
 
     public AppConfig setTarget(TargetConfig target) {
         this.target = target;
+        return this;
+    }
+
+    public CrosserConfig getCrosser() {
+        return crosser;
+    }
+
+    public AppConfig setCrosser(CrosserConfig crosser) {
+        this.crosser = crosser;
         return this;
     }
 }
