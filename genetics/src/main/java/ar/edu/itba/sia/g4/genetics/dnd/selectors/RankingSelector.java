@@ -23,7 +23,7 @@ public class RankingSelector<T extends Species> extends BaseSelector<T> implemen
     protected List<T> doSelection(List<SelectorPair<T>> population, int populationLimit, long generation) {
 
         List<T> sortedPopulation = population.stream()
-                .sorted(Comparator.comparing((SelectorPair sp) -> sp.getFitness()).reversed())
+                .sorted(Comparator.comparing(SelectorPair::getFitness))
                 .map(SelectorPair::getThing)
                 .collect(Collectors.toList());
 

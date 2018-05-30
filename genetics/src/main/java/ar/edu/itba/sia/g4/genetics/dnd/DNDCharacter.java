@@ -115,8 +115,7 @@ public class DNDCharacter implements Species {
         if (profession != that.profession) {
             return false;
         }
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        return Arrays.equals(items, that.items);
+        return Arrays.deepEquals(items, that.items);
     }
 
     @Override
@@ -124,7 +123,7 @@ public class DNDCharacter implements Species {
         int result;
         long temp;
         result = profession.hashCode();
-        result = 31 * result + Arrays.hashCode(items);
+        result = 31 * result + Arrays.deepHashCode(items);
         temp = Double.doubleToLongBits(height);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;

@@ -7,14 +7,14 @@
     "helmets": "items-grandes/cascos.tsv",
     "boots": "items-grandes/botas.tsv"
   },
-  "populationSize": 2000,
+  "populationSize": 5000,
   "generationalGap": 0.75,
-  "replacementAlgorithm": "mix-all",
+  "replacementAlgorithm": "keep-some",
 
   "target": {
-    "type": "iterations",
-    "iterations": 100000,
-    "delta": 0.90
+    "type": "optimum",
+    "iterations": 500,
+    "delta": 0.995
   },
 
   "crosser": {
@@ -29,29 +29,29 @@
   },
 
   "selector": {
-    "mix": 0.5,
+    "mix": 0.3,
 
     "first": {
-      "useBoltzmann": true,
-      "type": "universal"
+      "useBoltzmann": false,
+      "type": "elite"
     },
 
     "last": {
-      "useBoltzmann": true,
-      "type": "universal"
+      "useBoltzmann": false,
+      "type": "ranking"
     }
   },
 
   "replacer": {
-    "mix": 0.5,
+    "mix": 0.3,
 
     "first": {
-      "useBoltzmann": true,
-      "type": "roulette"
+      "useBoltzmann": false,
+      "type": "elite"
     },
 
     "last": {
-      "useBoltzmann": true,
+      "useBoltzmann": false,
       "type": "roulette"
     }
   }

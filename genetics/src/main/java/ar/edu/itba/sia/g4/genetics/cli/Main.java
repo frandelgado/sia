@@ -48,6 +48,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -268,7 +269,9 @@ public class Main {
         List<DNDCharacter> evolved = charles.evolve(population);
         long stopTime = System.currentTimeMillis();
 
-        evolved.stream().distinct().forEach(p -> {
+        evolved.stream()
+         .distinct()
+         .sorted(Comparator.comparingDouble(Species::getFitness)).forEach(p -> {
             System.out.println("---");
             System.out.println(p);
         });
@@ -280,5 +283,7 @@ public class Main {
             }
         }
         logger.info("Elapsed {}ms", stopTime - startTime);
+        Double maxFit = evolved.stream().distinct().mapToDouble(i -> i.getFitness()).max().getAsDouble();
+        System.out.println("Max fitness: " + maxFit);
     }
 }
