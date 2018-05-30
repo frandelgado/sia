@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class TSVWriter {
+public class TSVWriter implements AutoCloseable {
     private final BufferedWriter writer;
     private boolean headerWritten;
 
@@ -20,9 +20,7 @@ public class TSVWriter {
     }
 
     public static TSVWriter toFile(Path path) throws IOException {
-        try (BufferedWriter writer = Files.newBufferedWriter(path)) {
-            return new TSVWriter(writer);
-        }
+            return new TSVWriter(Files.newBufferedWriter(path));
     }
 
     public TSVWriter writeHeader(String... items) throws IOException {
@@ -38,5 +36,10 @@ public class TSVWriter {
         writer.write(String.join("\t", items));
         writer.newLine();
         return this;
+    }
+
+    @Override
+    public void close() throws IOException {
+        writer.close();
     }
 }

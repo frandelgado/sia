@@ -226,40 +226,40 @@ public class Main {
     }
 
     private static void attachInspectors(CommandLineOptions options, Darwin<DNDCharacter> charles) {
-        TSVWriter writer;
-        try {
-            writer = TSVWriter.toFile(Paths.get("results.tsv"));
-            writer.writeHeader("generation", "avg fitness", "delta fitness", "least fit", "fitness breach", "fittest", "variance");
 
-        if (options.isStats()) {
-            charles.attachInspector((prev, cur, generation) -> {
-                double oldAvgFitness = prev.parallelStream().mapToDouble(Species::getFitness).average().orElse(0);
-                double avgFitness = cur.parallelStream().mapToDouble(Species::getFitness).average().orElse(0);
-                double fittest = cur.parallelStream().mapToDouble(Species::getFitness).max().orElse(0);
-                double leastFit = cur.parallelStream().mapToDouble(Species::getFitness).min().orElse(0);
-                logger.info("Generation {}", generation);
-                logger.info("Avg fitness {}", avgFitness);
-                logger.info("Delta fitness {}", -oldAvgFitness + avgFitness);
-                logger.info("Least fit {}", leastFit);
-                logger.info("Fitness Breach {}", fittest - leastFit);
-                logger.info("Fittest {}", fittest);
-                // me gustaria precalcular este sum en uno de los streams pasados.
-                double sum = cur.parallelStream().mapToDouble(Species::getFitness).sum();
-                double variance = cur.parallelStream().
-                        mapToDouble(Species::getFitness)
-                        .map(f -> (f/sum )* Math.pow(f-avgFitness,2))
-                        .sum();
-                logger.info("Variance {}",variance);
-                if (generation % 1000 == 0) {
+        try (TSVWriter writer = TSVWriter.toFile(Paths.get("results.tsv"))) {
+            writer.writeHeader("avgFitness", "fittest", "variance");
+
+            if (options.isStats()) {
+                charles.attachInspector((prev, cur, generation) -> {
+                    double oldAvgFitness = prev.parallelStream().mapToDouble(Species::getFitness).average().orElse(0);
+                    double avgFitness = cur.parallelStream().mapToDouble(Species::getFitness).average().orElse(0);
+                    double fittest = cur.parallelStream().mapToDouble(Species::getFitness).max().orElse(0);
+                    double leastFit = cur.parallelStream().mapToDouble(Species::getFitness).min().orElse(0);
+                    logger.info("Generation {}", generation);
+                    logger.info("Avg fitness {}", avgFitness);
+                    logger.info("Delta fitness {}", -oldAvgFitness + avgFitness);
+                    logger.info("Least fit {}", leastFit);
+                    logger.info("Fitness Breach {}", fittest - leastFit);
+                    logger.info("Fittest {}", fittest);
+                    // me gustaria precalcular este sum en uno de los streams pasados.
+                    double sum = cur.parallelStream().mapToDouble(Species::getFitness).sum();
+                    double variance = cur.parallelStream().
+                            mapToDouble(Species::getFitness)
+                            .map(f -> (f/sum )* Math.pow(f-avgFitness,2))
+                            .sum();
+                    logger.info("Variance {}",variance);
                     try {
-                        writer.writeLine(String.valueOf(avgFitness),
-                                String.valueOf(fittest), String.valueOf(variance));
+                        if (generation % 1000 == 0) {
+                            writer.writeLine(String.valueOf(avgFitness),
+                             String.valueOf(fittest), String.valueOf(variance));
+                        }
                     } catch (IOException e) {
                         logger.error("Oops");
                     }
-                }
-            });
-        }
+
+                });
+            }
         } catch (IOException e) {
             logger.error("Can't open results file", e);
             System.exit(8);
