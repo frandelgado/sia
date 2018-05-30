@@ -37,10 +37,10 @@ public class OptimumTarget<T extends Species> implements EvolutionaryTarget<DNDC
          .average()
          .orElse(0));
 
-        if (deltas.size() > iterations) {
-            deltas = deltas.subList(deltas.size() - iterations, deltas.size());
-        } else {
+        if (deltas.size() <= iterations) {
             return true;
+        } else {
+            deltas.remove(0);
         }
 
         double max = deltas.stream().max(Double::compare).orElse(0.0);
