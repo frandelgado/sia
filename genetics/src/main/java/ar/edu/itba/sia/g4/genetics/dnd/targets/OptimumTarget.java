@@ -4,17 +4,18 @@ import ar.edu.itba.sia.g4.genetics.dnd.DNDCharacter;
 import ar.edu.itba.sia.g4.genetics.problem.EvolutionaryTarget;
 import ar.edu.itba.sia.g4.genetics.problem.Species;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class OptimumTarget<T extends Species> implements EvolutionaryTarget<DNDCharacter> {
     private final double delta;
     private final int iterations;
-    private int plateauCount;
+    private List<Double> deltas;
 
     public OptimumTarget(double delta, int iterations) {
         this.delta = delta;
         this.iterations = iterations;
-        this.plateauCount = 0;
+        deltas = new LinkedList<>();
         if (delta <= 0) {
             throw new IllegalArgumentException("Delta must be > 0");
         }
@@ -25,9 +26,26 @@ public class OptimumTarget<T extends Species> implements EvolutionaryTarget<DNDC
 
     @Override
     public boolean shouldEvolve(List<DNDCharacter> prev, List<DNDCharacter> curr, long generation) {
-        double prevFitness = prev.stream().mapToDouble(Species::getFitness).average().orElse(0);
-        double currFitness = curr.stream().mapToDouble(Species::getFitness).average().orElse(0);
-        plateauCount = Math.abs(currFitness - prevFitness) <= delta ? plateauCount + 1 : 0;
-        return plateauCount < iterations;
+        if (generation == 0) {
+            deltas.add(prev.stream()
+             .mapToDouble(Species::getFitness)
+             .average()
+             .orElse(0));
+        }
+        deltas.add(curr.stream()
+         .mapToDouble(Species::getFitness)
+         .average()
+         .orElse(0));
+
+        if (deltas.size() > iterations) {
+            deltas = deltas.subList(deltas.size() - iterations, deltas.size());
+        } else {
+            return true;
+        }
+
+        double max = deltas.stream().max(Double::compare).orElse(0.0);
+        double min = deltas.stream().min(Double::compare).orElse(0.0);
+
+        return min / max < delta;
     }
 }
