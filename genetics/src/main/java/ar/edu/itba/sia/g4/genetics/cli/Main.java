@@ -250,15 +250,14 @@ public class Main {
                         .map(f -> (f/sum )* Math.pow(f-avgFitness,2))
                         .sum();
                 logger.info("Variance {}",variance);
-                try {
-                    writer.writeLine(String.valueOf(generation), String.valueOf(avgFitness),
-                     String.valueOf(avgFitness - oldAvgFitness), String.valueOf(leastFit),
-                     String.valueOf(fittest - leastFit),
-                     String.valueOf(fittest), String.valueOf(variance));
-                } catch (IOException e) {
-                    logger.error("Oops");
+                if (generation % 1000 == 0) {
+                    try {
+                        writer.writeLine(String.valueOf(avgFitness),
+                                String.valueOf(fittest), String.valueOf(variance));
+                    } catch (IOException e) {
+                        logger.error("Oops");
+                    }
                 }
-
             });
         }
         } catch (IOException e) {
