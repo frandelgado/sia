@@ -11,8 +11,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.9</maven.compiler.source>
-        <maven.compiler.target>1.9</maven.compiler.target>
+        <maven.compiler.source>10</maven.compiler.source>
+        <maven.compiler.target>10</maven.compiler.target>
 
         <log4j.version>2.11.0</log4j.version>
         <junit.version>4.11</junit.version>
@@ -25,6 +25,7 @@
         <org.slf4j.version>1.7.21</org.slf4j.version>
         <logback.version>1.1.7</logback.version>
         <mainClass>ar.edu.itba.sia.g4.genetics.cli.Main</mainClass>
+        <jfreechart.version>1.5.0</jfreechart.version>
     </properties>
 
     <dependencies>
@@ -39,7 +40,7 @@
         <dependency>
             <groupId>org.jfree</groupId>
             <artifactId>jfreechart</artifactId>
-            <version>1.5.0</version>
+            <version>${jfreechart.version}</version>
         </dependency>
 
         <dependency>
