@@ -1,0 +1,58 @@
+{
+  "profession": "WARRIOR1",
+  "items": {
+    "gauntlets": "items-chicos/guantes.tsv",
+    "weapons": "items-chicos/armas.tsv",
+    "chestplates": "items-chicos/pecheras.tsv",
+    "helmets": "items-chicos/cascos.tsv",
+    "boots": "items-chicos/botas.tsv"
+  },
+  "populationSize": 5000,
+  "generationalGap": 0.75,
+  "replacementAlgorithm": "keep-some",
+
+  "target": {
+    "type": "optimum",
+    "iterations": 500,
+    "delta": 0.995
+  },
+
+  "crosser": {
+    "type": "annular",
+    "chance": 0.8
+  },
+
+  "mutator": {
+    "type": "one-allele",
+    "uniform": true,
+    "chance": 0.05
+  },
+
+  "selector": {
+    "mix": 0.3,
+
+    "first": {
+      "useBoltzmann": false,
+      "type": "elite"
+    },
+
+    "last": {
+      "useBoltzmann": false,
+      "type": "ranking"
+    }
+  },
+
+  "replacer": {
+    "mix": 0.3,
+
+    "first": {
+      "useBoltzmann": false,
+      "type": "elite"
+    },
+
+    "last": {
+      "useBoltzmann": false,
+      "type": "roulette"
+    }
+  }
+}

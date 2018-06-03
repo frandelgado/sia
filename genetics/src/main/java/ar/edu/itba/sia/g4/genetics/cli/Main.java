@@ -27,7 +27,6 @@ import ar.edu.itba.sia.g4.genetics.dnd.targets.OptimumTarget;
 import ar.edu.itba.sia.g4.genetics.dnd.targets.StructureTarget;
 import ar.edu.itba.sia.g4.genetics.dnd.targets.TimeTarget;
 import ar.edu.itba.sia.g4.genetics.engine.Darwin;
-import ar.edu.itba.sia.g4.genetics.engine.Inspector;
 import ar.edu.itba.sia.g4.genetics.engine.KeepSomeAncestorsReplacer;
 import ar.edu.itba.sia.g4.genetics.engine.MixAllReplacer;
 import ar.edu.itba.sia.g4.genetics.engine.NewGenerationReplacer;
@@ -42,15 +41,18 @@ import ch.qos.logback.classic.Level;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.JFrame;
+import java.awt.BorderLayout;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ConcurrentMap;
 
 @SuppressWarnings("ALL")
 public class Main {
@@ -248,10 +250,24 @@ public class Main {
         return statsInspector;
     }
 
+
+    private final static EvolutionaryChart setupChart(CommandLineOptions options, Darwin<DNDCharacter> charles) {
+        if (options.isX11()) {
+            EvolutionaryChart chart = new EvolutionaryChart();
+            chart.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            chart.pack();
+            chart.setVisible(true);
+            charles.attachInspector(chart);
+            return chart;
+        }
+
+        return null;
+    }
+
     public static void main(String... args) {
         CommandLineOptions options = parseArguments(args);
-        AppConfig config = loadConfig(options.getConfig());
         setupLogging(options);
+        AppConfig config = loadConfig(options.getConfig());
 
         DNDCharacterSoup genesisPool = loadPrimordialSoup(config);
         List<DNDCharacter> population = genesisPool.miracleOfLife();
@@ -263,6 +279,7 @@ public class Main {
 
         Darwin<DNDCharacter> charles = new Darwin<>(target, crosser, mutator, replacer);
         StatsInspector<DNDCharacter> insp = attachInspectors(options, charles);
+        EvolutionaryChart chart = setupChart(options, charles);
 
         logger.info("Running the engine");
         long startTime = System.currentTimeMillis();
@@ -275,6 +292,7 @@ public class Main {
             System.out.println("---");
             System.out.println(p);
         });
+
         if (insp != null) {
             try {
                 insp.close();
