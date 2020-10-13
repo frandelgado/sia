@@ -15,7 +15,7 @@
         <maven.compiler.target>10</maven.compiler.target>
 
         <log4j.version>2.11.0</log4j.version>
-        <junit.version>4.11</junit.version>
+        <junit.version>4.13.1</junit.version>
         <args4j.version>2.33</args4j.version>
         <sia.version>1.0</sia.version>
         <jetbrains.version>13.0</jetbrains.version>
